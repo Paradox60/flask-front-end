@@ -29,6 +29,7 @@ cd flask-front-end
 ```bash
 cp .env.example .env
 ```
+
 Change variables if needed
 
 ### 3. Run with Docker
@@ -68,7 +69,6 @@ New topics can be added easily as Markdown files.
 - [ ] Add simple REST API
 - [ ] Improve layout with modern CSS (Flexbox, Grid, etc.)
 - [ ] Integrate basic JavaScript interactions (DOM, events)
-
 
 ---
 
