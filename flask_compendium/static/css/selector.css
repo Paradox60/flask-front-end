@@ -1,0 +1,20 @@
+body{
+	background-color:slategrey;
+}
+
+div{
+	background-color: red;
+}
+
+p{
+	text-decoration-color: darkred;
+	color:goldenrod;
+}
+
+.box{
+	background-color:blue;
+}
+
+.text{
+	color:yellowgreen;
+}

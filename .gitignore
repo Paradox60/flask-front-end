@@ -70,6 +70,7 @@ dist/
 
 # Markdown cache or temp files
 *.md~
+.obsidian/
 
 # Temporary files
 *.swp
@@ -82,3 +83,6 @@ staticfiles/
 
 # Articles or generated content
 content/__pycache__/
+
+# Sublime project workspace
+*.sublime-workspace

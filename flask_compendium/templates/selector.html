@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>flask_compendium</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/selector.css') }}">
+</head>
+<body>
+    <h1><center>Здесь по пробуем разобраться с основными принципами форматирования текста</center></h1>
+    <h2>Работа селекоров в css</h2>
+        <h3>Селектор имени тэга '<'p'>'' </h3>
+        <div>
+            <p>это текст c тегом p</p>
+        </div>
+        <hr>
+        </br>
+
+        <h3>Селектор класса  </h3>
+        <div class="box">
+            <p class="text">это текст c тегом p</p>
+        </div>
+        <hr>
+        </br>
+
+    <a href="{{ url_for('home') }}">На главную</a>
+</body>
+</html>
