@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>flask_compendium</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
 </head>
 <body>
-    <h1>Добро поважаловать в flask_compendium на Flask + Docker!</h1>
+    <h1>Добро! поважаловать в flask_compendium на Flask + Docker!</h1>
     <button onclick="greet()">Кликни</button>
     <a href="{{ url_for('text_page') }}">Работа с текстом</a>
-    <script src="{{ url_for('static', filename='script.js') }}"></script
+    <a href="{{ url_for('block_page') }}">Работа с блоками</a>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script
 
 </body>
 </html>

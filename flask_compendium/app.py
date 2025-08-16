@@ -9,4 +9,6 @@ def home():
 @app.route("/selector_page")
 def text_page():
     return render_template("selector.html")
-
+@app.route("/blocks")
+def block_page():
+    return render_template("blocks.html")
