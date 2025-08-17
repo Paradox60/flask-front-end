@@ -12,3 +12,7 @@ def text_page():
 @app.route("/blocks")
 def block_page():
     return render_template("blocks.html")
+
+@app.route("/flex")
+def flex():
+    return render_template("flex.html")

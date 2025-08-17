@@ -1,0 +1,76 @@
+html,body {
+	background-color: coral;
+	height: 100%;
+}
+
+body {	
+	display: flex;
+	flex-direction: column; /* располагаем header и main вертикально */
+}
+
+main {	
+	flex: 1;
+	display: flex;	
+	background-color: lightgrey;	
+	border-style: solid;
+	border-radius: 10px;
+	border-width: 2px;
+	border-color: red;
+}
+
+.flex {
+	display: flex;
+	flex: 0;
+	flex-grow: 1;
+	background-color: white;
+	min-height: 200px;
+	max-height: 200px;	
+	flex-direction: row;	
+	justify-content: space-around;
+	align-items: center;
+}
+
+.yellow {
+	display: flex;
+	background-color: yellow;
+	min-height: 120px;
+	max-height: 120px;
+	min-width: 180px;
+	align-items: center;
+}
+
+.red {
+	display: flex;
+	background-color: red;
+	min-height: 150px;
+	max-height: 150px;
+	min-width: 180px;
+	align-items: flex-start;
+}
+
+.aqua {
+	display:flex;
+	background-color: aqua;
+	min-height: 135px;
+	max-height: 135px;
+	min-width: 180px;
+	align-items: flex-end;
+}
+
+.blue {
+	display: flex;
+	background-color: blue;
+	min-height: 170px;
+	max-height: 170px;
+	min-width: 180px;
+	align-items: stretch;
+}
+
+.green {
+	display: flex;
+	background-color: green;
+	min-height: 100px;
+	max-height: 100px;
+	min-width: 180px;
+	align-items: baseline;
+} 

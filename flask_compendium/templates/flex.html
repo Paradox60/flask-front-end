@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>flask_compendium</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flex.css') }}">
+    
+    
+</head>
+<body>
+    <header>
+        <h1><center>Здесь попробуем разобраться с работой flex-контейнеров</center></h1>
+        <a href="{{ url_for('home') }}">На главную</a>
+        <hr>
+    </header>
+
+    <main class="workspace">
+        <div class="flex">
+            <div class="yellow"><span>yellow</span></div>
+            <div class="red"><div>red</div></div>
+            <div class="aqua"><a>aqua</a></div>
+            <div class="blue"><p>blue</p></div>
+            <div class="green"><span>green</span></div>
+        </div>
+    </main>
+   
+
+</body>
+</html>
