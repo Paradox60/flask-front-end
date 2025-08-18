@@ -1,0 +1,38 @@
+/* делаем, чтобы тело занимало всю высоту */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* создаём сетку для всего body */
+body {
+    display: grid;
+    grid-template-rows: 80px 1fr 60px; /* шапка 80px, контент занимает всё, подвал 60px */
+    grid-template-columns: 1fr;        /* одна колонка на весь экран */
+}
+
+/* шапка и подвал */
+header {
+    background-color: #4CAF50;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+}
+
+/* main будет тоже grid, чтобы разместить nav и content */
+main {
+    display: grid;
+    grid-template-columns: 200px 1fr; /* меню 200px, контент занимает оставшееся */
+    grid-gap: 10px;                   /* небольшой отступ между колонками */
+}
+
+/* оформление nav и content */
+nav {
+    background-color: #f4f4f4;
+}
+
+content {
+    background-color: #ddd;
+}

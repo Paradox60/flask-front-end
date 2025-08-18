@@ -16,3 +16,7 @@ def block_page():
 @app.route("/flex")
 def flex():
     return render_template("flex.html")
+
+@app.route("/grid")
+def grid():
+    return render_template("grid.html")    
