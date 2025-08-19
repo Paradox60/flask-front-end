@@ -7,14 +7,36 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
 </head>
 <body>
-    <h1>Добро! поважаловать в flask_compendium на Flask + Docker!</h1>
-    <button onclick="greet()">Кликни</button>
-    <ul>
-        <li><a href="{{ url_for('text_page') }}">Работа с текстом</a></li>
-        <li><a href="{{ url_for('block_page') }}">Работа с блоками</a></li>
-        <li><a href="{{ url_for('flex') }}">Работа с flex</a></li>
-        <li><a href="{{ url_for('grid') }}">Работа с grid</a></li>
-    </ul>  
+
+    <header>
+        <div class=header_main >
+            <div class="header_text">
+                <h1>Добро! поважаловать в flask_compendium на Flask + Docker!</h1>
+            <div>
+            <div class="head_navigation">
+                
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('text_page') }}">Работа с текстом</a></li>
+                <li><a href="{{ url_for('block_page') }}">Работа с блоками</a></li>
+                <li><a href="{{ url_for('flex') }}">Работа с flex</a></li>
+                <li><a href="{{ url_for('grid') }}">Работа с grid</a></li>
+            </ul>    
+        </nav>
+        <content>
+            <!-- <button onclick="greet()">Кликни</button> -->
+                      
+        </content>
+    </main>
+    
+    <footer></footer>
+    
+  
   
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>

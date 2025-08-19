@@ -1,7 +1,42 @@
-body {
+html, body {
     background-color:darkorange;
+    height: 100%;
     color: #eee;
+    margin: 0px 10px 0px 10px;
     font-family: sans-serif;
     text-align: center;
-    padding: 50px;
 }
+
+body {
+    display: grid;
+    grid-template-rows: 120px, 1fr, 80px ;
+    grid-template-columns: 1fr;
+}
+
+header {    
+    background-color: yellowgreen;
+    border-radus:20px ;
+}
+
+main {
+    padding: 0px;
+    margin: 0px;
+    display: grid;
+    grid-template-columns: 250px, 1fr;
+    grid-gap: 10x;
+}
+
+nav { 
+    background-color: #cbf3f3 ;
+}
+
+content {
+    background-color: white;
+}
+
+footer {
+    background-color: black;
+}
+
+
+
