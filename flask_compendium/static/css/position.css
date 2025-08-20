@@ -1,0 +1,86 @@
+html,body{
+	margin: 0px;
+	height: 100%;
+	background: skyblue;
+}
+
+body{
+	display: grid;
+	grid-template-rows: 120px auto 80px;
+	grid-template-columns: 1fr;
+	min-height: 100vh;
+	grid-gap: 5px;
+}
+
+header{
+	background-color: red;
+	border-style: solid;
+	border-width: 0px 1px 1px 1px;
+	border-color: black;
+}
+
+main{
+	background-color: yellow;
+	color:black;
+	display:grid;
+	grid-template-rows: 1fr;
+	grid-template-columns: 340px auto;
+	grid-gap: 10px;
+	
+}
+
+nav{
+	background-color: deepskyblue;
+	overfolw-y: auto;
+}
+
+.content{
+	background-color: #fff;
+	display:flex;	
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+
+}
+
+.wrapper{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	background-color: black;
+	min-height: 250px;
+	min-width: 550px;
+	margin: 50px;
+}
+
+
+
+.static{
+	position: static;
+}
+
+.rel{
+	position: relative;
+	top: 50px;
+}
+
+.fix{
+	position: fixed;
+}
+
+.abs{
+	position : absolute;
+}
+
+.sticky{
+	position: sticky;
+}
+
+.wrapper div{
+	background-color: green;
+	min-height: 100px;
+}
+
+footer{
+background-color: blue;
+}

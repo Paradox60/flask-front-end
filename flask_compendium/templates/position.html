@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/position.css') }}">
+</head>
+<body>
+	<header>
+		<center>
+			<h1>Работа с position</h1>
+        	<a href="{{ url_for('home') }}">На главную</a>
+		</center>
+	</header>
+	<main>
+		<nav></nav>
+		<div class="content">
+
+			<div class="wrapper">
+				<div class="static">
+					 <h2><center>Div position static</center></h2>
+				</div>
+			</div>
+
+			<div class="wrapper">
+				<div class="rel">
+					<h2><center>Div position relative</center></h2>
+				</div>
+			</div>
+
+			<div class="wrapper">
+				<div class="fix">
+					<h2><center>Div position fixed</center></h2>
+				</div>
+			</div>
+
+			<div class="wrapper">
+				<div class="abs">
+					<h2><center>Div position asolute</center></h2>
+				</div>
+			</div>
+
+			<div class="wrapper">
+				<div class="sticky">
+					<h2><center>Div position sticky</center></h2>
+				</div>
+			</div>
+
+		</div>
+		
+	</main>
+	<footer></footer>
+	
+</body>
+</html>

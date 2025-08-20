@@ -20,3 +20,7 @@ def flex():
 @app.route("/grid")
 def grid():
     return render_template("grid.html")    
+
+@app.route("/position")
+def position():
+    return render_template("position.html") 

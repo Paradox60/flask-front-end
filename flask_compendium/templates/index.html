@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>flask_compendium</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}"> 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
 </head>
 <body>
 
@@ -21,15 +21,17 @@
     
     <main>
         <nav>
+            <p>Ежедневнные уроки</p>
             <ul>
                 <li><a href="{{ url_for('text_page') }}">Работа с текстом</a></li>
                 <li><a href="{{ url_for('block_page') }}">Работа с блоками</a></li>
                 <li><a href="{{ url_for('flex') }}">Работа с flex</a></li>
                 <li><a href="{{ url_for('grid') }}">Работа с grid</a></li>
+                <li><a href="{{ url_for('position') }}">Работа с position</a></li>
             </ul>    
         </nav>
         <content>
-            <!-- <button onclick="greet()">Кликни</button> -->
+            <button onclick="greet()">Кликни</button>
                       
         </content>
     </main>
