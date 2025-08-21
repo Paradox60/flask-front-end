@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css')}}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/inline.css')}}">
+	<title>Document</title>
+</head>
+<body>
+	<header>
+		<h1>Работа с inline,block,inline-block</h1>
+		<a  href="{{ url_for('home')}}">Домой</a>
+	</header>
+	<main>
+		<nav>
+			<div class="nav_box">Хочу чтобы двигался</div>
+		</nav>
+
+		<section>
+			<div class="wrapper">
+				<div style="background: red; width: 200px; height: 50px;">
+					Block
+				</div>
+				<div style="background: blue; width: 100px; height: 50px;">
+					Block
+				</div>
+			</div>
+			<div class="wrapper">
+				<span style="background: red;">Inline</span>
+				<span style="background: blue;">Inline</span>
+			</div>
+			<div class="wrapper">
+				<div style="display: inline-block; width: 100px; height: 50px; background: red;">
+					Box 1
+				</div>
+				<div style="display: inline-block; width: 100px; height: 50px; background: blue;">
+					Box 2
+				</div>
+			</div>
+		</section>
+	</main>
+	<footer>
+		<span>Привет из футера</span>
+	</footer>
+</body>
+</html>

@@ -66,14 +66,21 @@ nav{
 
 .fix{
 	position: fixed;
+	bottom: 1px;
+	left:1px;
 }
 
 .abs{
 	position : absolute;
+	
 }
 
 .sticky{
+	padding-top: 10px;
+	background-color: green;
+	min-height: 100px;
 	position: sticky;
+	top: 10px;
 }
 
 .wrapper div{

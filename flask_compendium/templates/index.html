@@ -8,35 +8,38 @@
 </head>
 <body>
 
-    <header>
-        <div class=header_main >
-            <div class="header_text">
-                <h1>Добро! поважаловать в flask_compendium на Flask + Docker!</h1>
-            <div>
-            <div class="head_navigation">
-                
-            </div>
+    <header>    
+        <div class="header_text">
+            <h1>Добро! поважаловать в flask_compendium на Flask + Docker!</h1>
+        </div>
+
+        <div class="head_navigation">
+            <div>CSS</div>
+            <div>JS</div>
         </div>
     </header>
     
     <main>
         <nav>
-            <p>Ежедневнные уроки</p>
+            <h2>Ежедневнные уроки</h2>
+            <h4 style="margin-bottom: -10px;">08.2025</h4>
+            <hr>
             <ul>
-                <li><a href="{{ url_for('text_page') }}">Работа с текстом</a></li>
-                <li><a href="{{ url_for('block_page') }}">Работа с блоками</a></li>
-                <li><a href="{{ url_for('flex') }}">Работа с flex</a></li>
-                <li><a href="{{ url_for('grid') }}">Работа с grid</a></li>
-                <li><a href="{{ url_for('position') }}">Работа с position</a></li>
+                <li><a href="{{ url_for('text_page') }}">Работа с текстом(16)</a></li>
+                <li><a href="{{ url_for('block_page') }}">Работа с блоками(17)</a></li>
+                <li><a href="{{ url_for('flex') }}">Работа с flex(18)</a></li>
+                <li><a href="{{ url_for('grid') }}">Работа с grid(19)</a></li>
+                <li><a href="{{ url_for('position') }}">Работа с position(20)</a></li>
+                <li><a href="{{ url_for('inline') }}">Работа с inline,block(21)</a></li>
             </ul>    
         </nav>
-        <content>
+        <section>
             <button onclick="greet()">Кликни</button>
                       
-        </content>
+        </section>
     </main>
     
-    <footer></footer>
+    <footer>footer</footer>
     
   
   

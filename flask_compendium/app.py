@@ -9,6 +9,7 @@ def home():
 @app.route("/selector_page")
 def text_page():
     return render_template("selector.html")
+
 @app.route("/blocks")
 def block_page():
     return render_template("blocks.html")
@@ -24,3 +25,7 @@ def grid():
 @app.route("/position")
 def position():
     return render_template("position.html") 
+
+@app.route("/inline")
+def inline():
+    return render_template("inline.html") 

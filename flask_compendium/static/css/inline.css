@@ -1,0 +1,61 @@
+html,body{
+	background-color: green;
+	margin: 0px;
+	height: 100%;
+}
+
+body{
+	display: grid;
+	grid-template-rows: 120px 1fr 80px;
+	grid-template-columns: 1fr;
+} 
+
+header{
+	background-color: darkkhaki;
+	text-align: center;
+}
+
+main{
+	display: grid;
+	grid-template-columns: 120px auto;
+	grid-template-rows: auto;
+	background-color: black;
+}
+
+nav{
+	background-color: yellow;
+}
+
+.nav_box{
+	background-color: blue;
+	color: white;
+	position: sticky;
+	top: 1px;
+	margin-top: 5px;
+}
+
+section{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+	background-color: white;
+
+}
+
+.wrapper{
+	background-color: black;
+	min-height: 350px;
+	min-width:  350px;
+	margin: 50px;
+
+}
+
+.wrapper div{
+	vertical-align: center;
+	margin:auto;
+}
+
+footer{
+	background-color: aqua;
+}
