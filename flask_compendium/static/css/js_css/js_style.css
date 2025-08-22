@@ -1,0 +1,29 @@
+html,body{
+	background-color: lightgray;
+	height: 90%;
+}
+
+body{
+	display: block;
+	margin: 0px;
+	pddinig: 0px;
+}
+
+header{
+	
+	background-color: darkgray;
+	margin: 0px;
+}
+
+main{
+	display:inline;
+}
+
+footer{
+	background-color: gray;
+	display: inline-block;
+	height: 120px;
+	width: 100%;
+	position: absolute;
+	bottom: 1px;
+}

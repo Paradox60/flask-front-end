@@ -1,0 +1,85 @@
+html, body {
+    background-color:darkorange;
+    height: 100%;
+    color: #eee;
+    margin: 0px 10px 0px 10px;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+body {
+    display: grid;
+    grid-template-rows: 120px 1fr 80px ;
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+}
+
+header {
+    display: flex;
+    flex-direction: column;   
+    background-color: skyblue ;
+    justify-content: stretch;
+    align-items: stretch;
+    color: black;
+    border-style: solid;    
+    border-radius: 0px 0px 20px 20px;
+    border-width: 0px 1px 1px 1px;
+    border-color: black;
+}
+
+.header_text{
+    background-color: red;
+    flex-grow: 0;
+}
+
+.head_navigation{ 
+    display: flex; 
+    flex-direction: row;
+    justify-content: center ;
+    align-items: center;  
+    background-color: yellow;
+    border-radius: 0px 0px 20px 20px;
+    flex-grow: 1;  
+    gap: 10px;  
+}
+
+.head_navigation div{
+    background-color: skyblue;
+    min-width: 50px;
+    max-width: 50px;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    grid-gap: 5px;
+}
+
+nav { 
+    background-color: skyblue ;
+    color: black;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    border-radius: 20px;
+
+}
+
+section {
+    background-color: white;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    border-radius: 20px;
+}
+
+footer {
+    background-color: black;
+    border-style: solid;
+    border-color: white;
+    border-width: 1px 1px 0px 1px;
+    border-radius: 20px 20px 0px 0px;
+}
+
+
+
