@@ -5,11 +5,24 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/css_css/reset.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/js_css/js_style.css') }}">
+	{% block style %}{% endblock style %}
 	<title>Document</title>
+
 </head>
 <body>
+	
 	{% include "JS_temp/js_header.html" %}
-	{% include "JS_temp/js_main.html" %}
+
+	<main>
+		{% include "JS_temp/js_nav.html" %}
+		<section>
+			<div>{% block content %}{% endblock %}</div>
+		</section>	
+	</main>
+	
 	{% include "JS_temp/js_footer.html" %}	
+
 </body>
+
+{% block scripts %}{% endblock scripts %}
 </html>

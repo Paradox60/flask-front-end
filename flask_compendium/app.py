@@ -33,3 +33,8 @@ def inline():
 @app.route("/js_home")
 def js_start():
     return render_template("JS_temp/js_index.html") 
+
+
+@app.route("/js_first_lesson")
+def js_fl():
+    return render_template("JS_temp/lessons/js_fl.html") 
