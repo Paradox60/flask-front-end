@@ -1,0 +1,64 @@
+html,body{
+	background-color: yellow;
+	height: 100%;
+}
+body{
+	background-color: red;
+	display:grid;
+	grid-template-rows: 120px auto 80px;
+	grid-template-columns: auto;
+}
+
+header{
+	text-align: center;
+}
+
+main{
+	background-color: #2f4f4f;
+	display: grid;
+	grid-template-rows: auto;
+	grid-template-columns: 220px auto;
+}
+
+nav{
+	text-align: center;
+	background-color: green;	
+}
+
+nav p {
+	font-size: 1.4em;
+}
+
+section{
+
+}
+
+.first{
+	display: block;
+	float: left;
+	min-width: 300px;
+	min-height: 300px;
+	background-color: coral;
+}
+
+.second{
+	position: relative;
+	top: 50px;
+	display: block;
+	float: right;
+	min-width: 300px;
+	min-height: 300px;
+	background-color: red;
+}
+
+.third{
+	
+	width: 300px;
+	min-height: 300px;
+	background-color: blue;
+}
+
+footer{
+	text-align: center;
+	background-color: aqua;
+}

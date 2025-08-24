@@ -13,6 +13,17 @@
 		margin: 10px;
 	}
 
+	.calc{
+		background-color: black;
+		width: 300px;
+		height: 200px;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		margin: 10px;
+	}
+
 </style>
 {% endblock style %}
 
@@ -20,13 +31,21 @@
 	<div id="color" class="manual">
 		Центральный блок
 	</div>
+
+	<p id="demo"></p>
+
 	<div class="manual">
 	<button type="button" onclick="document.getElementById('color').style.background='red'">Нажмите на меня!</button>
+	<button type="button" onclick="myFunction()">Нажмите на меня!</button>
 	</div>
+	
+
 {% endblock %}
 
 {% block scripts %}
 <script>
-	
+function myFunction(){
+	document.getElementById('demo').innerHTML = "Привет мир!"		
+}
 </script>
 {% endblock scripts %}

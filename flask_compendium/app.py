@@ -38,3 +38,8 @@ def js_start():
 @app.route("/js_first_lesson")
 def js_fl():
     return render_template("JS_temp/lessons/js_fl.html") 
+
+
+@app.route("/float")
+def float():
+    return render_template("CSS_temp/float.html") 
