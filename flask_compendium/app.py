@@ -43,3 +43,11 @@ def js_fl():
 @app.route("/float")
 def float():
     return render_template("CSS_temp/float.html") 
+
+@app.route("/game")
+def mini_game():
+    return render_template("JS_temp/lessons/js_minigame.html") 
+
+@app.route("/text")
+def text():
+    return render_template("CSS_temp/text.html") 
