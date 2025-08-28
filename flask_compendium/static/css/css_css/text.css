@@ -27,11 +27,25 @@ main{
 	align-items: center;
 }
 
+.discriprion{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	width: 80%;
+	height: 120px;	
+	color:red;	
+}
+
 .text_box{
-	margin: 50px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	margin-top: 5px;
+	margin-bottom: 50px;
 	width: 80%;
 	height: 120px;
-	line-height: 120px;
 	text-align: center;
 	background-color: black;
 	color:white;

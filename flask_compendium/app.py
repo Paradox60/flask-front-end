@@ -51,3 +51,7 @@ def mini_game():
 @app.route("/text")
 def text():
     return render_template("CSS_temp/text.html") 
+
+@app.route("/droplist")
+def droplist():
+    return render_template("CSS_temp/droplist.html") 
