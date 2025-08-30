@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Flex пример</title>
+<style>
+body {
+    background: #0d0d0d;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+/* FLEX ВЕРСИЯ */
+.flex-demo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center; /* центрируем последний ряд */
+}
+
+.flex-demo div {
+    flex: 0 1 220px; /* минимальная ширина 220px, можно сжимать */
+    background: #1a1a1a;
+    border: 1px solid #1565c0;
+    padding: 30px 10px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 0 6px rgba(21, 101, 192, 0.4);
+    transition: all 0.3s ease;
+}
+
+.flex-demo div:hover {
+    background: #1565c0;
+    box-shadow: 0 0 12px rgba(100, 181, 246, 0.7);
+}
+</style>
+</head>
+<body>
+
+<h2>Flex (flex-wrap + центрирование)</h2>
+<content class="flex-demo">
+    <div>Карточка 1</div>
+    <div>Карточка 2</div>
+    <div>Карточка 3</div>
+    <div>Карточка 4</div>
+    <div>Карточка 5</div>
+</content>
+
+</body>
+</html>

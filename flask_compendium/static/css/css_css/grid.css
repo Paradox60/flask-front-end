@@ -35,4 +35,45 @@ nav {
 
 content {
     background-color: #ddd;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-temp
+    gap: 20px;
+    margin: 0 10%;
+    grid-template
+}
+
+content div{
+    background-color: red;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 120px;
+}
+
+
+.grid-demo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+    padding: 15px;
+}
+
+/* оформление карточек */
+.grid-demo div {
+    background: #1a1a1a;
+    border: 1px solid #1565c0;
+    color: #ffffff;
+    text-align: center;
+    padding: 30px 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 6px rgba(21, 101, 192, 0.4);
+    transition: all 0.3s ease;
+}
+
+.grid-demo div:hover {
+    background: #1565c0;
+    box-shadow: 0 0 12px rgba(100, 181, 246, 0.7);
 }

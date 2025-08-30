@@ -59,3 +59,11 @@ def droplist():
 @app.route("/transform")
 def transform():
     return render_template("CSS_temp/transform.html") 
+
+@app.route("/test")
+def test():
+    return render_template("CSS_temp/test.html") 
+
+@app.route("/test1")
+def test1():
+    return render_template("CSS_temp/test1.html") 
