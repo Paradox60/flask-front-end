@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Пример всех CSS-единиц</title>
+<style>
+  body {
+    font-size: 16px; /* базовый размер шрифта */
+    margin: 2rem;
+    background-color: #1e1e1e;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+  }
+
+  h1 {
+    font-size: 2em; /* относительно font-size родителя */
+    margin-bottom: 1rem;
+  }
+
+  .block-cm {
+    width: 5cm;
+    height: 2cm;
+    background-color: #4caf50;
+    margin-bottom: 1rem;
+    text-align: center;
+    line-height: 2cm;
+  }
+
+  .block-mm {
+    width: 50mm;
+    height: 20mm;
+    background-color: #2196f3;
+    margin-bottom: 1rem;
+    text-align: center;
+    line-height: 20mm;
+  }
+
+  .block-in {
+    width: 2in;
+    height: 1in;
+    background-color: #ff9800;
+    margin-bottom: 1rem;
+    text-align: center;
+    line-height: 1in;
+  }
+
+  .block-px {
+    width: 192px; /* 2in = 192px */
+    height: 96px;
+    background-color: #9c27b0;
+    margin-bottom: 1rem;
+    text-align: center;
+    line-height: 96px;
+  }
+
+  .block-pt {
+    width: 144pt; /* 2in = 144pt */
+    height: 72pt;
+    background-color: #f44336;
+    margin-bottom: 1rem;
+    text-align: center;
+    line-height: 72pt;
+  }
+
+  .block-pc {
+    width: 12pc; /* 12pt */
+    height: 6pc;
+    background-color: #00bcd4;
+    margin-bottom: 1rem;
+    text-align: center;
+    line-height: 6pc;
+  }
+
+  .text-em {
+    font-size: 2em;
+    margin-bottom: 1rem;
+  }
+
+  .text-ex {
+    font-size: 5ex;
+    margin-bottom: 1rem;
+  }
+
+  .text-ch {
+    width: 20ch;
+    background-color: #555;
+    padding: 0.5em;
+    margin-bottom: 1rem;
+  }
+
+  .text-rem {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .block-vw {
+    width: 50vw;
+    height: 5vh;
+    background-color: #ffeb3b;
+    margin-bottom: 1rem;
+    text-align: center;
+    line-height: 5vh;
+  }
+
+  .block-vh {
+    width: 20vw;
+    height: 20vh;
+    background-color: #8bc34a;
+    margin-bottom: 1rem;
+    text-align: center;
+    line-height: 20vh;
+  }
+
+  .block-vmin {
+    width: 30vmin;
+    height: 10vmin;
+    background-color: #ff5722;
+    margin-bottom: 1rem;
+    text-align: center;
+    line-height: 10vmin;
+  }
+
+  .block-vmax {
+    width: 30vmax;
+    height: 10vmax;
+    background-color: #607d8b;
+    margin-bottom: 1rem;
+    text-align: center;
+    line-height: 10vmax;
+  }
+
+  .block-percent {
+    width: 50%;
+    height: 50px;
+    background-color: #e91e63;
+    margin-bottom: 1rem;
+    text-align: center;
+    line-height: 50px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Пример всех CSS-единиц</h1>
+
+<div class="block-cm">5cm × 2cm</div>
+<div class="block-mm">50mm × 20mm</div>
+<div class="block-in">2in × 1in</div>
+<div class="block-px">192px × 96px</div>
+<div class="block-pt">144pt × 72pt</div>
+<div class="block-pc">12pc × 6pc</div>
+
+<p class="text-em">2em — размер шрифта относительно родителя</p>
+<p class="text-ex">5ex — относительно x-height шрифта</p>
+<div class="text-ch">20ch — ширина 20 символов "0"</div>
+<p class="text-rem">2rem — относительно корневого font-size</p>
+
+<div class="block-vw">50vw × 5vh</div>
+<div class="block-vh">20vw × 20vh</div>
+<div class="block-vmin">30vmin × 10vmin</div>
+<div class="block-vmax">30vmax × 10vmax</div>
+<div class="block-percent">50% ширины родителя</div>
+
+</body>
+</html>
