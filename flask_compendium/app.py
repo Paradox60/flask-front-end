@@ -70,4 +70,8 @@ def test1():
 
 @app.route("/type_size")
 def type_size():
-    return render_template("CSS_temp/type_size.html")     
+    return render_template("CSS_temp/type_size.html")    
+
+@app.route("/cards")
+def cards():
+    return render_template("CSS_temp/cards.html")   
