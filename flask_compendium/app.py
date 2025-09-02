@@ -74,4 +74,8 @@ def type_size():
 
 @app.route("/cards")
 def cards():
-    return render_template("CSS_temp/cards.html")   
+    return render_template("CSS_temp/cards.html")  
+
+@app.route("/calculators")
+def calc_page():
+    return render_template("JS_temp/lessons/calculators.html") 

@@ -1,0 +1,190 @@
+{% extends "JS_temp/js_base.html" %}
+
+{% block style %}
+<style>
+	.calc-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 32px;
+	}
+
+	.calc-main-header {
+	    text-align: center;
+	    color: #f0620f;
+	    margin-bottom: 8px;
+	}
+
+	.calc-subtitle {
+	    text-align: center;
+	    color: #bbb;
+	    margin-bottom: 32px;
+	}
+
+	.calc-section {
+	    margin-bottom: 40px;
+	}
+
+	.calc-section-title {
+	    font-size: 1.5rem;
+	    color: #00bfff;
+	    margin-bottom: 16px;
+	}
+
+	.calc-card {
+	    background: #1e1e1e;
+	    padding: 20px;
+	    border-radius: 16px;
+	    margin-bottom: 20px;
+	    border: 1px solid #2c2c2c;
+	    box-shadow: 0 0 6px rgba(0,0,0,0.3);
+	}
+
+	.calc-card h3 {
+	    margin-bottom: 12px;
+	    color: #f0620f;
+	}
+
+	.calc-form {
+	    display: flex;
+	    flex-direction: column;
+	    gap: 10px;
+	}
+
+	.calc-input {
+	    padding: 10px;
+	    border: 1px solid #333;
+	    border-radius: 8px;
+	    background: #121212;
+	    color: white;
+	}
+
+	.calc-result {
+	    margin-top: 12px;
+	    font-size: 1.1rem;
+	    color: #00ffcc;
+	}
+
+	.calc-toggle {
+	    background: #333;
+	    color: #fff;
+	    border: 1px solid #444;
+	    padding: 10px 16px;
+	    border-radius: 8px;
+	    cursor: pointer;
+	    margin-bottom: 20px;
+	}
+
+	.calc-toggle:hover {
+	    background: #444;
+	}
+
+	.hidden {
+	    display: none;
+	}
+
+
+</style>
+{% endblock style %}
+
+{% block content %}
+<div class="calc-page">
+
+    <h1 class="calc-main-header">Сверление</h1>
+    <p class="calc-subtitle">Базовые расчёты доступны сразу, расширенные — по кнопке.</p>
+
+    <!-- Базовые блоки -->
+    <div class="calc-section">
+        <h2 class="calc-section-title">Базовые расчёты</h2>
+
+        <div class="calc-card">
+            <h3>Расчёт оборотов (n)</h3>
+            <div class="calc-form">
+                <label>Скорость резания Vc (м/мин)</label>
+                <input type="number" class="calc-input">
+
+                <label>Диаметр сверла D (мм)</label>
+                <input type="number" class="calc-input">
+
+                <div class="calc-result">n = ... об/мин</div>
+            </div>
+        </div>
+
+        <div class="calc-card">
+            <h3>Расчёт подачи (f)</h3>
+            <div class="calc-form">
+                <label>Обороты n (об/мин)</label>
+                <input type="number" class="calc-input">
+
+                <label>Подача на зуб fz (мм/зуб)</label>
+                <input type="number" class="calc-input">
+
+                <label>Количество зубьев z</label>
+                <input type="number" class="calc-input">
+
+                <div class="calc-result">f = ... мм/мин</div>
+            </div>
+        </div>
+
+        <div class="calc-card">
+            <h3>Время обработки (T)</h3>
+            <div class="calc-form">
+                <label>Глубина сверления L (мм)</label>
+                <input type="number" class="calc-input">
+
+                <label>Подача f (мм/мин)</label>
+                <input type="number" class="calc-input">
+
+                <div class="calc-result">T = ... мин</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Продвинутые блоки -->
+    <div class="calc-section">
+        <h2 class="calc-section-title">Расширенные параметры</h2>
+        <button class="calc-toggle" onclick="toggleAdvanced()">Показать / скрыть</button>
+
+        <div id="advanced-section" class="calc-advanced hidden">
+            <div class="calc-card">
+                <h3>Мощность резания (Pc)</h3>
+                <div class="calc-form">
+                    <label>Сила резания Fc (Н)</label>
+                    <input type="number" class="calc-input">
+
+                    <label>Скорость резания Vc (м/мин)</label>
+                    <input type="number" class="calc-input">
+
+                    <div class="calc-result">Pc = ... кВт</div>
+                </div>
+            </div>
+
+            <div class="calc-card">
+                <h3>Выбор материала</h3>
+                <div class="calc-form">
+                    <label>Материал</label>
+                    <select class="calc-input">
+                        <option>Сталь</option>
+                        <option>Алюминий</option>
+                        <option>Титан</option>
+                        <option>Нержавейка</option>
+                    </select>
+
+                    <div class="calc-result">Рекомендуемый Vc = ... м/мин</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleAdvanced() {
+    document.getElementById("advanced-section").classList.toggle("hidden");
+}
+</script>
+{% endblock scripts %}
