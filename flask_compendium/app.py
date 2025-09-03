@@ -79,3 +79,7 @@ def cards():
 @app.route("/calculators")
 def calc_page():
     return render_template("JS_temp/lessons/calculators.html") 
+
+@app.route("/space")
+def space():
+    return render_template("CSS_temp/space.html")      
