@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Переключатель языков</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 28px;
+        }
+        
+        .language-switcher {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .dropdown {
+            position: relative;
+            width: 100%;
+        }
+        
+        .dropdown-toggle {
+            width: 100%;
+            padding: 14px 20px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dropdown-toggle:hover {
+            background: #1a2530;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .dropdown-toggle:after {
+            content: "▼";
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            margin-top: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 100;
+            overflow: hidden;
+        }
+        
+        .dropdown.open .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .dropdown-item:hover {
+            background: #f0f7ff;
+            color: #0066ff;
+        }
+        
+        .dropdown-item img {
+            width: 24px;
+            height: 16px;
+            object-fit: cover;
+            border: 1px solid #eee;
+        }
+        
+        .instructions {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e8f4fc;
+            border-radius: 10px;
+            text-align: left;
+        }
+        
+        .instructions h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .instructions p {
+            color: #34495e;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .instructions code {
+            background: #2c3e50;
+            color: white;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .dropdown-toggle {
+                font-size: 16px;
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Переключатель языков</h1>
+        
+        <form action="#" method="post" class="language-switcher">
+            <div class="dropdown" id="languageDropdown">
+                <button type="button" class="dropdown-toggle">
+                    <img src="https://flagcdn.com/w20/ru.png" alt="RU"> Русский
+                </button>
+                <div class="dropdown-menu">
+                    <button type="submit" name="language" value="ru" class="dropdown-item">
+                        <img src="https://flagcdn.com/w20/ru.png" alt="RU"> Русский
+                    </button>
+                    <button type="submit" name="language" value="en" class="dropdown-item">
+                        <img src="https://flagcdn.com/w20/gb.png" alt="EN"> English
+                    </button>
+                    <button type="submit" name="language" value="et" class="dropdown-item">
+                        <img src="https://flagcdn.com/w20/ee.png" alt="ET"> Eesti
+                    </button>
+                </div>
+            </div>
+        </form>
+        
+        <div class="instructions">
+            <h2>Как использовать в Django?</h2>
+            <p>1. Убедитесь, что в вашем проекте Django настроена поддержка интернационализации (i18n).</p>
+            <p>2. Добавьте этот код в ваш шаблон, убедившись, что тег <code>{% csrf_token %}</code> включен в форму.</p>
+            <p>3. Замените <code>#</code> в атрибуте <code>action</code> на <code>{% url 'set_language' %}</code>.</p>
+            <p>4. Добавьте логику для динамического отображения текущего языка с помощью <code>{% get_current_language %}</code>.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdown = document.getElementById('languageDropdown');
+            const toggle = dropdown.querySelector('.dropdown-toggle');
+            
+            toggle.addEventListener('click', function() {
+                dropdown.classList.toggle('open');
+            });
+            
+            // Закрытие dropdown при клике вне его
+            document.addEventListener('click', function(event) {
+                if (!dropdown.contains(event.target)) {
+                    dropdown.classList.remove('open');
+                }
+            });
+            
+            // Предотвращение закрытия при клике внутри dropdown
+            dropdown.querySelector('.dropdown-menu').addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        });
+    </script>
+</body>
+</html>

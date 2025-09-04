@@ -83,3 +83,7 @@ def calc_page():
 @app.route("/space")
 def space():
     return render_template("CSS_temp/space.html")      
+
+@app.route("/switcher")
+def switcher():
+    return render_template("CSS_temp/lang_switch.html")     
