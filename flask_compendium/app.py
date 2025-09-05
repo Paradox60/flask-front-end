@@ -87,3 +87,7 @@ def space():
 @app.route("/switcher")
 def switcher():
     return render_template("CSS_temp/lang_switch.html")     
+
+@app.route("/item_list")
+def item_list():
+    return render_template("CSS_temp/item_list.html")

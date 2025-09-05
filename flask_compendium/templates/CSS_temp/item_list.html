@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Категории расчетов</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .categories-menu {
+            width: 320px;
+            background: #2c3e50;
+            color: white;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .category {
+            border-bottom: 1px solid #34495e;
+        }
+
+        .category-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+        }
+
+        .category-header:hover {
+            background-color: #34495e;
+        }
+
+        .category-header::after {
+            content: '▼';
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .category-header.active::after {
+            transform: rotate(180deg);
+        }
+
+        .subcategory-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background-color: #34495e;
+        }
+
+        .subcategory-list.active {
+            max-height: 500px;
+        }
+
+        .subcategory-item {
+            padding: 12px 20px 12px 30px;
+            display: block;
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .subcategory-item:hover {
+            background-color: #2c3e50;
+            color: white;
+            border-left-color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <div class="categories-menu">
+        <!-- Режимы резания -->
+        <div class="category">
+            <div class="category-header">Режимы резания</div>
+            <div class="subcategory-list">
+                <a href="#" class="subcategory-item">Сверление</a>
+                <a href="#" class="subcategory-item">Точнение</a>
+                <a href="#" class="subcategory-item">Фрезерование</a>
+                <a href="#" class="subcategory-item">Время обработки</a>
+            </div>
+        </div>
+
+        <!-- Расчет мощности -->
+        <div class="category">
+            <div class="category-header">Расчет мощности</div>
+            <div class="subcategory-list">
+                <a href="#" class="subcategory-item">Мощность на шпинделе</a>
+                <a href="#" class="subcategory-item">Сила резания</a>
+            </div>
+        </div>
+
+        <!-- Геометрия и координаты -->
+        <div class="category">
+            <div class="category-header">Геометрия и координаты</div>
+            <div class="subcategory-list">
+                <a href="#" class="subcategory-item">Тут много всего можно придумать</a>
+            </div>
+        </div>
+
+        <!-- Расчет размеров и веса -->
+        <div class="category">
+            <div class="category-header">Расчет размеров и веса</div>
+            <div class="subcategory-list">
+                <a href="#" class="subcategory-item">Расчет веса</a>
+                <a href="#" class="subcategory-item">Расчет длины прутка для бар-фидера</a>
+            </div>
+        </div>
+
+        <!-- Перевод единиц -->
+        <div class="category">
+            <div class="category-header">Перевод единиц</div>
+            <div class="subcategory-list">
+                <a href="#" class="subcategory-item">Перевод длины</a>
+                <a href="#" class="subcategory-item">Перевод массы</a>
+                <a href="#" class="subcategory-item">Перевод давления</a>
+                <a href="#" class="subcategory-item">Перевод скорости (м/мин ↔ мм/об, футов и т.д.)</a>
+                <a href="#" class="subcategory-item">Перевод температуры</a>
+            </div>
+        </div>
+
+        <!-- Программы и движения -->
+        <div class="category">
+            <div class="category-header">Программы и движения</div>
+            <div class="subcategory-list">
+                <a href="#" class="subcategory-item">G76 Нарезание резьбы</a>
+                <a href="#" class="subcategory-item">G02/G03 сплайны и окружности</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryHeaders = document.querySelectorAll('.category-header');
+            
+            categoryHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const category = this.parentElement;
+                    const subcategoryList = this.nextElementSibling;
+                    
+                    // Закрываем все остальные категории
+                    document.querySelectorAll('.subcategory-list').forEach(list => {
+                        if (list !== subcategoryList) {
+                            list.classList.remove('active');
+                            list.previousElementSibling.classList.remove('active');
+                        }
+                    });
+                    
+                    // Переключаем текущую категорию
+                    this.classList.toggle('active');
+                    subcategoryList.classList.toggle('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
