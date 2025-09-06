@@ -3,28 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Типографика: искусство работы с текстом</title>
+    <title>Font-Style и креативные текстовые эффекты</title>
     <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --success: #2ecc71;
-        }
-        
+        /* Базовые стили */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            background-color: #f9f9f9;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
         }
         
         .container {
@@ -34,531 +28,470 @@
         }
         
         header {
-            background: var(--primary);
-            color: white;
-            padding: 2rem 0;
             text-align: center;
-            margin-bottom: 2rem;
-            border-radius: 0 0 10px 10px;
-        }
-        
-        h1, h2, h3 {
-            margin-bottom: 1rem;
-            color: var(--primary);
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
         
         h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
         }
         
         h2 {
-            font-size: 2rem;
-            border-bottom: 2px solid var(--secondary);
-            padding-bottom: 0.5rem;
-            margin-top: 2rem;
-        }
-        
-        h3 {
-            font-size: 1.5rem;
-            color: var(--secondary);
+            font-size: 1.8rem;
+            margin: 25px 0 15px;
+            color: #3498db;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
         }
         
         p {
-            margin-bottom: 1rem;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
         }
         
-        .nav {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-        
-        .nav-item {
-            margin: 0 10px;
-            padding: 10px 20px;
-            background: var(--light);
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-item:hover, .nav-item.active {
-            background: var(--secondary);
-            color: white;
-        }
-        
-        .section {
-            display: none;
+        /* Секции */
+        section {
             background: white;
-            padding: 2rem;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Демонстрационные блоки */
+        .demo-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .demo-box {
+            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
+            background: #f8f9fa;
+            border-left: 5px solid #3498db;
+            transition: transform 0.3s ease;
         }
         
-        .section.active {
-            display: block;
+        .demo-box:hover {
+            transform: translateY(-5px);
         }
         
-        .example-box {
-            border: 1px solid #ddd;
-            padding: 1.5rem;
-            margin: 1rem 0;
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
             border-radius: 5px;
-            background: #fafafa;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
         }
         
-        .interactive-box {
-            background: var(--light);
-            padding: 1.5rem;
-            border-radius: 5px;
-            margin: 1rem 0;
+        /* Специфические демонстрации */
+        .normal { font-style: normal; }
+        .italic { font-style: italic; }
+        .oblique { font-style: oblique; }
+        
+        .weight-demo-1 { font-weight: 100; }
+        .weight-demo-2 { font-weight: 400; }
+        .weight-demo-3 { font-weight: 700; }
+        .weight-demo-4 { font-weight: 900; }
+        
+        .transform-upper { text-transform: uppercase; }
+        .transform-lower { text-transform: lowercase; }
+        .transform-cap { text-transform: capitalize; }
+        
+        .spacing-wide { letter-spacing: 5px; }
+        .spacing-narrow { letter-spacing: -1px; }
+        
+        .shadow-simple {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .shadow-multiple {
+            color: white;
+            text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+        }
+        
+        .shadow-neon {
+            color: #fff;
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #0073e6, 0 0 20px #0073e6;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(45deg, #f3ec78, #af4261);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .stroke-text {
+            color: white;
+            -webkit-text-stroke: 2px #3498db;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .variable-font {
+            font-variation-settings: 'wght' 400;
+            transition: font-variation-settings 0.5s ease;
+        }
+        
+        .variable-font:hover {
+            font-variation-settings: 'wght' 800;
+        }
+        
+        /* Интерактивная область */
+        .interactive-area {
+            background: #eef5ff;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
         }
         
         .controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 1rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
         }
         
-        button, select, input {
-            padding: 8px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .control-group {
+            margin-bottom: 15px;
         }
         
-        button:hover, select:hover {
-            background: var(--secondary);
-            color: white;
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
         }
         
-        .text-sample {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            padding: 1.5rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin: 1rem 0;
-            transition: all 0.3s ease;
-        }
-        
-        .practice-area {
+        select, input {
             width: 100%;
-            min-height: 200px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            padding: 1rem;
-            margin: 1rem 0;
-            font-size: 1rem;
         }
         
-        .feedback {
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 5px;
-            display: none;
-        }
-        
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .exercise {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 5px;
-            margin: 1.5rem 0;
-            border-left: 4px solid var(--secondary);
+        .preview-text {
+            font-size: 1.5rem;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            min-height: 100px;
+            border: 1px dashed #3498db;
+            margin-top: 20px;
+            transition: all 0.3s ease;
         }
         
         footer {
             text-align: center;
-            padding: 2rem 0;
-            margin-top: 2rem;
-            color: #777;
-            border-top: 1px solid #ddd;
+            margin-top: 50px;
+            padding: 20px;
+            color: #7f8c8d;
         }
         
         @media (max-width: 768px) {
-            .nav {
-                flex-direction: column;
-                align-items: center;
+            .demo-container {
+                grid-template-columns: 1fr;
             }
             
-            .nav-item {
-                margin: 5px 0;
-                width: 80%;
-                text-align: center;
+            h1 {
+                font-size: 2rem;
             }
             
-            .controls {
-                flex-direction: column;
+            h2 {
+                font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>Типографика: искусство работы с текстом</h1>
-            <p>Изучите основы типографики и улучшите свои навыки работы с текстом</p>
-        </div>
-    </header>
-    
     <div class="container">
-        <div class="nav">
-            <div class="nav-item active" data-target="intro">Введение</div>
-            <div class="nav-item" data-target="fonts">Шрифты</div>
-            <div class="nav-item" data-target="spacing">Интервалы</div>
-            <div class="nav-item" data-target="hierarchy">Иерархия</div>
-            <div class="nav-item" data-target="practice">Практика</div>
-        </div>
+        <header>
+            <h1>Font-Style и креативные текстовые эффекты</h1>
+            <p>Изучите возможности оформления текста с помощью CSS</p>
+        </header>
         
-        <div id="intro" class="section active">
-            <h2>Введение в типографику</h2>
-            <p>Типографика — это искусство и техника оформления текста, чтобы сделать его читаемым, привлекательным и удобным для восприятия. Хорошая типографика помогает донести сообщение и вызывает эмоциональный отклик.</p>
+        <section>
+            <h2>Font-Style</h2>
+            <p>Свойство <code>font-style</code> определяет начертание шрифта — обычное, курсивное или наклонное.</p>
             
-            <div class="example-box">
-                <h3>Почему это важно?</h3>
-                <p>Плохо оформленный текст может оттолкнуть читателя, даже если содержание превосходно. Хорошая типографика:</p>
-                <ul>
-                    <li>Улучшает читаемость</li>
-                    <li>Повышает удобство восприятия</li>
-                    <li>Создает визуальную иерархию</li>
-                    <li>Передает настроение и тон</li>
-                    <li>Укрепляет бренд</li>
-                </ul>
-            </div>
-            
-            <div class="interactive-box">
-                <h3>Быстрый пример</h3>
-                <p>Сравните два варианта текста:</p>
-                
-                <div class="controls">
-                    <button id="badExample">Плохой пример</button>
-                    <button id="goodExample">Хороший пример</button>
+            <div class="demo-container">
+                <div class="demo-box">
+                    <p class="normal">Это текст с normal начертанием (обычный).</p>
+                    <div class="code-example">font-style: normal;</div>
                 </div>
                 
-                <div id="textExample" class="text-sample">
-                    Это пример текста, который демонстрирует важность хорошей типографики. Правильный выбор шрифта, размера, межстрочного интервала и других параметров значительно улучшает восприятие информации.
+                <div class="demo-box">
+                    <p class="italic">Это текст с italic начертанием (курсив).</p>
+                    <div class="code-example">font-style: italic;</div>
+                </div>
+                
+                <div class="demo-box">
+                    <p class="oblique">Это текст с oblique начертанием (наклонный).</p>
+                    <div class="code-example">font-style: oblique;</div>
                 </div>
             </div>
-        </div>
+        </section>
         
-        <div id="fonts" class="section">
-            <h2>Работа со шрифтами</h2>
-            <p>Шрифты играют ключевую роль в оформлении текста. Существуют шрифты с засечками (serif), без засечек (sans-serif), моноширинные и декоративные.</p>
+        <section>
+            <h2>Font-Weight</h2>
+            <p>Свойство <code>font-weight</code> определяет насыщенность шрифта.</p>
             
-            <div class="example-box">
-                <h3>Основные категории шрифтов</h3>
-                <ul>
-                    <li><strong>Serif (с засечками)</strong> — традиционные, часто используются в печатных изданиях</li>
-                    <li><strong>Sans-serif (без засечек)</strong> — современные, часто используются в вебе</li>
-                    <li><strong>Monospace (моноширинные)</strong> — каждый символ имеет одинаковую ширину</li>
-                    <li><strong>Display (декоративные)</strong> — для заголовков и акцентов, не для основного текста</li>
-                </ul>
-            </div>
-            
-            <div class="interactive-box">
-                <h3>Экспериментируйте со шрифтами</h3>
-                <p>Выберите шрифт для текста ниже:</p>
-                
-                <div class="controls">
-                    <select id="fontFamily">
-                        <option value="'Times New Roman', serif">Serif (Times New Roman)</option>
-                        <option value="'Arial', sans-serif" selected>Sans-serif (Arial)</option>
-                        <option value="'Courier New', monospace">Monospace (Courier New)</option>
-                        <option value="'Georgia', serif">Georgia</option>
-                        <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
-                    </select>
-                    
-                    <input type="range" id="fontSize" min="14" max="30" value="18">
-                    <span id="fontSizeValue">18px</span>
+            <div class="demo-container">
+                <div class="demo-box">
+                    <p class="weight-demo-1">Тонкое начертание (100)</p>
+                    <div class="code-example">font-weight: 100;</div>
                 </div>
                 
-                <div id="fontExample" class="text-sample">
-                    Этот текст будет меняться в зависимости от ваших настроек. Экспериментируйте с разными шрифтами и размерами, чтобы понять, как они влияют на восприятие.
+                <div class="demo-box">
+                    <p class="weight-demo-2">Обычное начертание (400 - normal)</p>
+                    <div class="code-example">font-weight: 400;</div>
+                </div>
+                
+                <div class="demo-box">
+                    <p class="weight-demo-3">Жирное начертание (700 - bold)</p>
+                    <div class="code-example">font-weight: 700;</div>
+                </div>
+                
+                <div class="demo-box">
+                    <p class="weight-demo-4">Очень жирное начертание (900)</p>
+                    <div class="code-example">font-weight: 900;</div>
                 </div>
             </div>
-        </div>
+        </section>
         
-        <div id="spacing" class="section">
-            <h2>Интервалы и отступы</h2>
-            <p>Правильные интервалы — ключ к удобочитаемости. Рассмотрим три основных типа интервалов: межбуквенный (tracking), межстрочный (leading) и между абзацами.</p>
+        <section>
+            <h2>Text-Transform</h2>
+            <p>Свойство <code>text-transform</code> управляет регистром текста.</p>
             
-            <div class="example-box">
-                <h3>Важность интервалов</h3>
-                <p>Слишком маленькие интервалы делают текст "слипшимся", слишком большие — разорванным. Правильные интервалы помогают глазу перемещаться по тексту и улучшают понимание.</p>
-            </div>
-            
-            <div class="interactive-box">
-                <h3>Настройте интервалы</h3>
-                
-                <div class="controls">
-                    <label>Межбуквенное расстояние:
-                        <input type="range" id="letterSpacing" min="-1" max="5" value="0" step="0.1">
-                        <span id="letterSpacingValue">0px</span>
-                    </label>
-                    
-                    <label>Межстрочное расстояние:
-                        <input type="range" id="lineHeight" min="1" max="2.5" value="1.6" step="0.1">
-                        <span id="lineHeightValue">1.6</span>
-                    </label>
-                    
-                    <label>Межабзацный отступ:
-                        <input type="range" id="paragraphSpacing" min="0" max="30" value="16" step="1">
-                        <span id="paragraphSpacingValue">16px</span>
-                    </label>
+            <div class="demo-container">
+                <div class="demo-box">
+                    <p class="transform-upper">Этот текст преобразован в верхний регистр</p>
+                    <div class="code-example">text-transform: uppercase;</div>
                 </div>
                 
-                <div id="spacingExample" class="text-sample">
-                    <p>Это первый абзац текста, который демонстрирует важность правильных интервалов. Обратите внимание, как меняется восприятие текста при изменении расстояний между буквами, строками и абзацами.</p>
-                    <p>Это второй абзац. Хорошо подобранные интервалы делают текст более читаемым и приятным для глаз. Поэкспериментируйте с настройками, чтобы найти оптимальный баланс.</p>
+                <div class="demo-box">
+                    <p class="transform-lower">Этот текст преобразован в нижний регистр</p>
+                    <div class="code-example">text-transform: lowercase;</div>
+                </div>
+                
+                <div class="demo-box">
+                    <p class="transform-cap">этот текст преобразован в регистр заголовка</p>
+                    <div class="code-example">text-transform: capitalize;</div>
                 </div>
             </div>
-        </div>
+        </section>
         
-        <div id="hierarchy" class="section">
-            <h2>Создание визуальной иерархии</h2>
-            <p>Визуальная иерархия помогает направить внимание читателя и показать, какая информация является наиболее важной.</p>
+        <section>
+            <h2>Letter-Spacing</h2>
+            <p>Свойство <code>letter-spacing</code> определяет межбуквенное расстояние.</p>
             
-            <div class="example-box">
-                <h3>Способы создания иерархии</h3>
-                <ul>
-                    <li><strong>Размер</strong> — крупные элементы привлекают больше внимания</li>
-                    <li><strong>Насыщенность</strong> — жирный текст выделяется на фоне обычного</li>
-                    <li><strong>Цвет</strong> — контрастные цвета привлекают внимание</li>
-                    <li><strong>Позиция</strong> — элементы вверху страницы заметнее</li>
-                    <li><strong>Пробелы</strong> — пустое пространство вокруг элемента выделяет его</li>
-                </ul>
-            </div>
-            
-            <div class="interactive-box">
-                <h3>Создайте иерархию</h3>
-                <p>Отредактируйте текст ниже, чтобы создать清晰的 визуальную иерархию:</p>
-                
-                <div class="controls">
-                    <button id="makeHeading">Сделать заголовком</button>
-                    <button id="makeImportant">Выделить важное</button>
-                    <button id="makeNormal">Обычный текст</button>
+            <div class="demo-container">
+                <div class="demo-box">
+                    <p class="spacing-wide">Широкое межбуквенное расстояние</p>
+                    <div class="code-example">letter-spacing: 5px;</div>
                 </div>
                 
-                <div id="hierarchyExample" class="practice-area" contenteditable="true">
-                    Заголовок документа
-                    
-                    Это вводный абзац, который представляет основную тему. Он должен быть достаточно заметным, но не затмевать заголовок.
-                    
-                    Важная информация: этот раздел содержит ключевые данные, которые должны выделяться на фоне остального текста.
-                    
-                    Дополнительные сведения и пояснения к основному содержанию. Этот текст имеет второстепенное значение.
+                <div class="demo-box">
+                    <p>Обычное межбуквенное расстояние</p>
+                    <div class="code-example">letter-spacing: normal;</div>
+                </div>
+                
+                <div class="demo-box">
+                    <p class="spacing-narrow">Узкое межбуквенное расстояние</p>
+                    <div class="code-example">letter-spacing: -1px;</div>
                 </div>
             </div>
-        </div>
+        </section>
         
-        <div id="practice" class="section">
-            <h2>Практическое задание</h2>
-            <p>Примените полученные знания на практике! Отформатируйте текст ниже, используя principles хорошей типографики.</p>
+        <section>
+            <h2>Text-Shadow</h2>
+            <p>Свойство <code>text-shadow</code> добавляет тень к тексту.</p>
             
-            <div class="exercise">
-                <h3>Задание</h3>
-                <p>Вам нужно отформатировать следующий текст, чтобы сделать его удобочитаемым и визуально привлекательным:</p>
-                <ol>
-                    <li>Выберите подходящий шрифт</li>
-                    <li>Настройте размер текста и интервалы</li>
-                    <li>Создайте清晰 визуальную иерархию</li>
-                    <li>Убедитесь, что текст хорошо воспринимается</li>
-                </ol>
+            <div class="demo-container">
+                <div class="demo-box">
+                    <p class="shadow-simple">Простая тень для текста</p>
+                    <div class="code-example">text-shadow: 2px 2px 4px rgba(0,0,0,0.3);</div>
+                </div>
+                
+                <div class="demo-box">
+                    <p class="shadow-multiple">Множественные тени</p>
+                    <div class="code-example">
+                        text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+                    </div>
+                </div>
+                
+                <div class="demo-box">
+                    <p class="shadow-neon">Неоновый эффект</p>
+                    <div class="code-example">
+                        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #0073e6, 0 0 20px #0073e6;
+                    </div>
+                </div>
             </div>
+        </section>
+        
+        <section>
+            <h2>Креативные эффекты</h2>
+            <p>Современный CSS позволяет создавать впечатляющие текстовые эффекты.</p>
+            
+            <div class="demo-container">
+                <div class="demo-box">
+                    <p class="gradient-text">Градиентный текст</p>
+                    <div class="code-example">
+                        background: linear-gradient(45deg, #f3ec78, #af4261);<br>
+                        -webkit-background-clip: text;<br>
+                        background-clip: text;<br>
+                        color: transparent;
+                    </div>
+                </div>
+                
+                <div class="demo-box">
+                    <p class="stroke-text">Текст с обводкой</p>
+                    <div class="code-example">
+                        color: white;<br>
+                        -webkit-text-stroke: 2px #3498db;
+                    </div>
+                </div>
+                
+                <div class="demo-box">
+                    <p class="variable-font">Наведите на меня (переменный шрифт)</p>
+                    <div class="code-example">
+                        font-variation-settings: 'wght' 400;<br>
+                        transition: font-variation-settings 0.5s ease;<br>
+                        /* При наведении: */<br>
+                        font-variation-settings: 'wght' 800;
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="interactive-area">
+            <h2>Интерактивная площадка</h2>
+            <p>Поэкспериментируйте с различными свойствами текста:</p>
             
             <div class="controls">
-                <select id="practiceFont">
-                    <option value="'Times New Roman', serif">Times New Roman</option>
-                    <option value="'Arial', sans-serif">Arial</option>
-                    <option value="'Georgia', serif">Georgia</option>
-                    <option value="'Verdana', sans-serif">Verdana</option>
-                </select>
+                <div class="control-group">
+                    <label for="fontFamily">Шрифт:</label>
+                    <select id="fontFamily">
+                        <option value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">Без засечек</option>
+                        <option value="'Georgia', serif">С засечками</option>
+                        <option value="'Courier New', monospace">Моноширинный</option>
+                        <option value="'Comic Sans MS', cursive">Рукописный</option>
+                    </select>
+                </div>
                 
-                <input type="range" id="practiceSize" min="14" max="24" value="16">
-                <span id="practiceSizeValue">16px</span>
+                <div class="control-group">
+                    <label for="fontStyle">Font-Style:</label>
+                    <select id="fontStyle">
+                        <option value="normal">Normal</option>
+                        <option value="italic">Italic</option>
+                        <option value="oblique">Oblique</option>
+                    </select>
+                </div>
                 
-                <button id="checkWork">Проверить работу</button>
+                <div class="control-group">
+                    <label for="fontWeight">Font-Weight:</label>
+                    <select id="fontWeight">
+                        <option value="100">100 (Thin)</option>
+                        <option value="300">300 (Light)</option>
+                        <option value="400" selected>400 (Normal)</option>
+                        <option value="600">600 (Semi-Bold)</option>
+                        <option value="700">700 (Bold)</option>
+                        <option value="900">900 (Black)</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="textTransform">Text-Transform:</label>
+                    <select id="textTransform">
+                        <option value="none" selected>None</option>
+                        <option value="uppercase">Uppercase</option>
+                        <option value="lowercase">Lowercase</option>
+                        <option value="capitalize">Capitalize</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="letterSpacing">Letter-Spacing (px):</label>
+                    <input type="range" id="letterSpacing" min="-2" max="10" value="0" step="0.5">
+                    <span id="letterSpacingValue">0px</span>
+                </div>
+                
+                <div class="control-group">
+                    <label for="fontSize">Font-Size (px):</label>
+                    <input type="range" id="fontSize" min="14" max="50" value="24" step="1">
+                    <span id="fontSizeValue">24px</span>
+                </div>
             </div>
             
-            <div id="practiceExercise" class="practice-area" contenteditable="true">
-                Важность типографики в веб-дизайне
-                
-                Типографика — это не просто выбор красивого шрифта. Это искусство, которое оказывает непосредственное влияние на читаемость контента, восприятие информации и общее впечатление от сайта.
-                
-                Ключевые принципы хорошей типографики:
-                
-                - Контраст: Различные шрифты и размеры помогают создать иерархию
-                - Соответствие: Шрифты должны соответствовать тону и цели контента
-                - Readability: Текст должен легко читаться на всех устройствах
-                - Единство: Все элементы должны работать вместе гармонично
-                
-                Помните: хорошая типографика незаметна. Плохая — бросается в глаза.
+            <div class="preview-text" id="previewText">
+                Этот текст можно настроить с помощью элементов управления выше!
             </div>
-            
-            <div id="practiceFeedback" class="feedback">
-                Здесь появится feedback после проверки вашей работы.
-            </div>
-        </div>
+        </section>
+        
+        <footer>
+            <p>Создано для демонстрации возможностей CSS | 2023</p>
+        </footer>
     </div>
-    
-    <footer>
-        <div class="container">
-            <p>Обучающая страница по основам типографики © 2023</p>
-        </div>
-    </footer>
 
     <script>
-        // Навигация по разделам
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                // Убираем активный класс у всех элементов навигации
-                document.querySelectorAll('.nav-item').forEach(navItem => {
-                    navItem.classList.remove('active');
-                });
-                
-                // Добавляем активный класс к текущему элементу
-                this.classList.add('active');
-                
-                // Скрываем все разделы
-                document.querySelectorAll('.section').forEach(section => {
-                    section.classList.remove('active');
-                });
-                
-                // Показываем выбранный раздел
-                const target = this.getAttribute('data-target');
-                document.getElementById(target).classList.add('active');
-            });
-        });
-        
-        // Пример плохой/хорошей типографики
-        document.getElementById('badExample').addEventListener('click', function() {
-            const example = document.getElementById('textExample');
-            example.style.fontFamily = 'Comic Sans MS, cursive';
-            example.style.fontSize = '12px';
-            example.style.lineHeight = '1';
-            example.style.letterSpacing = '0';
-            example.style.color = 'red';
-            example.style.backgroundColor = 'yellow';
-        });
-        
-        document.getElementById('goodExample').addEventListener('click', function() {
-            const example = document.getElementById('textExample');
-            example.style.fontFamily = "'Georgia', serif";
-            example.style.fontSize = '18px';
-            example.style.lineHeight = '1.6';
-            example.style.letterSpacing = '0.5px';
-            example.style.color = '#333';
-            example.style.backgroundColor = '#fafafa';
-        });
-        
-        // Работа со шрифтами
-        const fontFamily = document.getElementById('fontFamily');
-        const fontSize = document.getElementById('fontSize');
-        const fontSizeValue = document.getElementById('fontSizeValue');
-        const fontExample = document.getElementById('fontExample');
-        
-        fontFamily.addEventListener('change', function() {
-            fontExample.style.fontFamily = this.value;
-        });
-        
-        fontSize.addEventListener('input', function() {
-            const size = this.value + 'px';
-            fontExample.style.fontSize = size;
-            fontSizeValue.textContent = size;
-        });
-        
-        // Интервалы
-        const letterSpacing = document.getElementById('letterSpacing');
-        const letterSpacingValue = document.getElementById('letterSpacingValue');
-        const lineHeight = document.getElementById('lineHeight');
-        const lineHeightValue = document.getElementById('lineHeightValue');
-        const paragraphSpacing = document.getElementById('paragraphSpacing');
-        const paragraphSpacingValue = document.getElementById('paragraphSpacingValue');
-        const spacingExample = document.getElementById('spacingExample');
-        
-        letterSpacing.addEventListener('input', function() {
-            const spacing = this.value + 'px';
-            spacingExample.style.letterSpacing = spacing;
-            letterSpacingValue.textContent = spacing;
-        });
-        
-        lineHeight.addEventListener('input', function() {
-            spacingExample.style.lineHeight = this.value;
-            lineHeightValue.textContent = this.value;
-        });
-        
-        paragraphSpacing.addEventListener('input', function() {
-            const spacing = this.value + 'px';
-            const paragraphs = spacingExample.querySelectorAll('p');
-            paragraphs.forEach(p => {
-                p.style.marginBottom = spacing;
-            });
-            paragraphSpacingValue.textContent = spacing;
-        });
-        
-        // Визуальная иерархия
-        document.getElementById('makeHeading').addEventListener('click', function() {
-            document.execCommand('formatBlock', false, '<h3>');
-        });
-        
-        document.getElementById('makeImportant').addEventListener('click', function() {
-            document.execCommand('bold', false, null);
-        });
-        
-        document.getElementById('makeNormal').addEventListener('click', function() {
-            document.execCommand('formatBlock', false, '<p>');
-            document.execCommand('removeFormat', false, null);
-        });
-        
-        // Практическое задание
-        const practiceFont = document.getElementById('practiceFont');
-        const practiceSize = document.getElementById('practiceSize');
-        const practiceSizeValue = document.getElementById('practiceSizeValue');
-        const practiceExercise = document.getElementById('practiceExercise');
-        const checkWork = document.getElementById('checkWork');
-        const practiceFeedback = document.getElementById('practiceFeedback');
-        
-        practiceFont.addEventListener('change', function() {
-            practiceExercise.style.fontFamily = this.value;
-        });
-        
-        practiceSize.addEventListener('input', function() {
-            const size = this.value + 'px';
-            practiceExercise.style.fontSize = size;
-            practiceSizeValue.textContent = size;
-        });
-        
-        checkWork.addEventListener('click', function() {
-            // Простая проверка - есть ли заголовки и выделения
-            const hasHeadings = practiceExercise.querySelector('h1, h2, h3, h4, h5, h6');
-            const hasBold = practiceExercise.querySelector('strong, b');
+        // Интерактивные элементы
+        document.addEventListener('DOMContentLoaded', function() {
+            const previewText = document.getElementById('previewText');
+            const controls = {
+                fontFamily: document.getElementById('fontFamily'),
+                fontStyle: document.getElementById('fontStyle'),
+                fontWeight: document.getElementById('fontWeight'),
+                textTransform: document.getElementById('textTransform'),
+                letterSpacing: document.getElementById('letterSpacing'),
+                fontSize: document.getElementById('fontSize')
+            };
             
-            practiceFeedback.style.display = 'block';
+            const letterSpacingValue = document.getElementById('letterSpacingValue');
+            const fontSizeValue = document.getElementById('fontSizeValue');
             
-            if (hasHeadings && hasBold) {
-                practiceFeedback.className = 'feedback success';
-                practiceFeedback.innerHTML = '<h3>Отлично!</h3><p>Вы создали хорошую визуальную иерархию с помощью заголовков и выделения важных элементов.</p>';
-            } else if (hasHeadings) {
-                practiceFeedback.className = 'feedback';
-                practiceFeedback.innerHTML = '<h3>Хорошо, но можно лучше</h3><p>Вы используете заголовки, но не выделяете важные части текста. Попробуйте использовать жирное начертание для ключевых моментов.</p>';
-            } else if (hasBold) {
-                practiceFeedback.className = 'feedback';
-                practiceFeedback.innerHTML = '<h3>Неплохо</h3><p>Вы выделяете важные элементы, но не создали清晰 иерархию заголовков. Добавьте заголовки разных уровней.</p>';
-            } else {
-                practiceFeedback.className = 'feedback';
-                practiceFeedback.innerHTML = '<h3>Нужно поработать</h3><p>Текст не имеет清晰 визуальной иерархии. Добавьте заголовки и выделите важные части текста.</p>';
+            // Обновление значений ползунков
+            controls.letterSpacing.addEventListener('input', function() {
+                letterSpacingValue.textContent = this.value + 'px';
+                updateTextStyle();
+            });
+            
+            controls.fontSize.addEventListener('input', function() {
+                fontSizeValue.textContent = this.value + 'px';
+                updateTextStyle();
+            });
+            
+            // Добавление обработчиков для всех элементов управления
+            for (const control in controls) {
+                if (control !== 'letterSpacing' && control !== 'fontSize') {
+                    controls[control].addEventListener('change', updateTextStyle);
+                }
             }
+            
+            // Функция обновления стиля текста
+            function updateTextStyle() {
+                previewText.style.fontFamily = controls.fontFamily.value;
+                previewText.style.fontStyle = controls.fontStyle.value;
+                previewText.style.fontWeight = controls.fontWeight.value;
+                previewText.style.textTransform = controls.textTransform.value;
+                previewText.style.letterSpacing = controls.letterSpacing.value + 'px';
+                previewText.style.fontSize = controls.fontSize.value + 'px';
+            }
+            
+            // Инициализация значений
+            letterSpacingValue.textContent = controls.letterSpacing.value + 'px';
+            fontSizeValue.textContent = controls.fontSize.value + 'px';
         });
     </script>
 </body>
