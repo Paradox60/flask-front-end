@@ -95,3 +95,7 @@ def item_list():
 @app.route("/page_item_list")
 def page_item_list():
     return render_template("CSS_temp/page_item_list.html")
+
+@app.route("/content_switcher")
+def content_switcher():
+    return render_template("CSS_temp/content_switcher.html")

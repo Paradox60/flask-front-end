@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Процессы обработки металлов</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px;
+            background: #2c3e50;
+            color: white;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #34495e;
+            justify-content: center;
+        }
+        
+        .tab {
+            padding: 15px 30px;
+            background: none;
+            border: none;
+            color: #ecf0f1;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .tab:hover {
+            background: #4a6278;
+        }
+        
+        .tab.active {
+            background: #1abc9c;
+            font-weight: bold;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #16a085;
+        }
+        
+        .content {
+            padding: 30px;
+            min-height: 400px;
+        }
+        
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            border-bottom: 2px solid #1abc9c;
+            padding-bottom: 10px;
+        }
+        
+        p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .image-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .process-image {
+            width: 300px;
+            height: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .process-image div {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .process-image:hover div {
+            transform: scale(1.05);
+        }
+        
+        .process-image span {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .specs {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #1abc9c;
+        }
+        
+        .specs h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        li::before {
+            content: "•";
+            color: #1abc9c;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .process-image {
+                width: 100%;
+                margin: 10px 0;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Процессы обработки металлов</h1>
+            <p>Выберите технологический процесс для получения информации</p>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab active" data-tab="drilling">Сверление</button>
+            <button class="tab" data-tab="turning">Точение</button>
+            <button class="tab" data-tab="milling">Фрезерование</button>
+        </div>
+        
+        <div class="content">
+            <div class="content-section active" id="drilling">
+                <h2>Сверление</h2>
+                <p>Сверление — процесс создания отверстий в материале с помощью вращающегося режущего инструмента — сверла. Применяется для получения сквозных и глухих отверстий различного диаметра и глубины.</p>
+                
+                <div class="image-container">
+                    <div class="process-image">
+                        <div style="background-color: #8e44ad; background-image: linear-gradient(45deg, #9b59b6, #3498db);"></div>
+                        <span>Спиральное сверло по металлу</span>
+                    </div>
+                    <div class="process-image">
+                        <div style="background-color: #e74c3c; background-image: linear-gradient(45deg, #e74c3c, #f39c12);"></div>
+                        <span>Процесс сверления на станке</span>
+                    </div>
+                </div>
+                
+                <div class="specs">
+                    <h3>Особенности процесса:</h3>
+                    <ul>
+                        <li>Точность обработки: ±0.05 мм</li>
+                        <li>Скорость резания: 15-100 м/мин в зависимости от материала</li>
+                        <li>Применяемое оборудование: сверлильные станки, токарные станки, обрабатывающие центры</li>
+                        <li>Основные виды сверл: спиральные, корончатые, ступенчатые</li>
+                        <li>Охлаждение необходимо для большинства материалов</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="content-section" id="turning">
+                <h2>Точение</h2>
+                <p>Точение — процесс обработки тел вращения, при котором заготовка вращается, а режущий инструмент (резец) совершает поступательное движение. Применяется для создания цилиндрических, конических и фасонных поверхностей.</p>
+                
+                <div class="image-container">
+                    <div class="process-image">
+                        <div style="background-color: #3498db; background-image: linear-gradient(45deg, #3498db, #2ecc71);"></div>
+                        <span>Токарный станок с ЧПУ</span>
+                    </div>
+                    <div class="process-image">
+                        <div style="background-color: #f39c12; background-image: linear-gradient(45deg, #f39c12, #e74c3c);"></div>
+                        <span>Токарные резцы различной формы</span>
+                    </div>
+                </div>
+                
+                <div class="specs">
+                    <h3>Особенности процесса:</h3>
+                    <ul>
+                        <li>Точность обработки: ±0.01 мм</li>
+                        <li>Шероховатость поверхности: Ra 0.32-2.5 мкм</li>
+                        <li>Основные операции: обтачивание, растачивание, подрезание, разрезание</li>
+                        <li>Применяемое оборудование: токарные станки, токарно-револьверные станки, станки с ЧПУ</li>
+                        <li>Возможность обработки наружных и внутренних поверхностей</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="content-section" id="milling">
+                <h2>Фрезерование</h2>
+                <p>Фрезерование — процесс обработки материалов резанием с помощью фрезы — многолезвийного инструмента. Фреза совершает вращательное движение, а заготовка — поступательное.</p>
+                
+                <div class="image-container">
+                    <div class="process-image">
+                        <div style="background-color: #2ecc71; background-image: linear-gradient(45deg, #2ecc71, #3498db);"></div>
+                        <span>Фрезерный обрабатывающий центр</span>
+                    </div>
+                    <div class="process-image">
+                        <div style="background-color: #9b59b6; background-image: linear-gradient(45deg, #9b59b6, #e74c3c);"></div>
+                        <span>Различные типы фрез</span>
+                    </div>
+                </div>
+                
+                <div class="specs">
+                    <h3>Особенности процесса:</h3>
+                    <ul>
+                        <li>Точность обработки: ±0.02 мм</li>
+                        <li>Возможность обработки плоских и фасонных поверхностей</li>
+                        <li>Основные виды фрезерования: торцевое, концевое, периферийное</li>
+                        <li>Применяемое оборудование: фрезерные станки, обрабатывающие центры</li>
+                        <li>Высокая производительность при обработке сложных поверхностей</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Демонстрационная страница процессов обработки металлов | 2023</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            const contentSections = document.querySelectorAll('.content-section');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Убираем активный класс у всех кнопок
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // Добавляем активный класс текущей кнопке
+                    this.classList.add('active');
+                    
+                    // Скрываем все секции контента
+                    contentSections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Показываем нужную секцию
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
