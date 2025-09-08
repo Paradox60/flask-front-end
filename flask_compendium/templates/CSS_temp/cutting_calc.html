@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор режимов резания</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+        }
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        .content {
+            padding: 25px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #1abc9c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #16a085;
+        }
+        .results {
+            margin-top: 25px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #1abc9c;
+        }
+        .result-item {
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .result-value {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            .content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Калькулятор режимов резания</h1>
+            <p>Расчет параметров обработки для токарных операций</p>
+        </header>
+        
+        <div class="content">
+            <div class="input-group">
+                <label for="material">Материал заготовки:</label>
+                <select id="material">
+                    <option value="100">Сталь конструкционная (100 м/мин)</option>
+                    <option value="120">Сталь инструментальная (120 м/мин)</option>
+                    <option value="150">Чугун (150 м/мин)</option>
+                    <option value="200">Алюминий (200 м/мин)</option>
+                    <option value="80">Нержавеющая сталь (80 м/мин)</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="diameter">Диаметр заготовки (мм):</label>
+                <input type="number" id="diameter" min="1" value="50">
+            </div>
+            
+            <div class="input-group">
+                <label for="length">Длина обработки (мм):</label>
+                <input type="number" id="length" min="1" value="100">
+            </div>
+            
+            <div class="input-group">
+                <label for="feed">Подача на оборот (мм/об):</label>
+                <input type="number" id="feed" min="0.01" step="0.01" value="0.2">
+            </div>
+            
+            <button onclick="calculate()">Рассчитать</button>
+            
+            <div class="results">
+                <h3>Результаты расчета:</h3>
+                <div class="result-item">
+                    <span>Скорость резания:</span>
+                    <span id="cuttingSpeed" class="result-value">-</span>
+                </div>
+                <div class="result-item">
+                    <span>Частота вращения:</span>
+                    <span id="spindleSpeed" class="result-value">-</span>
+                </div>
+                <div class="result-item">
+                    <span>Основное время:</span>
+                    <span id="machiningTime" class="result-value">-</span>
+                </div>
+                <div class="result-item">
+                    <span>Минутная подача:</span>
+                    <span id="feedRate" class="result-value">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Калькулятор режимов резания | 2023</p>
+    </footer>
+
+    <script>
+        function calculate() {
+            // Получаем значения из формы
+            const materialSpeed = parseFloat(document.getElementById('material').value);
+            const diameter = parseFloat(document.getElementById('diameter').value);
+            const length = parseFloat(document.getElementById('length').value);
+            const feed = parseFloat(document.getElementById('feed').value);
+            
+            // Проверяем корректность введенных данных
+            if (isNaN(diameter) || isNaN(length) || isNaN(feed) || 
+                diameter <= 0 || length <= 0 || feed <= 0) {
+                alert("Пожалуйста, введите корректные значения!");
+                return;
+            }
+            
+            // Расчет скорости резания (м/мин)
+            const cuttingSpeed = materialSpeed;
+            
+            // Расчет частоты вращения шпинделя (об/мин)
+            const spindleSpeed = Math.round((cuttingSpeed * 1000) / (Math.PI * diameter));
+            
+            // Расчет минутной подачи (мм/мин)
+            const feedRate = Math.round(spindleSpeed * feed * 100) / 100;
+            
+            // Расчет основного времени обработки (мин)
+            const machiningTime = Math.round((length / feedRate) * 100) / 100;
+            
+            // Вывод результатов
+            document.getElementById('cuttingSpeed').textContent = cuttingSpeed + ' м/мин';
+            document.getElementById('spindleSpeed').textContent = spindleSpeed + ' об/мин';
+            document.getElementById('machiningTime').textContent = machiningTime + ' мин';
+            document.getElementById('feedRate').textContent = feedRate + ' мм/мин';
+        }
+        
+        // Выполняем расчет при загрузке страницы
+        window.onload = calculate;
+    </script>
+</body>
+</html>

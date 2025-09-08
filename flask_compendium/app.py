@@ -99,3 +99,8 @@ def page_item_list():
 @app.route("/content_switcher")
 def content_switcher():
     return render_template("CSS_temp/content_switcher.html")
+
+
+@app.route("/cutting_calc")
+def cutting_calc():
+    return render_template("CSS_temp/cutting_calc.html")
