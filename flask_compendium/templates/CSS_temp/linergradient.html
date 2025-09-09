@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Работа с linear-gradient в CSS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+            border-radius: 10px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin: 25px 0 15px;
+            color: #2c3e50;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            margin: 20px 0 10px;
+            color: #2980b9;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .code-example {
+            background: #2d3436;
+            color: #f5f6fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: 'Courier New', Courier, monospace;
+            overflow-x: auto;
+        }
+        
+        .gradient-box {
+            height: 150px;
+            margin: 20px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .example-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .example-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .example-preview {
+            height: 120px;
+        }
+        
+        .example-info {
+            padding: 15px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Работа с linear-gradient в CSS</h1>
+            <p>Исчерпывающее руководство по созданию линейных градиентов</p>
+        </header>
+        
+        <section>
+            <h2>Что такое linear-gradient?</h2>
+            <p>Linear-gradient - это CSS-функция, которая создает изображение, состоящее из постепенного перехода между двумя или более цветами вдоль прямой линии.</p>
+            
+            <div class="code-example">
+                background: linear-gradient(direction, color-stop1, color-stop2, ...);
+            </div>
+        </section>
+        
+        <section>
+            <h2>Базовый синтаксис</h2>
+            
+            <h3>1. Направление градиента</h3>
+            <p>Направление можно задавать ключевыми словами или градусами:</p>
+            
+            <div class="example-grid">
+                <div class="example-card">
+                    <div class="example-preview" style="background: linear-gradient(to right, #ff9a9e, #fad0c4);"></div>
+                    <div class="example-info">
+                        <p><strong>to right</strong></p>
+                        <div class="code-example">
+                            linear-gradient(to right, #ff9a9e, #fad0c4)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-preview" style="background: linear-gradient(45deg, #a1c4fd, #c2e9fb);"></div>
+                    <div class="example-info">
+                        <p><strong>45deg</strong></p>
+                        <div class="code-example">
+                            linear-gradient(45deg, #a1c4fd, #c2e9fb)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-preview" style="background: linear-gradient(to bottom right, #ffecd2, #fcb69f);"></div>
+                    <div class="example-info">
+                        <p><strong>to bottom right</strong></p>
+                        <div class="code-example">
+                            linear-gradient(to bottom right, #ffecd2, #fcb69f)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>2. Цветовые остановки (Color stops)</h3>
+            <p>Вы можете контролировать положение цветовых переходов:</p>
+            
+            <div class="example-grid">
+                <div class="example-card">
+                    <div class="example-preview" style="background: linear-gradient(to right, #4facfe 0%, #00f2fe 50%, #a6ffcb 100%);"></div>
+                    <div class="example-info">
+                        <p><strong>С указанием позиций</strong></p>
+                        <div class="code-example">
+                            linear-gradient(to right, #4facfe 0%, #00f2fe 50%, #a6ffcb 100%)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-preview" style="background: linear-gradient(to right, #ff9a9e 20%, #fad0c4 80%);"></div>
+                    <div class="example-info">
+                        <p><strong>С ограниченным переходом</strong></p>
+                        <div class="code-example">
+                            linear-gradient(to right, #ff9a9e 20%, #fad0c4 80%)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Практические примеры</h2>
+            
+            <div class="example-grid">
+                <div class="example-card">
+                    <div class="example-preview" style="background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);"></div>
+                    <div class="example-info">
+                        <p><strong>Радужный градиент</strong></p>
+                        <div class="code-example">
+                            linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-preview" style="background: repeating-linear-gradient(45deg, #3f87a6, #ebf8e1 15%, #f69d3c 20%);"></div>
+                    <div class="example-info">
+                        <p><strong>Повторяющийся градиент</strong></p>
+                        <div class="code-example">
+                            repeating-linear-gradient(45deg, #3f87a6, #ebf8e1 15%, #f69d3c 20%)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="example-preview" style="background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(0,0,0,0.5) 100%), url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"><rect fill=\"%23333\" width=\"100\" height=\"100\"/></svg>');"></div>
+                    <div class="example-info">
+                        <p><strong>Наложение на изображение</strong></p>
+                        <div class="code-example">
+                            linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 100%), url(image.jpg)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Советы и лучшие практики</h2>
+            <ul>
+                <li>Всегда указывайте fallback цвет для браузеров, которые не поддерживают градиенты</li>
+                <li>Используйте инструменты типа <a href="https://cssgradient.io/" style="color: #3498db;">CSS Gradient Generator</a> для быстрого создания сложных градиентов</li>
+                <li>Помните о доступности - убедитесь, что текст остается читаемым на фоне градиента</li>
+                <li>Экспериментируйте с прозрачностью (rgba) для создания сложных наложений</li>
+            </ul>
+        </section>
+        
+        <footer>
+            <p>© 2023 Руководство по linear-gradient | Создано для образовательных целей</p>
+        </footer>
+    </div>
+</body>
+</html>

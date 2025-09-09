@@ -104,3 +104,7 @@ def content_switcher():
 @app.route("/cutting_calc")
 def cutting_calc():
     return render_template("CSS_temp/cutting_calc.html")
+
+@app.route("/linergradient")
+def linergradient():
+    return render_template("CSS_temp/linergradient.html")
