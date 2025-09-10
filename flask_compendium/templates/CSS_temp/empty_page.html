@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница не найдена</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Эффект статического шума */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.35;
+            z-index: -1;
+            animation: noise 0.4s linear infinite;
+        }
+        
+        /* Эффект мерцания */
+        .flicker {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            animation: flicker 0.15s infinite;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        /* Полосы как в старом ТВ */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                rgba(255,255,255,0.03) 50%, 
+                rgba(0,0,0,0.1) 50%);
+            background-size: 100% 4px;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        /* Цветные полосы */
+        .color-bars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to bottom, 
+                #000, #000 16.66%,
+                #fff 16.66%, #fff 33.33%,
+                #00ffff 33.33%, #00ffff 50%,
+                #ff00ff 50%, #ff00ff 66.66%,
+                #ffff00 66.66%, #ffff00 83.33%,
+                #000 83.33%, #000 100%);
+            opacity: 0.7;
+            z-index: -2;
+        }
+        
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 2;
+            width: 80%;
+            max-width: 600px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+            animation: glitch 5s infinite;
+        }
+        
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: rgba(255, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            margin-top: 1rem;
+        }
+        
+        /* Анимации */
+        @keyframes noise {
+            0% { transform: translate(0,0) }
+            10% { transform: translate(-5%,-5%) }
+            20% { transform: translate(-10%,5%) }
+            30% { transform: translate(5%,-10%) }
+            40% { transform: translate(-5%,15%) }
+            50% { transform: translate(-10%,5%) }
+            60% { transform: translate(15%,0) }
+            70% { transform: translate(0,10%) }
+            80% { transform: translate(-15%,0) }
+            90% { transform: translate(10%,5%) }
+            100% { transform: translate(5%,0) }
+        }
+        
+        @keyframes flicker {
+            0% { opacity: 0.1; }
+            5% { opacity: 0.1; }
+            6% { opacity: 1; }
+            7% { opacity: 0.1; }
+            8% { opacity: 1; }
+            9% { opacity: 0.1; }
+            20% { opacity: 1; }
+            50% { opacity: 0.3; }
+            70% { opacity: 1; }
+            80% { opacity: 0.3; }
+            100% { opacity: 0.1; }
+        }
+        
+        @keyframes glitch {
+            0% { text-shadow: 2px 2px 0 red, -2px -2px 0 cyan; }
+            5% { text-shadow: -2px 2px 0 red, 2px -2px 0 cyan; }
+            10% { text-shadow: 2px -2px 0 red, -2px 2px 0 cyan; }
+            15% { text-shadow: -2px -2px 0 red, 2px 2px 0 cyan; }
+            20% { text-shadow: 2px 2px 0 red, -2px -2px 0 cyan; }
+            50% { text-shadow: 2px 2px 0 red, -2px -2px 0 cyan; }
+            55% { text-shadow: -2px 2px 0 red, 2px -2px 0 cyan; }
+            60% { text-shadow: 2px -2px 0 red, -2px 2px 0 cyan; }
+            65% { text-shadow: -2px -2px 0 red, 2px 2px 0 cyan; }
+            70% { text-shadow: 2px 2px 0 red, -2px -2px 0 cyan; }
+            100% { text-shadow: 2px 2px 0 red, -2px -2px 0 cyan; }
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            p { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+    <div class="flicker"></div>
+    <div class="scanlines"></div>
+    <div class="color-bars"></div>
+    
+    <div class="container">
+        <h1>СИГНАЛ НЕ НАЙДЕН</h1>
+        <p>Данная страница временно недоступна или находится в разработке.</p>
+        <p>Попробуйте вернуться позже или проверьте подключение.</p>
+        <div class="pulse">ПЕРЕЗАГРУЗИТЬ СТРАНИЦУ</div>
+    </div>
+
+    <script>
+        // Дополнительные визуальные эффекты
+        document.addEventListener('DOMContentLoaded', function() {
+            // Случайные помехи
+            setInterval(() => {
+                if (Math.random() > 0.7) {
+                    document.body.style.opacity = Math.random() * 0.3 + 0.7;
+                    setTimeout(() => {
+                        document.body.style.opacity = 1;
+                    }, 100);
+                }
+            }, 300);
+            
+            // Перезагрузка при клике на кнопку
+            document.querySelector('.pulse').addEventListener('click', function() {
+                window.location.reload();
+            });
+        });
+    </script>
+</body>
+</html>

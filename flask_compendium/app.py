@@ -108,3 +108,7 @@ def cutting_calc():
 @app.route("/linergradient")
 def linergradient():
     return render_template("CSS_temp/linergradient.html")
+
+@app.route("/empty_page")
+def empty_page():
+    return render_template("CSS_temp/empty_page.html")
