@@ -112,3 +112,11 @@ def linergradient():
 @app.route("/empty_page")
 def empty_page():
     return render_template("CSS_temp/empty_page.html")
+
+@app.route("/cutting_parameters")
+def cutting_parameters():
+    return render_template("CSS_temp/cutting_parameters.html")
+
+@app.route("/drop_menu")
+def drop_menu():
+    return render_template("CSS_temp/drop_menu.html")

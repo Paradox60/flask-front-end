@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор металлообработки</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #444;
+        }
+        
+        h1 {
+            color: #f0620f;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        .subtitle {
+            color: #bbb;
+            margin-bottom: 20px;
+        }
+        
+        .calculator-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .calc-btn {
+            padding: 12px 20px;
+            background: #333;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .calc-btn:hover {
+            background: #444;
+        }
+        
+        .calc-btn.active {
+            background: #f0620f;
+            border-color: #ff8c42;
+        }
+        
+        .units-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #f0620f;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+        
+        .calculator-section {
+            display: none;
+        }
+        
+        .calculator-section.active {
+            display: block;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: #00bfff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .calc-card {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            border: 1px solid #2c2c2c;
+            box-shadow: 0 0 6px rgba(0,0,0,0.3);
+        }
+        
+        .calc-card h3 {
+            margin-bottom: 15px;
+            color: #f0620f;
+            text-align: center;
+        }
+        
+        .calc-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        label {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        input, select {
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: #121212;
+            color: white;
+        }
+        
+        .calculate-btn {
+            padding: 12px;
+            background: #f0620f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .calculate-btn:hover {
+            background: #ff8c42;
+        }
+        
+        .calculate-result {
+            margin-top: 15px;
+            padding: 15px;
+            background: #252525;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            color: #00ffcc;
+            border: 1px solid #333;
+        }
+        
+        .advanced-toggle {
+            background: #333;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            transition: background 0.3s;
+        }
+        
+        .advanced-toggle:hover {
+            background: #444;
+        }
+        
+        .advanced-section {
+            display: none;
+        }
+        
+        .advanced-section.show {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .calculator-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .calc-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Калькулятор металлообработки</h1>
+            <p class="subtitle">Выберите тип обработки и единицы измерения для расчётов</p>
+            
+            <div class="calculator-selector">
+                <button class="calc-btn active" data-calc="drilling">Сверление</button>
+                <button class="calc-btn" data-calc="turning">Точение</button>
+                <button class="calc-btn" data-calc="milling">Фрезерование</button>
+            </div>
+            
+            <div class="units-toggle">
+                <span>Метрическая система (мм)</span>
+                <label class="switch">
+                    <input type="checkbox" id="units-toggle">
+                    <span class="slider"></span>
+                </label>
+                <span>Дюймовая система (дюймы)</span>
+            </div>
+        </header>
+        
+        <!-- Калькулятор сверления -->
+        <section id="drilling-calc" class="calculator-section active">
+            <h2 class="section-title">Сверление</h2>
+            
+            <div class="calc-card">
+                <h3>Расчёт оборотов (n)</h3>
+                <div class="calc-form">
+                    <div class="form-group">
+                        <label for="drilling-vc">Скорость резания Vc (м/мин)</label>
+                        <input type="number" id="drilling-vc" class="calculate-input" placeholder="Введите скорость резания">
+                    </div>
+                    <div class="form-group">
+                        <label for="drilling-diameter">Диаметр сверла D (<span class="unit-label">мм</span>)</label>
+                        <input type="number" id="drilling-diameter" class="calculate-input" placeholder="Введите диаметр сверла">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateDrillingRPM()">Рассчитать</button>
+                    <div class="calculate-result" id="drilling-rpm-result">n = ... об/мин</div>
+                </div>
+            </div>
+            
+            <div class="calc-card">
+                <h3>Расчёт подачи (f)</h3>
+                <div class="calc-form">
+                    <div class="form-group">
+                        <label for="drilling-rpm">Обороты n (об/мин)</label>
+                        <input type="number" id="drilling-rpm" class="calculate-input" placeholder="Введите обороты">
+                    </div>
+                    <div class="form-group">
+                        <label for="drilling-fz">Подача на зуб fz (<span class="unit-label">мм</span>/зуб)</label>
+                        <input type="number" id="drilling-fz" class="calculate-input" placeholder="Введите подачу на зуб">
+                    </div>
+                    <div class="form-group">
+                        <label for="drilling-teeth">Количество зубьев z</label>
+                        <input type="number" id="drilling-teeth" class="calculate-input" value="2" placeholder="Введите количество зубьев">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateDrillingFeed()">Рассчитать</button>
+                    <div class="calculate-result" id="drilling-feed-result">f = ... <span class="unit-label">мм</span>/мин</div>
+                </div>
+            </div>
+            
+            <button class="advanced-toggle" onclick="toggleAdvanced('drilling-advanced')">Расширенные параметры</button>
+            
+            <div id="drilling-advanced" class="advanced-section">
+                <div class="calc-card">
+                    <h3>Мощность резания (Pc)</h3>
+                    <div class="calc-form">
+                        <div class="form-group">
+                            <label for="drilling-fc">Сила резания Fc (Н)</label>
+                            <input type="number" id="drilling-fc" class="calculate-input" placeholder="Введите силу резания">
+                        </div>
+                        <div class="form-group">
+                            <label for="drilling-vc-power">Скорость резания Vc (м/мин)</label>
+                            <input type="number" id="drilling-vc-power" class="calculate-input" placeholder="Введите скорость резания">
+                        </div>
+                        <button class="calculate-btn" onclick="calculateDrillingPower()">Рассчитать</button>
+                        <div class="calculate-result" id="drilling-power-result">Pc = ... кВт</div>
+                    </div>
+                </div>
+                
+                <div class="calc-card">
+                    <h3>Время обработки (T)</h3>
+                    <div class="calc-form">
+                        <div class="form-group">
+                            <label for="drilling-depth">Глубина сверления L (<span class="unit-label">мм</span>)</label>
+                            <input type="number" id="drilling-depth" class="calculate-input" placeholder="Введите глубину сверления">
+                        </div>
+                        <div class="form-group">
+                            <label for="drilling-f-time">Подача f (<span class="unit-label">мм</span>/мин)</label>
+                            <input type="number" id="drilling-f-time" class="calculate-input" placeholder="Введите подачу">
+                        </div>
+                        <button class="calculate-btn" onclick="calculateDrillingTime()">Рассчитать</button>
+                        <div class="calculate-result" id="drilling-time-result">T = ... мин</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Калькулятор точения -->
+        <section id="turning-calc" class="calculator-section">
+            <h2 class="section-title">Точение</h2>
+            
+            <div class="calc-card">
+                <h3>Расчёт оборотов (n)</h3>
+                <div class="calc-form">
+                    <div class="form-group">
+                        <label for="turning-vc">Скорость резания Vc (м/мин)</label>
+                        <input type="number" id="turning-vc" class="calculate-input" placeholder="Введите скорость резания">
+                    </div>
+                    <div class="form-group">
+                        <label for="turning-diameter">Диаметр заготовки D (<span class="unit-label">мм</span>)</label>
+                        <input type="number" id="turning-diameter" class="calculate-input" placeholder="Введите диаметр заготовки">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateTurningRPM()">Рассчитать</button>
+                    <div class="calculate-result" id="turning-rpm-result">n = ... об/мин</div>
+                </div>
+            </div>
+            
+            <div class="calc-card">
+                <h3>Расчёт подачи (f)</h3>
+                <div class="calc-form">
+                    <div class="form-group">
+                        <label for="turning-rpm">Обороты n (об/мин)</label>
+                        <input type="number" id="turning-rpm" class="calculate-input" placeholder="Введите обороты">
+                    </div>
+                    <div class="form-group">
+                        <label for="turning-fz">Подача на оборот f (<span class="unit-label">мм</span>/об)</label>
+                        <input type="number" id="turning-fz" class="calculate-input" placeholder="Введите подачу на оборот">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateTurningFeed()">Рассчитать</button>
+                    <div class="calculate-result" id="turning-feed-result">f = ... <span class="unit-label">мм</span>/мин</div>
+                </div>
+            </div>
+            
+            <button class="advanced-toggle" onclick="toggleAdvanced('turning-advanced')">Расширенные параметры</button>
+            
+            <div id="turning-advanced" class="advanced-section">
+                <div class="calc-card">
+                    <h3>Расчёт времени обработки</h3>
+                    <div class="calc-form">
+                        <div class="form-group">
+                            <label for="turning-length">Длина обработки L (<span class="unit-label">мм</span>)</label>
+                            <input type="number" id="turning-length" class="calculate-input" placeholder="Введите длину обработки">
+                        </div>
+                        <div class="form-group">
+                            <label for="turning-passes">Количество проходов</label>
+                            <input type="number" id="turning-passes" class="calculate-input" value="1" placeholder="Введите количество проходов">
+                        </div>
+                        <div class="form-group">
+                            <label for="turning-f-time">Подача f (<span class="unit-label">мм</span>/об)</label>
+                            <input type="number" id="turning-f-time" class="calculate-input" placeholder="Введите подачу">
+                        </div>
+                        <div class="form-group">
+                            <label for="turning-rpm-time">Обороты n (об/мин)</label>
+                            <input type="number" id="turning-rpm-time" class="calculate-input" placeholder="Введите обороты">
+                        </div>
+                        <button class="calculate-btn" onclick="calculateTurningTime()">Рассчитать</button>
+                        <div class="calculate-result" id="turning-time-result">T = ... мин</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Калькулятор фрезерования -->
+        <section id="milling-calc" class="calculator-section">
+            <h2 class="section-title">Фрезерование</h2>
+            
+            <div class="calc-card">
+                <h3>Расчёт оборотов (n)</h3>
+                <div class="calc-form">
+                    <div class="form-group">
+                        <label for="milling-vc">Скорость резания Vc (м/мин)</label>
+                        <input type="number" id="milling-vc" class="calculate-input" placeholder="Введите скорость резания">
+                    </div>
+                    <div class="form-group">
+                        <label for="milling-diameter">Диаметр фрезы D (<span class="unit-label">мм</span>)</label>
+                        <input type="number" id="milling-diameter" class="calculate-input" placeholder="Введите диаметр фрезы">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateMillingRPM()">Рассчитать</button>
+                    <div class="calculate-result" id="milling-rpm-result">n = ... об/мин</div>
+                </div>
+            </div>
+            
+            <div class="calc-card">
+                <h3>Расчёт подачи (f)</h3>
+                <div class="calc-form">
+                    <div class="form-group">
+                        <label for="milling-rpm">Обороты n (об/мин)</label>
+                        <input type="number" id="milling-rpm" class="calculate-input" placeholder="Введите обороты">
+                    </div>
+                    <div class="form-group">
+                        <label for="milling-fz">Подача на зуб fz (<span class="unit-label">мм</span>/зуб)</label>
+                        <input type="number" id="milling-fz" class="calculate-input" placeholder="Введите подачу на зуб">
+                    </div>
+                    <div class="form-group">
+                        <label for="milling-teeth">Количество зубьев z</label>
+                        <input type="number" id="milling-teeth" class="calculate-input" value="4" placeholder="Введите количество зубьев">
+                    </div>
+                    <button class="calculate-btn" onclick="calculateMillingFeed()">Рассчитать</button>
+                    <div class="calculate-result" id="milling-feed-result">f = ... <span class="unit-label">мм</span>/мин</div>
+                </div>
+            </div>
+            
+            <button class="advanced-toggle" onclick="toggleAdvanced('milling-advanced')">Расширенные параметры</button>
+            
+            <div id="milling-advanced" class="advanced-section">
+                <div class="calc-card">
+                    <h3>Расчёт съёма материала (Q)</h3>
+                    <div class="calc-form">
+                        <div class="form-group">
+                            <label for="milling-width">Ширина фрезерования (<span class="unit-label">мм</span>)</label>
+                            <input type="number" id="milling-width" class="calculate-input" placeholder="Введите ширину фрезерования">
+                        </div>
+                        <div class="form-group">
+                            <label for="milling-depth">Глубина резания (<span class="unit-label">мм</span>)</label>
+                            <input type="number" id="milling-depth" class="calculate-input" placeholder="Введите глубину резания">
+                        </div>
+                        <div class="form-group">
+                            <label for="milling-feed">Подача f (<span class="unit-label">мм</span>/мин)</label>
+                            <input type="number" id="milling-feed" class="calculate-input" placeholder="Введите подачу">
+                        </div>
+                        <button class="calculate-btn" onclick="calculateMillingVolume()">Рассчитать</button>
+                        <div class="calculate-result" id="milling-volume-result">Q = ... см³/мин</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Переключение между калькуляторами
+        document.querySelectorAll('.calc-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Убрать активный класс у всех кнопок
+                document.querySelectorAll('.calc-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Добавить активный класс текущей кнопке
+                this.classList.add('active');
+                
+                // Скрыть все калькуляторы
+                document.querySelectorAll('.calculator-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Показать выбранный калькулятор
+                const calcId = this.getAttribute('data-calc') + '-calc';
+                document.getElementById(calcId).classList.add('active');
+            });
+        });
+        
+        // Переключение между метрической и дюймовой системами
+        const unitsToggle = document.getElementById('units-toggle');
+        const unitLabels = document.querySelectorAll('.unit-label');
+        
+        unitsToggle.addEventListener('change', function() {
+            if (this.checked) {
+                unitLabels.forEach(label => {
+                    label.textContent = 'дюйм';
+                });
+            } else {
+                unitLabels.forEach(label => {
+                    label.textContent = 'мм';
+                });
+            }
+        });
+        
+        // Переключение расширенных параметров
+        function toggleAdvanced(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('show');
+        }
+        
+        // Функции для расчётов сверления
+        function calculateDrillingRPM() {
+            const vc = parseFloat(document.getElementById('drilling-vc').value);
+            const diameter = parseFloat(document.getElementById('drilling-diameter').value);
+            
+            if (vc && diameter) {
+                const rpm = (vc * 1000) / (Math.PI * diameter);
+                document.getElementById('drilling-rpm-result').textContent = `n = ${rpm.toFixed(0)} об/мин`;
+            }
+        }
+        
+        function calculateDrillingFeed() {
+            const rpm = parseFloat(document.getElementById('drilling-rpm').value);
+            const fz = parseFloat(document.getElementById('drilling-fz').value);
+            const teeth = parseFloat(document.getElementById('drilling-teeth').value);
+            
+            if (rpm && fz && teeth) {
+                const feed = rpm * fz * teeth;
+                document.getElementById('drilling-feed-result').textContent = `f = ${feed.toFixed(2)} мм/мин`;
+            }
+        }
+        
+        function calculateDrillingPower() {
+            const fc = parseFloat(document.getElementById('drilling-fc').value);
+            const vc = parseFloat(document.getElementById('drilling-vc-power').value);
+            
+            if (fc && vc) {
+                const power = (fc * vc) / 60000;
+                document.getElementById('drilling-power-result').textContent = `Pc = ${power.toFixed(2)} кВт`;
+            }
+        }
+        
+        function calculateDrillingTime() {
+            const depth = parseFloat(document.getElementById('drilling-depth').value);
+            const feed = parseFloat(document.getElementById('drilling-f-time').value);
+            
+            if (depth && feed) {
+                const time = depth / feed;
+                document.getElementById('drilling-time-result').textContent = `T = ${time.toFixed(2)} мин`;
+            }
+        }
+        
+        // Функции для расчётов точения
+        function calculateTurningRPM() {
+            const vc = parseFloat(document.getElementById('turning-vc').value);
+            const diameter = parseFloat(document.getElementById('turning-diameter').value);
+            
+            if (vc && diameter) {
+                const rpm = (vc * 1000) / (Math.PI * diameter);
+                document.getElementById('turning-rpm-result').textContent = `n = ${rpm.toFixed(0)} об/мин`;
+            }
+        }
+        
+        function calculateTurningFeed() {
+            const rpm = parseFloat(document.getElementById('turning-rpm').value);
+            const fz = parseFloat(document.getElementById('turning-fz').value);
+            
+            if (rpm && fz) {
+                const feed = rpm * fz;
+                document.getElementById('turning-feed-result').textContent = `f = ${feed.toFixed(2)} мм/мин`;
+            }
+        }
+        
+        function calculateTurningTime() {
+            const length = parseFloat(document.getElementById('turning-length').value);
+            const passes = parseFloat(document.getElementById('turning-passes').value);
+            const feed = parseFloat(document.getElementById('turning-f-time').value);
+            const rpm = parseFloat(document.getElementById('turning-rpm-time').value);
+            
+            if (length && passes && feed && rpm) {
+                const time = (length * passes) / (feed * rpm);
+                document.getElementById('turning-time-result').textContent = `T = ${time.toFixed(2)} мин`;
+            }
+        }
+        
+        // Функции для расчётов фрезерования
+        function calculateMillingRPM() {
+            const vc = parseFloat(document.getElementById('milling-vc').value);
+            const diameter = parseFloat(document.getElementById('milling-diameter').value);
+            
+            if (vc && diameter) {
+                const rpm = (vc * 1000) / (Math.PI * diameter);
+                document.getElementById('milling-rpm-result').textContent = `n = ${rpm.toFixed(0)} об/мин`;
+            }
+        }
+        
+        function calculateMillingFeed() {
+            const rpm = parseFloat(document.getElementById('milling-rpm').value);
+            const fz = parseFloat(document.getElementById('milling-fz').value);
+            const teeth = parseFloat(document.getElementById('milling-teeth').value);
+            
+            if (rpm && fz && teeth) {
+                const feed = rpm * fz * teeth;
+                document.getElementById('milling-feed-result').textContent = `f = ${feed.toFixed(2)} мм/мин`;
+            }
+        }
+        
+        function calculateMillingVolume() {
+            const width = parseFloat(document.getElementById('milling-width').value);
+            const depth = parseFloat(document.getElementById('milling-depth').value);
+            const feed = parseFloat(document.getElementById('milling-feed').value);
+            
+            if (width && depth && feed) {
+                const volume = (width * depth * feed) / 1000;
+                document.getElementById('milling-volume-result').textContent = `Q = ${volume.toFixed(2)} см³/мин`;
+            }
+        }
+    </script>
+</body>
+</html>
