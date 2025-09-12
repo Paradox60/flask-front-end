@@ -120,3 +120,7 @@ def cutting_parameters():
 @app.route("/drop_menu")
 def drop_menu():
     return render_template("CSS_temp/drop_menu.html")
+
+@app.route("/calculator_label")
+def calculator_label():
+    return render_template("CSS_temp/calculator_label.html")

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор сложения</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .calculator {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        h1 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #34495e;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #6e8efb;
+            outline: none;
+        }
+        
+        .result {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px dashed #6e8efb;
+            margin-top: 20px;
+        }
+        
+        .result-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .formula {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Калькулятор сложения</h1>
+        
+        <div class="input-group">
+            <label for="number1">Первое число:</label>
+            <input type="number" id="number1" placeholder="Введите число" value="0">
+        </div>
+        
+        <div class="input-group">
+            <label for="number2">Второе число:</label>
+            <input type="number" id="number2" placeholder="Введите число" value="0">
+        </div>
+        
+        <div class="result">
+            <div class="result-text">Результат: <span id="result">0</span></div>
+            <div class="formula" id="formula">0 + 0 = 0</div>
+        </div>
+    </div>
+
+    <script>
+        // Получаем элементы DOM
+        const number1Input = document.getElementById('number1');
+        const number2Input = document.getElementById('number2');
+        const resultElement = document.getElementById('result');
+        const formulaElement = document.getElementById('formula');
+        
+        // Функция для сложения чисел
+        function calculateSum() {
+            // Получаем значения из полей ввода
+            const num1 = parseFloat(number1Input.value) || 0;
+            const num2 = parseFloat(number2Input.value) || 0;
+            
+            // Вычисляем сумму
+            const sum = num1 + num2;
+            
+            // Обновляем результат
+            resultElement.textContent = sum;
+            
+            // Обновляем формулу
+            formulaElement.textContent = `${num1} + ${num2} = ${sum}`;
+        }
+        
+        // Добавляем обработчики событий на оба поля ввода
+        number1Input.addEventListener('input', calculateSum);
+        number2Input.addEventListener('input', calculateSum);
+        
+        // Вызываем функцию сразу для отображения начального результата
+        calculateSum();
+    </script>
+</body>
+</html>
