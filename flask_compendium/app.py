@@ -124,3 +124,7 @@ def drop_menu():
 @app.route("/calculator_label")
 def calculator_label():
     return render_template("CSS_temp/calculator_label.html")
+    
+@app.route("/graph")
+def graph():
+    return render_template("CSS_temp/graph.html")
