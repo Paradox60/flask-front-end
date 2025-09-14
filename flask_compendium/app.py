@@ -128,3 +128,7 @@ def calculator_label():
 @app.route("/graph")
 def graph():
     return render_template("CSS_temp/graph.html")
+        
+@app.route("/formulas")
+def formulas():
+    return render_template("CSS_temp/formulas.html")

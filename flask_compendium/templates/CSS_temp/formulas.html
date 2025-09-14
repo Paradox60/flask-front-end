@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Формулы режимов резания</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+        
+        .card-header {
+            background: #3498db;
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .card-header i {
+            font-size: 24px;
+        }
+        
+        .card-content {
+            padding: 25px;
+        }
+        
+        .formula {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .variables {
+            margin-top: 20px;
+        }
+        
+        .variable {
+            display: flex;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .symbol {
+            font-weight: bold;
+            min-width: 30px;
+            color: #2980b9;
+        }
+        
+        .algorithm {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+        }
+        
+        .algorithm h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .step {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #ddd;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Формулы режимов резания</h1>
+            <p class="subtitle">Справочник по основным параметрам обработки материалов: скорость резания, обороты, крутящий момент, подача и мощность на шпинделе</p>
+        </header>
+        
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <h2>Скорость резания (Vc)</h2>
+                </div>
+                <div class="card-content">
+                    <p>Скорость, с которой режущая кромка инструмента перемещается относительно поверхности заготовки. Измеряется в метрах в минуту (м/мин).</p>
+                    <div class="formula">Vc = (π × D × n) / 1000</div>
+                    <div class="variables">
+                        <div class="variable"><span class="symbol">Vc</span> - Скорость резания (м/мин)</div>
+                        <div class="variable"><span class="symbol">π</span> - Число Пи (~3.1416)</div>
+                        <div class="variable"><span class="symbol">D</span> - Диаметр заготовки или инструмента (мм)</div>
+                        <div class="variable"><span class="symbol">n</span> - Частота вращения шпинделя (об/мин)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-cogs"></i>
+                    <h2>Обороты шпинделя (n)</h2>
+                </div>
+                <div class="card-content">
+                    <p>Частота вращения шпинделя станка. Измеряется в оборотах в минуту (об/мин).</p>
+                    <div class="formula">n = (1000 × Vc) / (π × D)</div>
+                    <div class="variables">
+                        <div class="variable"><span class="symbol">n</span> - Частота вращения шпинделя (об/мин)</div>
+                        <div class="variable"><span class="symbol">Vc</span> - Скорость резания (м/мин)</div>
+                        <div class="variable"><span class="symbol">D</span> - Диаметр заготовки или инструмента (мм)</div>
+                        <div class="variable"><span class="symbol">π</span> - Число Пи (~3.1416)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-bolt"></i>
+                    <h2>Крутящий момент (Mкр)</h2>
+                </div>
+                <div class="card-content">
+                    <p>Сила, которую должен приложить шпиндель, чтобы провернуть инструмент или заготовку против силы резания. Измеряется в Ньютон-метрах (Н·м).</p>
+                    <div class="formula">Mкр = (P × 30) / (π × n)</div>
+                    <div class="variables">
+                        <div class="variable"><span class="symbol">Mкр</span> - Крутящий момент (Н·м)</div>
+                        <div class="variable"><span class="symbol">P</span> - Мощность резания (кВт)</div>
+                        <div class="variable"><span class="symbol">n</span> - Частота вращения шпинделя (об/мин)</div>
+                        <div class="variable"><span class="symbol">π</span> - Число Пи (~3.1416)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-forward"></i>
+                    <h2>Подача (f)</h2>
+                </div>
+                <div class="card-content">
+                    <p>Скорость движения инструмента относительно заготовки. Может выражаться как подача на оборот (мм/об), подача на зуб (мм/зуб) или минутная подача (мм/мин).</p>
+                    <div class="formula">Vf = n × fz × z</div>
+                    <div class="variables">
+                        <div class="variable"><span class="symbol">Vf</span> - Минутная подача (мм/мин)</div>
+                        <div class="variable"><span class="symbol">n</span> - Частота вращения шпинделя (об/мин)</div>
+                        <div class="variable"><span class="symbol">fz</span> - Подача на зуб (мм/зуб)</div>
+                        <div class="variable"><span class="symbol">z</span> - Количество зубьев инструмента</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-charging-station"></i>
+                    <h2>Мощность резания (P)</h2>
+                </div>
+                <div class="card-content">
+                    <p>Мощность, которая необходима на шпинделе станка для выполнения операции резания. Измеряется в киловаттах (кВт).</p>
+                    <div class="formula">P = (F × Vc) / (60 × 1000)</div>
+                    <div class="variables">
+                        <div class="variable"><span class="symbol">P</span> - Мощность резания (кВт)</div>
+                        <div class="variable"><span class="symbol">F</span> - Сила резания (Н)</div>
+                        <div class="variable"><span class="symbol">Vc</span> - Скорость резания (м/мин)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-industry"></i>
+                    <h2>Съем материала (Q)</h2>
+                </div>
+                <div class="card-content">
+                    <p>Объем материала, снимаемый в единицу времени. Измеряется в кубических сантиметрах в минуту (см³/мин).</p>
+                    <div class="formula">Q = ae × ap × Vf / 1000</div>
+                    <div class="variables">
+                        <div class="variable"><span class="symbol">Q</span> - Объем снимаемого материала (см³/мин)</div>
+                        <div class="variable"><span class="symbol">ae</span> - Ширина резания (мм)</div>
+                        <div class="variable"><span class="symbol">ap</span> - Глубина резания (мм)</div>
+                        <div class="variable"><span class="symbol">Vf</span> - Минутная подача (мм/мин)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="algorithm">
+            <h2>Алгоритм расчета режимов резания</h2>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Определите скорость резания (Vc)</h3>
+                    <p>Используйте справочные таблицы для выбора оптимальной скорости резания в зависимости от обрабатываемого материала и материала инструмента.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Рассчитайте частоту вращения (n)</h3>
+                    <p>Используйте формулу n = (1000 × Vc) / (π × D) для определения требуемых оборотов шпинделя.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Выберите подачу на зуб (fz)</h3>
+                    <p>На основе рекомендаций для конкретного инструмента и обрабатываемого материала определите подачу на зуб.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Рассчитайте минутную подачу (Vf)</h3>
+                    <p>Используйте формулу Vf = n × fz × z для определения скорости движения инструмента.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h3>Оцените мощность резания (P)</h3>
+                    <p>Рассчитайте требуемую мощность для выполнения операции и убедитесь, что станок обладает необходимой мощностью.</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Данный справочник предназначен для образовательных целей. Всегда сверяйтесь с техническими рекомендациями производителей инструмента.</p>
+            <p>© 2023 Формулы режимов резания</p>
+        </footer>
+    </div>
+</body>
+</html>
