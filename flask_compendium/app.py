@@ -132,3 +132,7 @@ def graph():
 @app.route("/formulas")
 def formulas():
     return render_template("CSS_temp/formulas.html")
+
+@app.route("/java_base")
+def java_base():
+    return render_template("CSS_temp/java_base.html")

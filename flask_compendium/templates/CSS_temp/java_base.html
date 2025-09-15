@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Основы JavaScript для веб-разработки</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        
+        .sidebar {
+            flex: 1;
+            min-width: 250px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-right: 20px;
+        }
+        
+        .main-content {
+            flex: 3;
+            min-width: 300px;
+        }
+        
+        .nav-item {
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .nav-item:hover {
+            background: #3498db;
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .nav-item.active {
+            background: #3498db;
+            color: white;
+            border-left: 4px solid #2c3e50;
+        }
+        
+        .lesson {
+            display: none;
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .lesson.active {
+            display: block;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        h3 {
+            color: #3498db;
+            margin: 15px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .code-example {
+            background: #2c3e50;
+            color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .interactive-demo {
+            background: #e8f4fc;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px 10px 0;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        input, select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 5px 0;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: #d4edda;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Основы JavaScript для веб-страниц</h1>
+            <p class="subtitle">Изучите базовые принципы работы с JavaScript в браузере с помощью интерактивных примеров</p>
+        </header>
+        
+        <div class="content">
+            <div class="sidebar">
+                <div class="nav-item active" data-lesson="1">1. Подключение JavaScript</div>
+                <div class="nav-item" data-lesson="2">2. Переменные и типы данных</div>
+                <div class="nav-item" data-lesson="3">3. Операторы и выражения</div>
+                <div class="nav-item" data-lesson="4">4. Условия if/else</div>
+                <div class="nav-item" data-lesson="5">5. Циклы</div>
+                <div class="nav-item" data-lesson="6">6. Функции</div>
+                <div class="nav-item" data-lesson="7">7. Работа с DOM</div>
+                <div class="nav-item" data-lesson="8">8. Обработка событий</div>
+            </div>
+            
+            <div class="main-content">
+                <div class="lesson active" id="lesson-1">
+                    <h2>1. Подключение JavaScript к странице</h2>
+                    <p>JavaScript можно подключить к HTML-странице двумя способами:</p>
+                    
+                    <h3>Внешний файл</h3>
+                    <div class="code-example">
+                        &lt;script src="script.js"&gt;&lt;/script&gt;
+                    </div>
+                    
+                    <h3>Встроенный скрипт</h3>
+                    <div class="code-example">
+                        &lt;script&gt;<br>
+                        &nbsp;&nbsp;console.log("Hello, World!");<br>
+                        &lt;/script&gt;
+                    </div>
+                    
+                    <div class="interactive-demo">
+                        <h3>Попробуйте сами:</h3>
+                        <p>Нажмите кнопку, чтобы выполнить JavaScript код:</p>
+                        <button onclick="alert('Привет, мир!')">Выполнить alert()</button>
+                        <button onclick="console.log('Сообщение в консоли')">Выполнить console.log()</button>
+                    </div>
+                </div>
+                
+                <div class="lesson" id="lesson-2">
+                    <h2>2. Переменные и типы данных</h2>
+                    <p>В JavaScript есть три способа объявления переменных:</p>
+                    
+                    <div class="code-example">
+                        var oldVariable = "Устаревший способ";<br>
+                        let changeableVariable = "Можно изменить";<br>
+                        const constantVariable = "Нельзя изменить";
+                    </div>
+                    
+                    <p>Основные типы данных:</p>
+                    <div class="code-example">
+                        let string = "Текст"; // Строка<br>
+                        let number = 42; // Число<br>
+                        let boolean = true; // Логический тип<br>
+                        let array = [1, 2, 3]; // Массив<br>
+                        let object = {name: "John", age: 30}; // Объект
+                    </div>
+                    
+                    <div class="interactive-demo">
+                        <h3>Демонстрация переменных:</h3>
+                        <button onclick="showVariables()">Показать значения переменных</button>
+                        <div class="result" id="variables-result"></div>
+                    </div>
+                </div>
+                
+                <div class="lesson" id="lesson-3">
+                    <h2>3. Операторы и выражения</h2>
+                    <p>JavaScript поддерживает различные операторы:</p>
+                    
+                    <h3>Арифметические операторы</h3>
+                    <div class="code-example">
+                        let sum = 5 + 3; // 8<br>
+                        let difference = 10 - 4; // 6<br>
+                        let product = 3 * 4; // 12<br>
+                        let quotient = 20 / 5; // 4<br>
+                        let remainder = 10 % 3; // 1
+                    </div>
+                    
+                    <h3>Операторы сравнения</h3>
+                    <div class="code-example">
+                        let equal = 5 == "5"; // true (нестрогое сравнение)<br>
+                        let strictEqual = 5 === "5"; // false (строгое сравнение)<br>
+                        let notEqual = 5 != 10; // true<br>
+                        let greaterThan = 10 > 5; // true
+                    </div>
+                    
+                    <div class="interactive-demo">
+                        <h3>Калькулятор:</h3>
+                        <input type="number" id="num1" placeholder="Первое число" value="10">
+                        <input type="number" id="num2" placeholder="Второе число" value="5">
+                        <button onclick="calculate('add')">Сложить (+)</button>
+                        <button onclick="calculate('subtract')">Вычесть (-)</button>
+                        <button onclick="calculate('multiply')">Умножить (*)</button>
+                        <button onclick="calculate('divide')">Разделить (/)</button>
+                        <div class="result" id="calculation-result"></div>
+                    </div>
+                </div>
+                
+                <div class="lesson" id="lesson-4">
+                    <h2>4. Условные конструкции if/else</h2>
+                    <p>Конструкции if/else позволяют выполнять код в зависимости от условий:</p>
+                    
+                    <div class="code-example">
+                        let temperature = 25;<br><br>
+                        
+                        if (temperature > 30) {<br>
+                        &nbsp;&nbsp;console.log("Жарко");<br>
+                        } else if (temperature > 20) {<br>
+                        &nbsp;&nbsp;console.log("Тепло");<br>
+                        } else {<br>
+                        &nbsp;&nbsp;console.log("Прохладно");<br>
+                        }
+                    </div>
+                    
+                    <div class="interactive-demo">
+                        <h3>Проверка температуры:</h3>
+                        <input type="number" id="temperature" placeholder="Введите температуру" value="25">
+                        <button onclick="checkTemperature()">Проверить</button>
+                        <div class="result" id="temperature-result"></div>
+                    </div>
+                </div>
+                
+                <!-- Остальные уроки будут здесь -->
+                <div class="lesson" id="lesson-5">
+                    <h2>5. Циклы</h2>
+                    <p>Циклы позволяют повторять выполнение кода несколько раз.</p>
+                    <p>Содержимое урока о циклах...</p>
+                </div>
+                
+                <div class="lesson" id="lesson-6">
+                    <h2>6. Функции</h2>
+                    <p>Функции позволяют структурировать код и повторно использовать его.</p>
+                    <p>Содержимое урока о функциях...</p>
+                </div>
+                
+                <div class="lesson" id="lesson-7">
+                    <h2>7. Работа с DOM</h2>
+                    <p>DOM (Document Object Model) позволяет взаимодействовать с элементами страницы.</p>
+                    <p>Содержимое урока о DOM...</p>
+                </div>
+                
+                <div class="lesson" id="lesson-8">
+                    <h2>8. Обработка событий</h2>
+                    <p>События позволяют реагировать на действия пользователя.</p>
+                    <p>Содержимое урока о событиях...</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Интерактивный курс по основам JavaScript &copy; 2023</p>
+        </footer>
+    </div>
+
+    <script>
+        // Навигация по урокам
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Убираем активный класс у всех элементов
+                document.querySelectorAll('.nav-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                document.querySelectorAll('.lesson').forEach(l => {
+                    l.classList.remove('active');
+                });
+                
+                // Добавляем активный класс к выбранному элементу
+                this.classList.add('active');
+                const lessonId = `lesson-${this.getAttribute('data-lesson')}`;
+                document.getElementById(lessonId).classList.add('active');
+            });
+        });
+        
+        // Функции для демонстрационных примеров
+        function showVariables() {
+            const resultDiv = document.getElementById('variables-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <p>let name = "John"; // ${typeof "John"}</p>
+                <p>let age = 30; // ${typeof 30}</p>
+                <p>let isStudent = true; // ${typeof true}</p>
+                <p>let fruits = ["Apple", "Banana", "Orange"]; // ${typeof ["Apple", "Banana", "Orange"]}</p>
+            `;
+        }
+        
+        function calculate(operation) {
+            const num1 = parseFloat(document.getElementById('num1').value);
+            const num2 = parseFloat(document.getElementById('num2').value);
+            const resultDiv = document.getElementById('calculation-result');
+            let result;
+            
+            switch(operation) {
+                case 'add':
+                    result = num1 + num2;
+                    break;
+                case 'subtract':
+                    result = num1 - num2;
+                    break;
+                case 'multiply':
+                    result = num1 * num2;
+                    break;
+                case 'divide':
+                    result = num2 !== 0 ? num1 / num2 : "Ошибка: деление на ноль!";
+                    break;
+            }
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `<p>Результат: ${result}</p>`;
+        }
+        
+        function checkTemperature() {
+            const temp = parseFloat(document.getElementById('temperature').value);
+            const resultDiv = document.getElementById('temperature-result');
+            let message;
+            
+            if (temp > 30) {
+                message = "Жарко! 🥵";
+            } else if (temp > 20) {
+                message = "Тепло! 😊";
+            } else if (temp > 10) {
+                message = "Прохладно! 🧥";
+            } else {
+                message = "Холодно! ❄️";
+            }
+            
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `<p>При ${temp}°C: ${message}</p>`;
+        }
+    </script>
+</body>
+</html>
