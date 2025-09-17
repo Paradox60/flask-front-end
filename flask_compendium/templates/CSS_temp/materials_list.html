@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог материалов | Справочники</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .material-card {
+            transition: all 0.3s ease;
+            border: 1px solid #dee2e6;
+        }
+        .material-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+            border-color: #007bff;
+        }
+        .filter-section {
+            background-color: #f8f9fa;
+            border-radius: 0.375rem;
+            padding: 1.5rem;
+        }
+        .property-badge {
+            font-size: 0.75rem;
+        }
+        .search-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .category-active {
+            background-color: #007bff !important;
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Хлебные крошки -->
+    <nav class="container mt-3" aria-label="Хлебные крошки">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#"><i class="bi bi-house"></i> Главная</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Справочники материалов</li>
+        </ol>
+    </nav>
+
+    <div class="container my-4">
+        <!-- Заголовок и статистика -->
+        <div class="search-header rounded-3 p-4 mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 fw-bold">Каталог материалов</h1>
+                    <p class="lead mb-0">Найдено 47 материалов</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <button class="btn btn-light me-2">
+                        <i class="bi bi-download"></i> Экспорт
+                    </button>
+                    <button class="btn btn-light">
+                        <i class="bi bi-plus-circle"></i> Добавить материал
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Боковая панель фильтров -->
+            <div class="col-lg-3">
+                <div class="filter-section mb-4">
+                    <h5 class="mb-3"><i class="bi bi-funnel"></i> Фильтры</h5>
+                    
+                    <!-- Быстрые категории -->
+                    <div class="mb-4">
+                        <h6>Категории</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            <button class="btn btn-sm btn-outline-primary category-active">Все</button>
+                            <button class="btn btn-sm btn-outline-primary">Металлы</button>
+                            <button class="btn btn-sm btn-outline-primary">Пластики</button>
+                            <button class="btn btn-sm btn-outline-primary">Древесина</button>
+                        </div>
+                    </div>
+
+                    <!-- Поиск по названию -->
+                    <div class="mb-4">
+                        <h6>Название</h6>
+                        <input type="text" class="form-control form-control-sm" placeholder="Поиск материалов...">
+                    </div>
+
+                    <!-- Фильтр по свойствам -->
+                    <div class="mb-4">
+                        <h6>Свойства</h6>
+                        
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Плотность (кг/м³)</label>
+                            <select class="form-select form-select-sm">
+                                <option>Любая</option>
+                                <option>Менее 1000</option>
+                                <option>1000-5000</option>
+                                <option>5000-10000</option>
+                                <option>Более 10000</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Прочность (МПа)</label>
+                            <select class="form-select form-select-sm">
+                                <option>Любая</option>
+                                <option>Низкая (< 100)</option>
+                                <option>Средняя (100-500)</option>
+                                <option>Высокая (> 500)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Температура плавления</label>
+                            <select class="form-select form-select-sm">
+                                <option>Любая</option>
+                                <option>Низкая (< 100°C)</option>
+                                <option>Средняя (100-500°C)</option>
+                                <option>Высокая (> 500°C)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Кнопки фильтров -->
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-sm">
+                            <i class="bi bi-filter"></i> Применить фильтры
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-arrow-clockwise"></i> Сбросить
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Быстрый просмотр избранного -->
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0"><i class="bi bi-star"></i> Недавние</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            <a href="#" class="list-group-item list-group-item-action small">S355 Сталь</a>
+                            <a href="#" class="list-group-item list-group-item-action small">Алюминий 6061</a>
+                            <a href="#" class="list-group-item list-group-item-action small">Дуб натуральный</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Основной контент - список материалов -->
+            <div class="col-lg-9">
+                <!-- Панель управления списком -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="btn-group">
+                        <button class="btn btn-outline-primary active">
+                            <i class="bi bi-grid"></i> Плитки
+                        </button>
+                        <button class="btn btn-outline-primary">
+                            <i class="bi bi-list"></i> Список
+                        </button>
+                    </div>
+                    
+                    <div class="d-flex">
+                        <select class="form-select form-select-sm me-2" style="width: 150px;">
+                            <option>Сначала новые</option>
+                            <option>Сначала старые</option>
+                            <option>По названию (А-Я)</option>
+                            <option>По названию (Я-А)</option>
+                            <option>По прочности</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Список материалов в виде карточек -->
+                <div class="row">
+                    <!-- Материал 1 -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card material-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-primary property-badge">Металл</span>
+                                    <i class="bi bi-star text-warning"></i>
+                                </div>
+                                <h5 class="card-title">S355 Сталь</h5>
+                                <p class="card-text small text-muted">Конструкционная сталь нормальной прочности</p>
+                                
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between small mb-1">
+                                        <span>Плотность:</span>
+                                        <strong>7850 кг/м³</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small mb-1">
+                                        <span>Прочность:</span>
+                                        <strong>355 МПа</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small">
+                                        <span>Температура:</span>
+                                        <strong>1420°C</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <div class="d-grid gap-2">
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Материал 2 -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card material-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-success property-badge">Пластик</span>
+                                    <i class="bi bi-star"></i>
+                                </div>
+                                <h5 class="card-title">Полипропилен (PP)</h5>
+                                <p class="card-text small text-muted">Термопластичный полимер</p>
+                                
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between small mb-1">
+                                        <span>Плотность:</span>
+                                        <strong>905 кг/м³</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small mb-1">
+                                        <span>Прочность:</span>
+                                        <strong>35 МПа</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small">
+                                        <span>Температура:</span>
+                                        <strong>160°C</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <div class="d-grid gap-2">
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Материал 3 -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card material-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-warning text-dark property-badge">Древесина</span>
+                                    <i class="bi bi-star"></i>
+                                </div>
+                                <h5 class="card-title">Дуб натуральный</h5>
+                                <p class="card-text small text-muted">Твёрдая лиственная порода</p>
+                                
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between small mb-1">
+                                        <span>Плотность:</span>
+                                        <strong>700 кг/м³</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small mb-1">
+                                        <span>Прочность:</span>
+                                        <strong>55 МПа</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small">
+                                        <span>Влажность:</span>
+                                        <strong>12%</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <div class="d-grid gap-2">
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Материал 4 -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card material-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-primary property-badge">Металл</span>
+                                    <i class="bi bi-star text-warning"></i>
+                                </div>
+                                <h5 class="card-title">Алюминий 6061</h5>
+                                <p class="card-text small text-muted">Сплав алюминия с магнием и кремнием</p>
+                                
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between small mb-1">
+                                        <span>Плотность:</span>
+                                        <strong>2700 кг/м³</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small mb-1">
+                                        <span>Прочность:</span>
+                                        <strong>310 МПа</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small">
+                                        <span>Температура:</span>
+                                        <strong>650°C</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <div class="d-grid gap-2">
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Материал 5 -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card material-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-info property-badge">Композит</span>
+                                    <i class="bi bi-star"></i>
+                                </div>
+                                <h5 class="card-title">Углепластик</h5>
+                                <p class="card-text small text-muted">Композитный материал из углеродного волокна</p>
+                                
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between small mb-1">
+                                        <span>Плотность:</span>
+                                        <strong>1600 кг/м³</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small mb-1">
+                                        <span>Прочность:</span>
+                                        <strong>600 МПа</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small">
+                                        <span>Модуль упругости:</span>
+                                        <strong>70 ГПа</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <div class="d-grid gap-2">
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Материал 6 -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card material-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-success property-badge">Пластик</span>
+                                    <i class="bi bi-star"></i>
+                                </div>
+                                <h5 class="card-title">Поликарбонат (PC)</h5>
+                                <p class="card-text small text-muted">Аморфный термопластик</p>
+                                
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between small mb-1">
+                                        <span>Плотность:</span>
+                                        <strong>1200 кг/м³</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small mb-1">
+                                        <span>Прочность:</span>
+                                        <strong>65 МПа</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small">
+                                        <span>Температура:</span>
+                                        <strong>150°C</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <div class="d-grid gap-2">
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Пагинация -->
+                <nav aria-label="Навигация по страницам" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Назад</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Вперед</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

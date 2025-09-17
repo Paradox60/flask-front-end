@@ -136,3 +136,11 @@ def formulas():
 @app.route("/java_base")
 def java_base():
     return render_template("CSS_temp/java_base.html")
+
+@app.route("/materials")
+def materials():
+    return render_template("CSS_temp/materials.html")
+
+@app.route("/materials_list")
+def materials_list():
+    return render_template("CSS_temp/materials_list.html")
