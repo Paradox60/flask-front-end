@@ -144,3 +144,7 @@ def materials():
 @app.route("/materials_list")
 def materials_list():
     return render_template("CSS_temp/materials_list.html")
+
+@app.route("/django_mods")
+def django_mods():
+    return render_template("CSS_temp/django_mods.html")
