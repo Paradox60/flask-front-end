@@ -148,3 +148,7 @@ def materials_list():
 @app.route("/django_mods")
 def django_mods():
     return render_template("CSS_temp/django_mods.html")
+
+@app.route("/matProp")
+def matProp():
+    return render_template("CSS_temp/matProp.html")

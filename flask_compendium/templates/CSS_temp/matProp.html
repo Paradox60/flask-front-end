@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Свойства материалов: Металл, Пластик, Дерево</title>
+    <style>
+        :root {
+            --metal-color: #5f7d95;
+            --plastic-color: #e67e22;
+            --wood-color: #8b4513;
+            --light-bg: #f8f9fa;
+            --dark-text: #2c3e50;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background: linear-gradient(135deg, #ece9e6 0%, #ffffff 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 2rem 0;
+            background: white;
+            margin-bottom: 2rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--metal-color), var(--plastic-color), var(--wood-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .material-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 5px solid;
+        }
+        
+        .material-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .metal-card {
+            border-top-color: var(--metal-color);
+        }
+        
+        .plastic-card {
+            border-top-color: var(--plastic-color);
+        }
+        
+        .wood-card {
+            border-top-color: var(--wood-color);
+        }
+        
+        .material-icon {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .material-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .property-list {
+            list-style: none;
+        }
+        
+        .property-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .property-item:last-child {
+            border-bottom: none;
+        }
+        
+        .property-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .comparison-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .comparison-table th {
+            background-color: var(--light-bg);
+            font-weight: bold;
+        }
+        
+        .metal-cell {
+            background-color: rgba(95, 125, 149, 0.1);
+        }
+        
+        .plastic-cell {
+            background-color: rgba(230, 126, 34, 0.1);
+        }
+        
+        .wood-cell {
+            background-color: rgba(139, 69, 19, 0.1);
+        }
+        
+        .interactive-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .slider-container {
+            margin: 1.5rem 0;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 20px;
+            margin: 10px 0;
+        }
+        
+        .slider-value {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+        }
+        
+        .test-area {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .test-item {
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .test-metal {
+            background-color: var(--metal-color);
+            color: white;
+        }
+        
+        .test-plastic {
+            background-color: var(--plastic-color);
+            color: white;
+        }
+        
+        .test-wood {
+            background-color: var(--wood-color);
+            color: white;
+        }
+        
+        .test-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .test-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: var(--light-bg);
+            border-radius: 8px;
+            min-height: 100px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #7f8c8d;
+        }
+        
+        @media (max-width: 768px) {
+            .materials-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .test-area {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Свойства материалов</h1>
+            <p class="subtitle">Изучение характеристик металлов, пластиков и дерева</p>
+        </header>
+
+        <div class="materials-grid">
+            <!-- Металл -->
+            <div class="material-card metal-card">
+                <div class="material-icon">⚙️</div>
+                <h2 class="material-title">Металл</h2>
+                <ul class="property-list">
+                    <li class="property-item"><span class="property-icon">🔩</span> Высокая прочность и твердость</li>
+                    <li class="property-item"><span class="property-icon">🔥</span> Теплопроводность: высокая</li>
+                    <li class="property-item"><span class="property-icon">⚡</span> Электропроводность: высокая</li>
+                    <li class="property-item"><span class="property-icon">💧</span> Плотность: высокая</li>
+                    <li class="property-item"><span class="property-icon">🔄</span> Пластичность: изменяемая</li>
+                    <li class="property-item"><span class="property-icon">⚠️</span> Коррозионная стойкость: низкая (требует защиты)</li>
+                    <li class="property-item"><span class="property-icon">🏭</span> Обрабатываемость: хорошая</li>
+                </ul>
+            </div>
+
+            <!-- Пластик -->
+            <div class="material-card plastic-card">
+                <div class="material-icon">🧪</div>
+                <h2 class="material-title">Пластик</h2>
+                <ul class="property-list">
+                    <li class="property-item"><span class="property-icon">🪶</span> Легкий вес</li>
+                    <li class="property-item"><span class="property-icon">🚫</span> Теплопроводность: низкая</li>
+                    <li class="property-item"><span class="property-icon">🚫</span> Электропроводность: отсутствует</li>
+                    <li class="property-item"><span class="property-icon">🛡️</span> Химическая стойкость: высокая</li>
+                    <li class="property-item"><span class="property-icon">🎨</span> Легкость окрашивания</li>
+                    <li class="property-item"><span class="property-icon">♻️</span> Возможность переработки</li>
+                    <li class="property-item"><span class="property-icon">💰</span> Низкая стоимость производства</li>
+                </ul>
+            </div>
+
+            <!-- Дерево -->
+            <div class="material-card wood-card">
+                <div class="material-icon">🌳</div>
+                <h2 class="material-title">Дерево</h2>
+                <ul class="property-list">
+                    <li class="property-item"><span class="property-icon">🌿</span> Природный материал</li>
+                    <li class="property-item"><span class="property-icon">🪵</span> Прочность: средняя</li>
+                    <li class="property-item"><span class="property-icon">🔥</span> Горючесть: высокая</li>
+                    <li class="property-item"><span class="property-icon">💧</span> Гигроскопичность (впитывает влагу)</li>
+                    <li class="property-item"><span class="property-icon">🔊</span> Хорошие акустические свойства</li>
+                    <li class="property-item"><span class="property-icon">🛠️</span> Легкость обработки</li>
+                    <li class="property-item"><span class="property-icon">❤️</span> Экологичность и биоразлагаемость</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="comparison-section">
+            <h2>Сравнительная таблица свойств</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Свойство</th>
+                        <th>Металл</th>
+                        <th>Пластик</th>
+                        <th>Дерево</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Плотность (г/см³)</td>
+                        <td class="metal-cell">2.7-8.0</td>
+                        <td class="plastic-cell">0.9-1.4</td>
+                        <td class="wood-cell">0.4-0.8</td>
+                    </tr>
+                    <tr>
+                        <td>Температура плавления (°C)</td>
+                        <td class="metal-cell">600-3400</td>
+                        <td class="plastic-cell">100-250</td>
+                        <td class="wood-cell">-</td>
+                    </tr>
+                    <tr>
+                        <td>Теплопроводность</td>
+                        <td class="metal-cell">Высокая</td>
+                        <td class="plastic-cell">Низкая</td>
+                        <td class="wood-cell">Очень низкая</td>
+                    </tr>
+                    <tr>
+                        <td>Электропроводность</td>
+                        <td class="metal-cell">Высокая</td>
+                        <td class="plastic-cell">Отсутствует</td>
+                        <td class="wood-cell">Отсутствует</td>
+                    </tr>
+                    <tr>
+                        <td>Прочность на растяжение</td>
+                        <td class="metal-cell">Высокая</td>
+                        <td class="plastic-cell">Средняя</td>
+                        <td class="wood-cell">Средняя</td>
+                    </tr>
+                    <tr>
+                        <td>Стойкость к коррозии</td>
+                        <td class="metal-cell">Низкая</td>
+                        <td class="plastic-cell">Высокая</td>
+                        <td class="wood-cell">Средняя</td>
+                    </tr>
+                    <tr>
+                        <td>Стоимость</td>
+                        <td class="metal-cell">Высокая</td>
+                        <td class="plastic-cell">Низкая</td>
+                        <td class="wood-cell">Средняя</td>
+                    </tr>
+                    <tr>
+                        <td>Экологичность</td>
+                        <td class="metal-cell">Средняя</td>
+                        <td class="plastic-cell">Низкая</td>
+                        <td class="wood-cell">Высокая</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="interactive-section">
+            <h2>Интерактивное сравнение свойств</h2>
+            <p>Используйте ползунки, чтобы сравнить свойства материалов:</p>
+            
+            <div class="slider-container">
+                <h3>Прочность</h3>
+                <input type="range" min="0" max="100" value="90" class="slider" id="strengthSlider">
+                <div class="slider-labels">
+                    <span>Низкая</span>
+                    <span class="slider-value" id="strengthValue">90%</span>
+                    <span>Высокая</span>
+                </div>
+            </div>
+            
+            <div class="slider-container">
+                <h3>Вес</h3>
+                <input type="range" min="0" max="100" value="85" class="slider" id="weightSlider">
+                <div class="slider-labels">
+                    <span>Лёгкий</span>
+                    <span class="slider-value" id="weightValue">85%</span>
+                    <span>Тяжёлый</span>
+                </div>
+            </div>
+            
+            <div class="slider-container">
+                <h3>Стоимость обработки</h3>
+                <input type="range" min="0" max="100" value="75" class="slider" id="costSlider">
+                <div class="slider-labels">
+                    <span>Низкая</span>
+                    <span class="slider-value" id="costValue">75%</span>
+                    <span>Высокая</span>
+                </div>
+            </div>
+            
+            <h3>Тестирование материалов</h3>
+            <p>Нажмите на материал, чтобы увидеть его реакцию на различные воздействия:</p>
+            
+            <div class="test-area">
+                <div class="test-item test-metal" onclick="testMaterial('metal')">
+                    <h4>Металл</h4>
+                    <p>Проверить свойства</p>
+                </div>
+                <div class="test-item test-plastic" onclick="testMaterial('plastic')">
+                    <h4>Пластик</h4>
+                    <p>Проверить свойства</p>
+                </div>
+                <div class="test-item test-wood" onclick="testMaterial('wood')">
+                    <h4>Дерево</h4>
+                    <p>Проверить свойства</p>
+                </div>
+            </div>
+            
+            <div class="test-result" id="testResult">
+                Выберите материал для тестирования...
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 Сравнение свойств материалов | Образовательный проект</p>
+        </div>
+    </footer>
+
+    <script>
+        // Обработка ползунков
+        const strengthSlider = document.getElementById('strengthSlider');
+        const weightSlider = document.getElementById('weightSlider');
+        const costSlider = document.getElementById('costSlider');
+        
+        const strengthValue = document.getElementById('strengthValue');
+        const weightValue = document.getElementById('weightValue');
+        const costValue = document.getElementById('costValue');
+        
+        strengthSlider.addEventListener('input', () => {
+            strengthValue.textContent = `${strengthSlider.value}%`;
+        });
+        
+        weightSlider.addEventListener('input', () => {
+            weightValue.textContent = `${weightSlider.value}%`;
+        });
+        
+        costSlider.addEventListener('input', () => {
+            costValue.textContent = `${costSlider.value}%`;
+        });
+        
+        // Тестирование материалов
+        function testMaterial(material) {
+            const resultDiv = document.getElementById('testResult');
+            let resultHTML = '';
+            
+            switch(material) {
+                case 'metal':
+                    resultHTML = `
+                        <h4>Реакция металла:</h4>
+                        <p>✅ Проводит электричество</p>
+                        <p>✅ Проводит тепло</p>
+                        <p>✅ Высокая прочность</p>
+                        <p>⚠️ Подвержен коррозии</p>
+                        <p>🔊 При ударе издает звонкий звук</p>
+                    `;
+                    break;
+                    
+                case 'plastic':
+                    resultHTML = `
+                        <h4>Реакция пластика:</h4>
+                        <p>❌ Не проводит электричество</p>
+                        <p>❌ Плохо проводит тепло</p>
+                        <p>✅ Легкий вес</p>
+                        <p>✅ Устойчив к коррозии</p>
+                        <p>🔥 Может плавиться при нагреве</p>
+                    `;
+                    break;
+                    
+                case 'wood':
+                    resultHTML = `
+                        <h4>Реакция дерева:</h4>
+                        <p>❌ Не проводит электричество</p>
+                        <p>❌ Плохо проводит тепло</p>
+                        <p>✅ Приятная текстура</p>
+                        <p>⚠️ Впитывает влагу</p>
+                        <p>🔥 Горючий материал</p>
+                        <p>🌿 Естественный запах</p>
+                    `;
+                    break;
+            }
+            
+            resultDiv.innerHTML = resultHTML;
+        }
+        
+        // Имитация изменения свойств при движении ползунков
+        const sliders = document.querySelectorAll('.slider');
+        sliders.forEach(slider => {
+            slider.addEventListener('input', () => {
+                // Здесь можно добавить логику для динамического обновления
+                // информации о материалах на основе значений ползунков
+            });
+        });
+    </script>
+</body>
+</html>
