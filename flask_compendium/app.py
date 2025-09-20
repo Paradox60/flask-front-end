@@ -152,3 +152,7 @@ def django_mods():
 @app.route("/matProp")
 def matProp():
     return render_template("CSS_temp/matProp.html")
+
+@app.route("/metallProp")
+def metallProp():
+    return render_template("CSS_temp/metallProp.html")
