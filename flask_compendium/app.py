@@ -156,3 +156,7 @@ def matProp():
 @app.route("/metallProp")
 def metallProp():
     return render_template("CSS_temp/metallProp.html")
+
+@app.route("/thread")
+def thread():
+    return render_template("CSS_temp/thread.html")
