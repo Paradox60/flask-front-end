@@ -160,3 +160,7 @@ def metallProp():
 @app.route("/thread")
 def thread():
     return render_template("CSS_temp/thread.html")
+
+@app.route("/adminPy")
+def adminPy():
+    return render_template("CSS_temp/adminPy.html")

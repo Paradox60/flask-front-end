@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Работа с admin.py в Django</title>
+    <style>
+        :root {
+            --django-green: #092e20;
+            --django-light-green: #0c4b33;
+            --django-accent: #157347;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --code-bg: #2d2d2d;
+            --warning: #ffc107;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--django-green), var(--django-light-green));
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+            border-left: 5px solid var(--django-accent);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        h2 {
+            color: var(--django-green);
+            margin: 1.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--django-accent);
+        }
+        
+        h3 {
+            color: var(--django-light-green);
+            margin: 1.2rem 0 0.8rem;
+        }
+        
+        .code-block {
+            background-color: var(--code-bg);
+            color: #f8f8f2;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        .keyword {
+            color: #f92672;
+        }
+        
+        .string {
+            color: #a6e22e;
+        }
+        
+        .comment {
+            color: #75715e;
+        }
+        
+        .function {
+            color: #66d9ef;
+        }
+        
+        .class {
+            color: #a6e22e;
+        }
+        
+        .attr {
+            color: #fd971f;
+        }
+        
+        .step-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .step {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            background: var(--django-accent);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .example-card {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--django-accent);
+        }
+        
+        .admin-preview {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .admin-header {
+            background: var(--django-light-green);
+            color: white;
+            padding: 1rem;
+            margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+            border-radius: 6px 6px 0 0;
+        }
+        
+        .admin-content {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 1.5rem;
+        }
+        
+        .admin-sidebar {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+        }
+        
+        .admin-main {
+            padding: 0.5rem;
+        }
+        
+        .model-list {
+            list-style: none;
+        }
+        
+        .model-item {
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 4px;
+            border-left: 3px solid var(--django-accent);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .model-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .interactive-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .tab-container {
+            margin: 1.5rem 0;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 1rem;
+        }
+        
+        .tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom-color: var(--django-accent);
+            font-weight: bold;
+            color: var(--django-green);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 1rem 0;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--django-accent);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+        
+        .btn:hover {
+            background: var(--django-light-green);
+        }
+        
+        .note {
+            background: #fff8e1;
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            color: #6c757d;
+            background: white;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        @media (max-width: 768px) {
+            .admin-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .step {
+                flex-direction: column;
+            }
+            
+            .step-number {
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Работа с admin.py в Django</h1>
+            <p class="subtitle">Полное руководство по настройке и кастомизации административной панели Django</p>
+        </header>
+
+        <div class="card">
+            <h2>Что такое admin.py?</h2>
+            <p><strong>admin.py</strong> - это файл в приложении Django, который отвечает за настройку административной панели. Здесь регистрируются модели, настраивается внешний вид и поведение интерфейса администрирования.</p>
+            
+            <div class="note">
+                <p>Админка Django - это мощный встроенный инструмент для управления содержимым сайта без необходимости писать собственные интерфейсы.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Базовая настройка административной панели</h2>
+            
+            <div class="step-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Создание суперпользователя</h3>
+                        <p>Перед использованием админки необходимо создать учетную запись суперпользователя:</p>
+                        <div class="code-block">
+                            <span class="comment"># В командной строке</span><br>
+                            python manage.py createsuperuser
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Регистрация моделей в admin.py</h3>
+                        <p>Чтобы модель отображалась в админке, ее нужно зарегистрировать:</p>
+                        <div class="code-block">
+                            <span class="comment"># myapp/admin.py</span><br>
+                            <span class="keyword">from</span> django.contrib <span class="keyword">import</span> admin<br>
+                            <span class="keyword">from</span> .models <span class="keyword">import</span> MyModel<br><br>
+                            
+                            <span class="comment"># Базовая регистрация</span><br>
+                            admin.site.register(MyModel)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Доступ к админке</h3>
+                        <p>После регистрации моделей можно зайти в админку по адресу:</p>
+                        <div class="code-block">
+                            http://localhost:8000/admin/
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Кастомизация отображения моделей</h2>
+            <p>Для тонкой настройки отображения модели в админке используется класс ModelAdmin.</p>
+            
+            <div class="code-block">
+                <span class="comment"># myapp/admin.py</span><br>
+                <span class="keyword">from</span> django.contrib <span class="keyword">import</span> admin<br>
+                <span class="keyword">from</span> .models <span class="keyword">import</span> Article, Category, Author<br><br>
+                
+                <span class="class">class</span> <span class="function">ArticleAdmin</span>(admin.ModelAdmin):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">list_display</span> = [<span class="string">'title'</span>, <span class="string">'author'</span>, <span class="string">'category'</span>, <span class="string">'published_date'</span>, <span class="string">'is_published'</span>]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">list_filter</span> = [<span class="string">'category'</span>, <span class="string">'published_date'</span>, <span class="string">'is_published'</span>]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">search_fields</span> = [<span class="string">'title'</span>, <span class="string">'content'</span>]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">list_editable</span> = [<span class="string">'is_published'</span>]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">prepopulated_fields</span> = {<span class="string">"slug"</span>: (<span class="string">"title"</span>,)}<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">date_hierarchy</span> = <span class="string">'published_date'</span><br><br>
+                
+                <span class="class">class</span> <span class="function">CategoryAdmin</span>(admin.ModelAdmin):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">prepopulated_fields</span> = {<span class="string">"slug"</span>: (<span class="string">"name"</span>,)}<br><br>
+                
+                <span class="comment"># Регистрация моделей с кастомизацией</span><br>
+                admin.site.register(Article, ArticleAdmin)<br>
+                admin.site.register(Category, CategoryAdmin)<br>
+                admin.site.register(Author)
+            </div>
+            
+            <div class="example-grid">
+                <div class="example-card">
+                    <h4>list_display</h4>
+                    <p>Определяет, какие поля отображать в списке объектов</p>
+                </div>
+                
+                <div class="example-card">
+                    <h4>list_filter</h4>
+                    <p>Добавляет фильтры в правую панель для указанных полей</p>
+                </div>
+                
+                <div class="example-card">
+                    <h4>search_fields</h4>
+                    <p>Включает поиск по указанным полям</p>
+                </div>
+                
+                <div class="example-card">
+                    <h4>list_editable</h4>
+                    <p>Позволяет редактировать поля прямо из списка</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Пример административной панели</h2>
+            <p>Вот как может выглядеть кастомизированная админка для блога:</p>
+            
+            <div class="admin-preview">
+                <div class="admin-header">
+                    <h3>Администрирование Django</h3>
+                </div>
+                
+                <div class="admin-content">
+                    <div class="admin-sidebar">
+                        <h4>Модели</h4>
+                        <ul class="model-list">
+                            <li class="model-item">Статьи</li>
+                            <li class="model-item">Категории</li>
+                            <li class="model-item">Авторы</li>
+                            <li class="model-item">Комментарии</li>
+                            <li class="model-item">Теги</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="admin-main">
+                        <h4>Выберите статью для изменения</h4>
+                        <div class="search-bar" style="margin: 1rem 0; padding: 0.5rem; background: #f8f9fa; border-radius: 4px;">
+                            Поиск: [____________] [Найти]
+                        </div>
+                        
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #e9ecef;">
+                                    <th style="padding: 0.5rem; text-align: left;">Заголовок</th>
+                                    <th style="padding: 0.5rem; text-align: left;">Автор</th>
+                                    <th style="padding: 0.5rem; text-align: left;">Дата публикации</th>
+                                    <th style="padding: 0.5rem; text-align: left;">Опубликовано</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 0.5rem;">Введение в Django</td>
+                                    <td style="padding: 0.5rem;">Иван Иванов</td>
+                                    <td style="padding: 0.5rem;">15.03.2023</td>
+                                    <td style="padding: 0.5rem;">✅</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 0.5rem;">Работа с моделями</td>
+                                    <td style="padding: 0.5rem;">Петр Петров</td>
+                                    <td style="padding: 0.5rem;">18.03.2023</td>
+                                    <td style="padding: 0.5rem;">✅</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 0.5rem;">Настройка админки</td>
+                                    <td style="padding: 0.5rem;">Иван Иванов</td>
+                                    <td style="padding: 0.5rem;">-</td>
+                                    <td style="padding: 0.5rem;">❌</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="interactive-section">
+            <h2>Интерактивные примеры настроек</h2>
+            <p>Выберите опцию, чтобы увидеть соответствующий код:</p>
+            
+            <div class="tab-container">
+                <div class="tabs">
+                    <div class="tab active" onclick="openTab(event, 'tab1')">Фильтрация</div>
+                    <div class="tab" onclick="openTab(event, 'tab2')">Поиск</div>
+                    <div class="tab" onclick="openTab(event, 'tab3')">Группировка полей</div>
+                    <div class="tab" onclick="openTab(event, 'tab4')">Кастомные действия</div>
+                </div>
+                
+                <div id="tab1" class="tab-content active">
+                    <div class="code-block">
+                        <span class="class">class</span> <span class="function">ArticleAdmin</span>(admin.ModelAdmin):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">list_filter</span> = (<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'category'</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'is_published'</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="string">'published_date'</span>, admin.DateFieldListFilter),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'author'</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;)
+                    </div>
+                </div>
+                
+                <div id="tab2" class="tab-content">
+                    <div class="code-block">
+                        <span class="class">class</span> <span class="function">ArticleAdmin</span>(admin.ModelAdmin):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">search_fields</span> = (<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'title'</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'content'</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'author__username'</span>,  <span class="comment"># Поиск по связанной модели</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'category__name'</span>     <span class="comment"># Поиск по связанной модели</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;)
+                    </div>
+                </div>
+                
+                <div id="tab3" class="tab-content">
+                    <div class="code-block">
+                        <span class="class">class</span> <span class="function">ArticleAdmin</span>(admin.ModelAdmin):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">fieldsets</span> = (<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="string">'Основная информация'</span>, {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'fields'</span>: (<span class="string">'title'</span>, <span class="string">'slug'</span>, <span class="string">'author'</span>, <span class="string">'category'</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="string">'Содержание'</span>, {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'fields'</span>: (<span class="string">'content'</span>, <span class="string">'excerpt'</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="string">'Публикация'</span>, {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'fields'</span>: (<span class="string">'is_published'</span>, <span class="string">'published_date'</span>),<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'classes'</span>: (<span class="string">'collapse'</span>,)  <span class="comment"># Сворачиваемая группа</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;})<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;)
+                    </div>
+                </div>
+                
+                <div id="tab4" class="tab-content">
+                    <div class="code-block">
+                        <span class="class">class</span> <span class="function">ArticleAdmin</span>(admin.ModelAdmin):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="attr">actions</span> = [<span class="string">'make_published'</span>, <span class="string">'make_unpublished'</span>]<br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">make_published</span>(self, request, queryset):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queryset.update(is_published=True)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;make_published.short_description = <span class="string">"Опубликовать выбранные статьи"</span><br><br>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">make_unpublished</span>(self, request, queryset):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queryset.update(is_published=False)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;make_unpublished.short_description = <span class="string">"Снять с публикации выбранные статьи"</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Расширенные возможности</h2>
+            
+            <div class="step-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Inline-модели</h3>
+                        <p>Позволяют редактировать связанные модели на той же странице:</p>
+                        <div class="code-block">
+                            <span class="class">class</span> <span class="function">CommentInline</span>(admin.TabularInline):<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;model = Comment<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;extra = 1  <span class="comment"># Количество пустых форм</span><br><br>
+                            
+                            <span class="class">class</span> <span class="function">ArticleAdmin</span>(admin.ModelAdmin):<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;inlines = [CommentInline]
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Кастомные шаблоны</h3>
+                        <p>Можно переопределять шаблоны админки для полной кастомизации:</p>
+                        <div class="code-block">
+                            <span class="class">class</span> <span class="function">ArticleAdmin</span>(admin.ModelAdmin):<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Использование кастомного шаблона изменения</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;change_form_template = <span class="string">'admin/myapp/article/change_form.html'</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Переопределение методов</h3>
+                        <p>Можно изменять логику сохранения, отображения и других операций:</p>
+                        <div class="code-block">
+                            <span class="class">class</span> <span class="function">ArticleAdmin</span>(admin.ModelAdmin):<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">save_model</span>(self, request, obj, form, change):<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Автоматическое установление автора</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> <span class="keyword">not</span> change:  <span class="comment"># Если объект создается</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj.author = request.user<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super().save_model(request, obj, form, change)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Полезные советы</h2>
+            <div class="note">
+                <p><strong>Совет 1:</strong> Всегда используйте verbose_name и verbose_name_plural в моделях для красивого отображения в админке.</p>
+                <p><strong>Совет 2:</strong> Для полей с большим количеством текста используйте TextareaWidget.</p>
+                <p><strong>Совет 3:</strong> Регулярно создавайте резервные копии базы данных перед массовыми операциями.</p>
+                <p><strong>Совет 4:</strong> Используйте list_per_page для управления количеством объектов на странице.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 Работа с admin.py в Django | Руководство для разработчиков</p>
+        </div>
+    </footer>
+
+    <script>
+        // Функция для переключения вкладок
+        function openTab(evt, tabName) {
+            const tabcontent = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        // Имитация взаимодействия с элементами админки
+        document.querySelectorAll('.model-item').forEach(item => {
+            item.addEventListener('click', function() {
+                alert('Вы выбрали: ' + this.textContent);
+            });
+        });
+    </script>
+</body>
+</html>
