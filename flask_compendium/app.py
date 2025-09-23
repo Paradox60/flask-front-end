@@ -164,3 +164,7 @@ def thread():
 @app.route("/adminPy")
 def adminPy():
     return render_template("CSS_temp/adminPy.html")
+
+@app.route("/models_to_view")
+def models_to_view():
+    return render_template("CSS_temp/models_to_view.html")

@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Получение данных из моделей Django через Views</title>
+    <style>
+        :root {
+            --django-green: #092e20;
+            --django-light-green: #0c4b33;
+            --django-accent: #157347;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --code-bg: #2d2d2d;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--django-green), var(--django-light-green));
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+            border-left: 5px solid var(--django-accent);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        h2 {
+            color: var(--django-green);
+            margin: 1.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--django-accent);
+        }
+        
+        h3 {
+            color: var(--django-light-green);
+            margin: 1.2rem 0 0.8rem;
+        }
+        
+        .code-block {
+            background-color: var(--code-bg);
+            color: #f8f8f2;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        .keyword {
+            color: #f92672;
+        }
+        
+        .string {
+            color: #a6e22e;
+        }
+        
+        .comment {
+            color: #75715e;
+        }
+        
+        .function {
+            color: #66d9ef;
+        }
+        
+        .class {
+            color: #a6e22e;
+        }
+        
+        .attr {
+            color: #fd971f;
+        }
+        
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .method-card {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--django-accent);
+            transition: all 0.3s;
+        }
+        
+        .method-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .method-title {
+            font-weight: bold;
+            color: var(--django-green);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .method-icon {
+            margin-right: 10px;
+            font-size: 1.4rem;
+        }
+        
+        .example-container {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+        
+        .example-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .example-tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-right: 1px solid #e9ecef;
+            transition: background 0.3s;
+        }
+        
+        .example-tab.active {
+            background: white;
+            font-weight: bold;
+            color: var(--django-green);
+        }
+        
+        .example-content {
+            padding: 1.5rem;
+            display: none;
+        }
+        
+        .example-content.active {
+            display: block;
+        }
+        
+        .flow-diagram {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        .flow-step {
+            background: var(--django-accent);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .flow-arrow {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #ddd;
+            z-index: 1;
+        }
+        
+        .flow-arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid #ddd;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        
+        .step-description {
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .interactive-demo {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .demo-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .demo-button {
+            background: var(--django-accent);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .demo-button:hover {
+            background: var(--django-light-green);
+        }
+        
+        .demo-result {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: var(--light);
+            border-radius: 8px;
+            min-height: 100px;
+            border-left: 4px solid var(--info);
+        }
+        
+        .note {
+            background: #fff8e1;
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            border-left: 4px solid var(--info);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            color: #6c757d;
+            background: white;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        @media (max-width: 768px) {
+            .method-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-steps {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .flow-arrow {
+                display: none;
+            }
+            
+            .demo-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Получение данных из моделей Django через Views</h1>
+            <p class="subtitle">Полное руководство по работе с данными в представлениях Django</p>
+        </header>
+
+        <div class="card">
+            <h2>Основной принцип работы</h2>
+            <p>В Django View (представление) - это функция или класс, который обрабатывает запрос и возвращает ответ. Для работы с данными из моделей используются методы QuerySet API.</p>
+            
+            <div class="flow-diagram">
+                <h3>Поток данных в Django</h3>
+                <div class="flow-steps">
+                    <div class="flow-step">1</div>
+                    <div class="flow-step">2</div>
+                    <div class="flow-step">3</div>
+                    <div class="flow-step">4</div>
+                    <div class="flow-arrow"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <div class="step-description">Запрос</div>
+                    <div class="step-description">View</div>
+                    <div class="step-description">Модель</div>
+                    <div class="step-description">Ответ</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Модель для примеров</h2>
+            <p>Рассмотрим работу с данными на примере модели BlogPost:</p>
+            
+            <div class="code-block">
+                <span class="comment"># models.py</span><br>
+                <span class="keyword">from</span> django.db <span class="keyword">import</span> models<br>
+                <span class="keyword">from</span> django.contrib.auth.models <span class="keyword">import</span> User<br><br>
+                
+                <span class="class">class</span> <span class="function">BlogPost</span>(models.Model):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;title = models.CharField(<span class="string">"Заголовок"</span>, max_length=200)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;content = models.TextField(<span class="string">"Содержание"</span>)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;author = models.ForeignKey(User, on_delete=models.CASCADE)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;created_at = models.DateTimeField(auto_now_add=True)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;updated_at = models.DateTimeField(auto_now=True)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;is_published = models.BooleanField(default=False)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;category = models.CharField(max_length=100, default=<span class="string">"general"</span>)<br><br>
+                
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__str__</span>(self):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> self.title
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Function-Based Views (FBV)</h2>
+            <p>Классический подход с использованием функций:</p>
+            
+            <div class="example-container">
+                <div class="example-tabs">
+                    <div class="example-tab active" onclick="showExample('example1')">Все записи</div>
+                    <div class="example-tab" onclick="showExample('example2')">Одна запись</div>
+                    <div class="example-tab" onclick="showExample('example3')">Фильтрация</div>
+                </div>
+                
+                <div id="example1" class="example-content active">
+                    <div class="code-block">
+                        <span class="comment"># views.py</span><br>
+                        <span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render<br>
+                        <span class="keyword">from</span> .models <span class="keyword">import</span> BlogPost<br><br>
+                        
+                        <span class="keyword">def</span> <span class="function">post_list</span>(request):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Получаем все опубликованные посты</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;posts = BlogPost.objects.filter(is_published=True)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> render(request, <span class="string">'blog/post_list.html'</span>, {<span class="string">'posts'</span>: posts})
+                    </div>
+                    
+                    <div class="code-block">
+                        <span class="comment"># urls.py</span><br>
+                        <span class="keyword">from</span> django.urls <span class="keyword">import</span> path<br>
+                        <span class="keyword">from</span> . <span class="keyword">import</span> views<br><br>
+                        
+                        urlpatterns = [<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;path(<span class="string">'posts/'</span>, views.post_list, name=<span class="string">'post_list'</span>),<br>
+                        ]
+                    </div>
+                </div>
+                
+                <div id="example2" class="example-content">
+                    <div class="code-block">
+                        <span class="keyword">def</span> <span class="function">post_detail</span>(request, post_id):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">try</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Получаем один пост по ID</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;post = BlogPost.objects.get(id=post_id, is_published=True)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">except</span> BlogPost.DoesNotExist:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Если пост не найден - 404 ошибка</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">from</span> django.http <span class="keyword">import</span> Http404<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">raise</span> Http404(<span class="string">"Пост не найден"</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> render(request, <span class="string">'blog/post_detail.html'</span>, {<span class="string">'post'</span>: post})
+                    </div>
+                    
+                    <div class="code-block">
+                        <span class="comment"># Более простой способ с get_object_or_404</span><br>
+                        <span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> get_object_or_404<br><br>
+                        
+                        <span class="keyword">def</span> <span class="function">post_detail</span>(request, post_id):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;post = get_object_or_404(BlogPost, id=post_id, is_published=True)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> render(request, <span class="string">'blog/post_detail.html'</span>, {<span class="string">'post'</span>: post})
+                    </div>
+                </div>
+                
+                <div id="example3" class="example-content">
+                    <div class="code-block">
+                        <span class="keyword">def</span> <span class="function">posts_by_category</span>(request, category_name):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Фильтрация по категории</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;posts = BlogPost.objects.filter(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;category=category_name, <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is_published=True<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;).order_by(<span class="string">'-created_at'</span>)  <span class="comment"># Сортировка по дате</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> render(request, <span class="string">'blog/category.html'</span>, {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'posts'</span>: posts,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'category'</span>: category_name<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;})
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Class-Based Views (CBV)</h2>
+            <p>Более современный подход с использованием классов:</p>
+            
+            <div class="method-grid">
+                <div class="method-card">
+                    <div class="method-title"><span class="method-icon">📋</span>ListView</div>
+                    <p>Для отображения списка объектов</p>
+                    <div class="code-block" style="font-size: 0.8rem; padding: 1rem;">
+                        <span class="keyword">from</span> django.views.generic <span class="keyword">import</span> ListView<br>
+                        <span class="keyword">from</span> .models <span class="keyword">import</span> BlogPost<br><br>
+                        
+                        <span class="class">class</span> <span class="function">PostListView</span>(ListView):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;model = BlogPost<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;template_name = <span class="string">'blog/post_list.html'</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;context_object_name = <span class="string">'posts'</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;queryset = BlogPost.objects.filter(is_published=True)
+                    </div>
+                </div>
+                
+                <div class="method-card">
+                    <div class="method-title"><span class="method-icon">🔍</span>DetailView</div>
+                    <p>Для отображения одного объекта</p>
+                    <div class="code-block" style="font-size: 0.8rem; padding: 1rem;">
+                        <span class="keyword">from</span> django.views.generic <span class="keyword">import</span> DetailView<br><br>
+                        
+                        <span class="class">class</span> <span class="function">PostDetailView</span>(DetailView):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;model = BlogPost<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;template_name = <span class="string">'blog/post_detail.html'</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;context_object_name = <span class="string">'post'</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">get_queryset</span>(self):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> BlogPost.objects.filter(is_published=True)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Основные методы QuerySet</h2>
+            <p>Методы для работы с данными в Django ORM:</p>
+            
+            <div class="method-grid">
+                <div class="method-card">
+                    <div class="method-title"><span class="method-icon">✅</span>all()</div>
+                    <p>Получить все объекты модели</p>
+                    <div class="code-block" style="font-size: 0.8rem; padding: 1rem;">
+                        posts = BlogPost.objects.all()
+                    </div>
+                </div>
+                
+                <div class="method-card">
+                    <div class="method-title"><span class="method-icon">🔍</span>filter()</div>
+                    <p>Фильтрация по условиям</p>
+                    <div class="code-block" style="font-size: 0.8rem; padding: 1rem;">
+                        published_posts = BlogPost.objects.filter(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;is_published=True,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;category="django"<br>
+                        )
+                    </div>
+                </div>
+                
+                <div class="method-card">
+                    <div class="method-title"><span class="method-icon">🚫</span>exclude()</div>
+                    <p>Исключение по условиям</p>
+                    <div class="code-block" style="font-size: 0.8rem; padding: 1rem;">
+                        posts = BlogPost.objects.exclude(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;category="archive"<br>
+                        )
+                    </div>
+                </div>
+                
+                <div class="method-card">
+                    <div class="method-title"><span class="method-icon">📊</span>get()</div>
+                    <p>Получить один объект (вызывает исключение если не найден или найдено несколько)</p>
+                    <div class="code-block" style="font-size: 0.8rem; padding: 1rem;">
+                        post = BlogPost.objects.get(id=1)
+                    </div>
+                </div>
+                
+                <div class="method-card">
+                    <div class="method-title"><span class="method-icon">📈</span>order_by()</div>
+                    <p>Сортировка результатов</p>
+                    <div class="code-block" style="font-size: 0.8rem; padding: 1rem;">
+                        posts = BlogPost.objects.order_by(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;'-created_at',  # по убыванию<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;'title'         # по возрастанию<br>
+                        )
+                    </div>
+                </div>
+                
+                <div class="method-card">
+                    <div class="method-title"><span class="method-icon">🔗</span>select_related()</div>
+                    <p>Оптимизация запросов для ForeignKey</p>
+                    <div class="code-block" style="font-size: 0.8rem; padding: 1rem;">
+                        posts = BlogPost.objects.select_related(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;'author'  # Загружаем данные автора одним запросом<br>
+                        )
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="interactive-demo">
+            <h2>Интерактивный пример</h2>
+            <p>Выберите тип запроса к базе данных:</p>
+            
+            <div class="demo-controls">
+                <button class="demo-button" onclick="showDemo('all')">Все посты</button>
+                <button class="demo-button" onclick="showDemo('published')">Опубликованные</button>
+                <button class="demo-button" onclick="showDemo('recent')">Последние 3</button>
+                <button class="demo-button" onclick="showDemo('django')">Категория Django</button>
+            </div>
+            
+            <div class="demo-result" id="demoResult">
+                Результаты запроса появятся здесь...
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Работа с формами и данными</h2>
+            <p>Пример обработки POST-запросов и создания новых объектов:</p>
+            
+            <div class="code-block">
+                <span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render, redirect<br>
+                <span class="keyword">from</span> .forms <span class="keyword">import</span> BlogPostForm<br>
+                <span class="keyword">from</span> .models <span class="keyword">import</span> BlogPost<br><br>
+                
+                <span class="keyword">def</span> <span class="function">create_post</span>(request):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> request.method == <span class="string">'POST'</span>:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;form = BlogPostForm(request.POST)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> form.is_valid():<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Сохраняем данные в базу</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;post = form.save(commit=False)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;post.author = request.user<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;post.save()<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> redirect(<span class="string">'post_detail'</span>, post_id=post.id)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">else</span>:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;form = BlogPostForm()<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> render(request, <span class="string">'blog/create_post.html'</span>, {<span class="string">'form'</span>: form})
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Полезные советы и лучшие практики</h2>
+            
+            <div class="note">
+                <p><strong>Оптимизация запросов:</strong> Используйте select_related() и prefetch_related() для уменьшения количества SQL-запросов.</p>
+            </div>
+            
+            <div class="info">
+                <p><strong>Безопасность:</strong> Всегда проверяйте права доступа при работе с пользовательскими данными.</p>
+            </div>
+            
+            <div class="note">
+                <p><strong>Обработка ошибок:</strong> Используйте get_object_or_404() вместо try/except для упрощения кода.</p>
+            </div>
+            
+            <div class="info">
+                <p><strong>Пагинация:</strong> Для больших списков используйте Django's Paginator или ListView.paginate_by.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 Работа с данными в Django Views | Руководство для разработчиков</p>
+        </div>
+    </footer>
+
+    <script>
+        // Функция для переключения примеров
+        function showExample(exampleId) {
+            const contents = document.querySelectorAll('.example-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            const tabs = document.querySelectorAll('.example-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(exampleId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Демонстрация запросов
+        function showDemo(type) {
+            const resultDiv = document.getElementById('demoResult');
+            let content = '';
+            
+            switch(type) {
+                case 'all':
+                    content = `
+                        <h4>Запрос: BlogPost.objects.all()</h4>
+                        <p><strong>SQL:</strong> SELECT * FROM blog_blogpost;</p>
+                        <p><strong>Результат:</strong> Все записи из таблицы BlogPost</p>
+                        <p><strong>Использование:</strong> Когда нужно получить все объекты без фильтрации</p>
+                    `;
+                    break;
+                    
+                case 'published':
+                    content = `
+                        <h4>Запрос: BlogPost.objects.filter(is_published=True)</h4>
+                        <p><strong>SQL:</strong> SELECT * FROM blog_blogpost WHERE is_published = 1;</p>
+                        <p><strong>Результат:</strong> Только опубликованные посты</p>
+                        <p><strong>Использование:</strong> Для отображения только активного контента</p>
+                    `;
+                    break;
+                    
+                case 'recent':
+                    content = `
+                        <h4>Запрос: BlogPost.objects.filter(is_published=True).order_by('-created_at')[:3]</h4>
+                        <p><strong>SQL:</strong> SELECT * FROM blog_blogpost WHERE is_published = 1 ORDER BY created_at DESC LIMIT 3;</p>
+                        <p><strong>Результат:</strong> 3 последних опубликованных поста</p>
+                        <p><strong>Использование:</strong> Для виджета "Последние статьи"</p>
+                    `;
+                    break;
+                    
+                case 'django':
+                    content = `
+                        <h4>Запрос: BlogPost.objects.filter(category='django', is_published=True)</h4>
+                        <p><strong>SQL:</strong> SELECT * FROM blog_blogpost WHERE category = 'django' AND is_published = 1;</p>
+                        <p><strong>Результат:</strong> Посты категории "Django"</p>
+                        <p><strong>Использование:</strong> Для страницы категории</p>
+                    `;
+                    break;
+            }
+            
+            resultDiv.innerHTML = content;
+        }
+        
+        // Инициализация демо
+        showDemo('all');
+    </script>
+</body>
+</html>
