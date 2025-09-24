@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вывод данных из SQL в Django</title>
+    <style>
+        :root {
+            --django-green: #092e20;
+            --django-light-green: #0c4b33;
+            --django-accent: #157347;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --code-bg: #2d2d2d;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --danger: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--django-green), var(--django-light-green));
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+            border-left: 5px solid var(--django-accent);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        h2 {
+            color: var(--django-green);
+            margin: 1.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--django-accent);
+        }
+        
+        h3 {
+            color: var(--django-light-green);
+            margin: 1.2rem 0 0.8rem;
+        }
+        
+        .code-block {
+            background-color: var(--code-bg);
+            color: #f8f8f2;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        .keyword {
+            color: #f92672;
+        }
+        
+        .string {
+            color: #a6e22e;
+        }
+        
+        .comment {
+            color: #75715e;
+        }
+        
+        .function {
+            color: #66d9ef;
+        }
+        
+        .class {
+            color: #a6e22e;
+        }
+        
+        .attr {
+            color: #fd971f;
+        }
+        
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .method-card {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--django-accent);
+            transition: all 0.3s;
+        }
+        
+        .method-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .method-title {
+            font-weight: bold;
+            color: var(--django-green);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .method-icon {
+            margin-right: 10px;
+            font-size: 1.4rem;
+        }
+        
+        .example-container {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+        
+        .example-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            flex-wrap: wrap;
+        }
+        
+        .example-tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-right: 1px solid #e9ecef;
+            transition: background 0.3s;
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        .example-tab.active {
+            background: white;
+            font-weight: bold;
+            color: var(--django-green);
+        }
+        
+        .example-content {
+            padding: 1.5rem;
+            display: none;
+        }
+        
+        .example-content.active {
+            display: block;
+        }
+        
+        .demo-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .demo-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .demo-button {
+            background: var(--django-accent);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .demo-button:hover {
+            background: var(--django-light-green);
+        }
+        
+        .demo-result {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: var(--light);
+            border-radius: 8px;
+            min-height: 100px;
+            border-left: 4px solid var(--info);
+            font-family: 'Consolas', monospace;
+            white-space: pre-wrap;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        .data-table th {
+            background: var(--django-light-green);
+            color: white;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .note {
+            background: #fff8e1;
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            border-left: 4px solid var(--info);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        .danger {
+            background: #f8d7da;
+            border-left: 4px solid var(--danger);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            color: #6c757d;
+            background: white;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        @media (max-width: 768px) {
+            .method-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .example-tabs {
+                flex-direction: column;
+            }
+            
+            .example-tab {
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+            }
+            
+            .demo-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Вывод данных из SQL в Django</h1>
+            <p class="subtitle">Способы получения и отображения данных из базы данных на веб-страницах</p>
+        </header>
+
+        <div class="card">
+            <h2>Модель для примеров</h2>
+            <p>Рассмотрим работу с данными на примере модели Product:</p>
+            
+            <div class="code-block">
+                <span class="comment"># models.py</span><br>
+                <span class="keyword">from</span> django.db <span class="keyword">import</span> models<br><br>
+                
+                <span class="class">class</span> <span class="function">Product</span>(models.Model):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;name = models.CharField(<span class="string">"Название"</span>, max_length=100)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;description = models.TextField(<span class="string">"Описание"</span>)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;price = models.DecimalField(max_digits=10, decimal_places=2)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;category = models.CharField(max_length=50)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;in_stock = models.BooleanField(default=True)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;created_at = models.DateTimeField(auto_now_add=True)<br><br>
+                
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="class">class</span> Meta:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ordering = [<span class="string">'-created_at'</span>]<br><br>
+                
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__str__</span>(self):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> self.name
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>1. Вывод данных через шаблоны (Templates)</h2>
+            <p>Самый распространенный способ - передача данных в шаблон через контекст.</p>
+            
+            <div class="example-container">
+                <div class="example-tabs">
+                    <div class="example-tab active" onclick="showExample('template1')">View</div>
+                    <div class="example-tab" onclick="showExample('template2')">Template</div>
+                    <div class="example-tab" onclick="showExample('template3')">Результат</div>
+                </div>
+                
+                <div id="template1" class="example-content active">
+                    <div class="code-block">
+                        <span class="comment"># views.py</span><br>
+                        <span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render<br>
+                        <span class="keyword">from</span> .models <span class="keyword">import</span> Product<br><br>
+                        
+                        <span class="keyword">def</span> <span class="function">product_list</span>(request):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Получаем все товары в наличии</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;products = Product.objects.filter(in_stock=True)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Передаем данные в шаблон</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> render(request, <span class="string">'products/list.html'</span>, {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'products'</span>: products,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'title'</span>: <span class="string">'Список товаров'</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;})
+                    </div>
+                </div>
+                
+                <div id="template2" class="example-content">
+                    <div class="code-block">
+                        <span class="comment">{# templates/products/list.html #}</span><br>
+                        &lt;h1&gt;{{ title }}&lt;/h1&gt;<br>
+                        &lt;table&gt;<br>
+                        &nbsp;&nbsp;&lt;thead&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;th&gt;Название&lt;/th&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;th&gt;Цена&lt;/th&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;th&gt;Категория&lt;/th&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/tr&gt;<br>
+                        &nbsp;&nbsp;&lt;/thead&gt;<br>
+                        &nbsp;&nbsp;&lt;tbody&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{% for product in products %}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;{{ product.name }}&lt;/td&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;{{ product.price }} руб.&lt;/td&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;{{ product.category }}&lt;/td&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/tr&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{% empty %}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td colspan="3"&gt;Товаров нет&lt;/td&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/tr&gt;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{% endfor %}<br>
+                        &nbsp;&nbsp;&lt;/tbody&gt;<br>
+                        &lt;/table&gt;
+                    </div>
+                </div>
+                
+                <div id="template3" class="example-content">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Цена</th>
+                                <th>Категория</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ноутбук HP</td>
+                                <td>55000 руб.</td>
+                                <td>Электроника</td>
+                            </tr>
+                            <tr>
+                                <td>Смартфон Samsung</td>
+                                <td>25000 руб.</td>
+                                <td>Электроника</td>
+                            </tr>
+                            <tr>
+                                <td>Книга "Python для начинающих"</td>
+                                <td>1500 руб.</td>
+                                <td>Книги</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>2. Class-Based Views для вывода данных</h2>
+            <p>Использование встроенных классов для упрощения кода.</p>
+            
+            <div class="method-grid">
+                <div class="method-card">
+                    <div class="method-title"><span class="method-icon">📋</span>ListView</div>
+                    <div class="code-block" style="font-size: 0.8rem; padding: 1rem;">
+                        <span class="keyword">from</span> django.views.generic <span class="keyword">import</span> ListView<br>
+                        <span class="keyword">from</span> .models <span class="keyword">import</span> Product<br><br>
+                        
+                        <span class="class">class</span> <span class="function">ProductListView</span>(ListView):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;model = Product<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;template_name = <span class="string">'products/product_list.html'</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;context_object_name = <span class="string">'products'</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;paginate_by = 10  <span class="comment"># Пагинация</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">get_queryset</span>(self):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> Product.objects.filter(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in_stock=True<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;).order_by(<span class="string">'-created_at'</span>)
+                    </div>
+                </div>
+                
+                <div class="method-card">
+                    <div class="method-title"><span class="method-icon">🔍</span>DetailView</div>
+                    <div class="code-block" style="font-size: 0.8rem; padding: 1rem;">
+                        <span class="keyword">from</span> django.views.generic <span class="keyword">import</span> DetailView<br><br>
+                        
+                        <span class="class">class</span> <span class="function">ProductDetailView</span>(DetailView):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;model = Product<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;template_name = <span class="string">'products/product_detail.html'</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;context_object_name = <span class="string">'product'</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        <span class="comment"># urls.py</span><br>
+                        path(<span class="string">'product/&lt;int:pk&gt;/'</span>, <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;ProductDetailView.as_view(), <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;name=<span class="string">'product_detail'</span>)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>3. Прямые SQL-запросы</h2>
+            <p>Использование сырых SQL-запросов когда ORM недостаточно.</p>
+            
+            <div class="example-container">
+                <div class="example-tabs">
+                    <div class="example-tab active" onclick="showExample('sql1')">raw()</div>
+                    <div class="example-tab" onclick="showExample('sql2')">cursor</div>
+                    <div class="example-tab" onclick="showExample('sql3')">Примеры</div>
+                </div>
+                
+                <div id="sql1" class="example-content active">
+                    <div class="code-block">
+                        <span class="comment"># Использование raw() для сложных запросов</span><br>
+                        <span class="keyword">from</span> django.db <span class="keyword">import</span> models<br><br>
+                        
+                        <span class="keyword">def</span> <span class="function">get_expensive_products</span>(min_price=10000):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;query = <span class="string">"""</span><br><span class="string">        SELECT * FROM products_product </span><br><span class="string">        WHERE price > %s AND in_stock = TRUE</span><br><span class="string">        ORDER BY price DESC</span><br><span class="string">        """</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> Product.objects.raw(query, [min_price])
+                    </div>
+                </div>
+                
+                <div id="sql2" class="example-content">
+                    <div class="code-block">
+                        <span class="comment"># Прямая работа с курсором</span><br>
+                        <span class="keyword">from</span> django.db <span class="keyword">import</span> connection<br><br>
+                        
+                        <span class="keyword">def</span> <span class="function">get_category_stats</span>():<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">with</span> connection.cursor() <span class="keyword">as</span> cursor:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cursor.execute(<span class="string">"""</span><br><span class="string">            SELECT category, COUNT(*), AVG(price) </span><br><span class="string">            FROM products_product </span><br><span class="string">            WHERE in_stock = TRUE </span><br><span class="string">            GROUP BY category</span><br><span class="string">            """</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rows = cursor.fetchall()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> rows
+                    </div>
+                </div>
+                
+                <div id="sql3" class="example-content">
+                    <div class="code-block">
+                        <span class="comment"># Пример использования в view</span><br>
+                        <span class="keyword">def</span> <span class="function">category_stats_view</span>(request):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;stats = get_category_stats()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;context = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'stats'</span>: [<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'category'</span>: row[0],<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'count'</span>: row[1],<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'avg_price'</span>: float(row[2])<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span> row <span class="keyword">in</span> stats<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> render(request, <span class="string">'stats.html'</span>, context)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="danger">
+                <p><strong>Внимание:</strong> Прямые SQL-запросы могут быть уязвимы к SQL-инъекциям. Всегда используйте параметризованные запросы!</p>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>Демонстрация SQL-запросов</h2>
+            <p>Посмотрите, как разные способы выборки данных генерируют SQL:</p>
+            
+            <div class="demo-controls">
+                <button class="demo-button" onclick="showSqlDemo('all')">Все товары</button>
+                <button class="demo-button" onclick="showSqlDemo('filter')">Фильтр по цене</button>
+                <button class="demo-button" onclick="showSqlDemo('annotate')">Аннотации</button>
+                <button class="demo-button" onclick="showSqlDemo('aggregate')">Агрегация</button>
+            </div>
+            
+            <div class="demo-result" id="sqlDemoResult">
+                Выберите тип запроса...
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>4. AJAX и JSON API</h2>
+            <p>Динамическая загрузка данных без перезагрузки страницы.</p>
+            
+            <div class="example-container">
+                <div class="example-tabs">
+                    <div class="example-tab active" onclick="showExample('ajax1')">View</div>
+                    <div class="example-tab" onclick="showExample('ajax2')">JavaScript</div>
+                    <div class="example-tab" onclick="showExample('ajax3')">Template</div>
+                </div>
+                
+                <div id="ajax1" class="example-content active">
+                    <div class="code-block">
+                        <span class="comment"># views.py - API endpoint</span><br>
+                        <span class="keyword">from</span> django.http <span class="keyword">import</span> JsonResponse<br>
+                        <span class="keyword">from</span> django.core <span class="keyword">import</span> serializers<br>
+                        <span class="keyword">import</span> json<br><br>
+                        
+                        <span class="keyword">def</span> <span class="function">api_products</span>(request):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;category = request.GET.get(<span class="string">'category'</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;min_price = request.GET.get(<span class="string">'min_price'</span>, 0)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;products = Product.objects.filter(in_stock=True)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> category:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;products = products.filter(category=category)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> min_price:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;products = products.filter(price__gte=min_price)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;data = list(products.values(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'id'</span>, <span class="string">'name'</span>, <span class="string">'price'</span>, <span class="string">'category'</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;))<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> JsonResponse(data, safe=False)
+                    </div>
+                </div>
+                
+                <div id="ajax2" class="example-content">
+                    <div class="code-block">
+                        <span class="comment">// JavaScript</span><br>
+                        <span class="function">function</span> loadProducts(category = <span class="string">''</span>) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;const url = <span class="string">`/api/products/?category=${category}`</span>;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;fetch(url)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.then(response => response.json())<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.then(products => {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const container = document.getElementById(<span class="string">'products-container'</span>);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;container.innerHTML = products.map(product => <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">`&lt;div class="product"&gt;${product.name} - ${product.price} руб.&lt;/div&gt;`</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;).join(<span class="string">''</span>);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+                        }
+                    </div>
+                </div>
+                
+                <div id="ajax3" class="example-content">
+                    <div class="code-block">
+                        <span class="comment">{# template.html #}</span><br>
+                        &lt;select onchange="loadProducts(this.value)"&gt;<br>
+                        &nbsp;&nbsp;&lt;option value=""&gt;Все категории&lt;/option&gt;<br>
+                        &nbsp;&nbsp;&lt;option value="electronics"&gt;Электроника&lt;/option&gt;<br>
+                        &nbsp;&nbsp;&lt;option value="books"&gt;Книги&lt;/option&gt;<br>
+                        &lt;/select&gt;<br>
+                        &lt;br&gt;<br>
+                        &lt;div id="products-container"&gt;<br>
+                        &nbsp;&nbsp;&lt;!-- Тут появятся товары через AJAX --&gt;<br>
+                        &lt;/div&gt;<br>
+                        &lt;script&gt;<br>
+                        &nbsp;&nbsp;<span class="comment">// Загружаем товары при загрузке страницы</span><br>
+                        &nbsp;&nbsp;document.addEventListener(<span class="string">'DOMContentLoaded'</span>, () => loadProducts());<br>
+                        &lt;/script&gt;
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>5. Пагинация данных</h2>
+            <p>Разбивка больших наборов данных на страницы.</p>
+            
+            <div class="code-block">
+                <span class="comment"># views.py</span><br>
+                <span class="keyword">from</span> django.core.paginator <span class="keyword">import</span> Paginator<br>
+                <span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render<br><br>
+                
+                <span class="keyword">def</span> <span class="function">product_list_paginated</span>(request):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;products = Product.objects.filter(in_stock=True)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;paginator = Paginator(products, 5)  <span class="comment"># 5 товаров на страницу</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;page_number = request.GET.get(<span class="string">'page'</span>)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;page_obj = paginator.get_page(page_number)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> render(request, <span class="string">'products/list.html'</span>, {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">'page_obj'</span>: page_obj<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;})
+            </div>
+            
+            <div class="code-block">
+                <span class="comment">{# template.html #}</span><br>
+                {% for product in page_obj %}<br>
+                &nbsp;&nbsp;&lt;div&gt;{{ product.name }} - {{ product.price }}&lt;/div&gt;<br>
+                {% endfor %}<br>
+                <br>
+                <span class="comment">{# Навигация по страницам #}</span><br>
+                &lt;div class="pagination"&gt;<br>
+                &nbsp;&nbsp;{% if page_obj.has_previous %}<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;a href="?page={{ page_obj.previous_page_number }}"&gt;Назад&lt;/a&gt;<br>
+                &nbsp;&nbsp;{% endif %}<br>
+                &nbsp;&nbsp;&lt;span&gt;Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}&lt;/span&gt;<br>
+                &nbsp;&nbsp;{% if page_obj.has_next %}<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;a href="?page={{ page_obj.next_page_number }}"&gt;Вперед&lt;/a&gt;<br>
+                &nbsp;&nbsp;{% endif %}<br>
+                &lt;/div&gt;
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Лучшие практики</h2>
+            
+            <div class="info">
+                <p><strong>Оптимизация запросов:</strong> Используйте select_related() и prefetch_related() для уменьшения количества SQL-запросов.</p>
+            </div>
+            
+            <div class="note">
+                <p><strong>Безопасность:</strong> Всегда экранируйте пользовательский ввод и используйте параметризованные запросы.</p>
+            </div>
+            
+            <div class="info">
+                <p><strong>Кэширование:</strong> Для часто запрашиваемых данных используйте кэширование.</p>
+            </div>
+            
+            <div class="note">
+                <p><strong>Пагинация:</strong>

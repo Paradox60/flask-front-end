@@ -168,3 +168,7 @@ def adminPy():
 @app.route("/models_to_view")
 def models_to_view():
     return render_template("CSS_temp/models_to_view.html")
+
+@app.route("/django_view")
+def django_view():
+    return render_template("CSS_temp/django_view.html")
