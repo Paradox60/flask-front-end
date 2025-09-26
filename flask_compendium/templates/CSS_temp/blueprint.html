@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Blueprint: Руководство по маршрутизации</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --success: #2ecc71;
+            --warning: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-menu li {
+            position: relative;
+        }
+        
+        .nav-menu a {
+            display: block;
+            padding: 1rem 1.5rem;
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-menu a:hover {
+            background-color: var(--light);
+            color: var(--secondary);
+        }
+        
+        .nav-menu a.active {
+            color: var(--secondary);
+            border-bottom: 3px solid var(--secondary);
+        }
+        
+        main {
+            padding: 2rem 0;
+        }
+        
+        section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        h3 {
+            color: var(--secondary);
+            margin: 1.5rem 0 0.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .code-block {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .code-comment {
+            color: #75715e;
+        }
+        
+        .code-keyword {
+            color: #f92672;
+        }
+        
+        .code-string {
+            color: #e6db74;
+        }
+        
+        .code-function {
+            color: #66d9ef;
+        }
+        
+        .code-class {
+            color: #a6e22e;
+        }
+        
+        .example {
+            background-color: var(--light);
+            border-left: 4px solid var(--secondary);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .note {
+            background-color: #fff9e6;
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .warning {
+            background-color: #ffe6e6;
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .diagram {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--secondary);
+            color: var(--secondary);
+            font-weight: 500;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-menu {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Flask Blueprint: Руководство по маршрутизации</h1>
+            <p class="subtitle">Структурирование приложений Flask с помощью Blueprint</p>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="#intro" class="active">Введение</a></li>
+                <li><a href="#what-is">Что такое Blueprint?</a></li>
+                <li><a href="#why-use">Зачем использовать Blueprint?</a></li>
+                <li><a href="#create">Создание Blueprint</a></li>
+                <li><a href="#register">Регистрация Blueprint</a></li>
+                <li><a href="#examples">Примеры</a></li>
+                <li><a href="#best-practices">Лучшие практики</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section id="intro">
+            <h2>Введение в Blueprint для Flask</h2>
+            <p>Flask Blueprint — это мощный инструмент для организации кода в приложениях Flask. Он позволяет разбивать приложение на модульные компоненты, что особенно полезно для крупных проектов.</p>
+            
+            <div class="diagram">
+                <h3>Структура приложения с Blueprint</h3>
+                <p><strong>Приложение Flask</strong> → <strong>Blueprint 1</strong> (Пользователи) → <strong>Blueprint 2</strong> (Блог) → <strong>Blueprint 3</strong> (Админка)</p>
+                <p>Каждый Blueprint содержит свои маршруты, шаблоны, статические файлы и логику.</p>
+            </div>
+        </section>
+        
+        <section id="what-is">
+            <h2>Что такое Blueprint?</h2>
+            <p>Blueprint в Flask — это способ организации группы связанных маршрутов и других компонентов приложения. Его можно рассматривать как "мини-приложение" внутри основного приложения Flask.</p>
+            
+            <p>Основные характеристики Blueprint:</p>
+            <ul>
+                <li>Позволяет разделить приложение на модули</li>
+                <li>Каждый Blueprint может иметь свои маршруты, шаблоны, статические файлы</li>
+                <li>Упрощает поддержку и масштабирование кода</li>
+                <li>Позволяет повторно использовать компоненты в разных проектах</li>
+            </ul>
+            
+            <div class="example">
+                <h3>Аналогия</h3>
+                <p>Представьте, что ваше Flask-приложение — это дом. Blueprint'ы — это комнаты в этом доме. Каждая комната имеет свою специфическую функцию (спальня, кухня, гостиная), но все они являются частью одного дома.</p>
+            </div>
+        </section>
+        
+        <section id="why-use">
+            <h2>Зачем использовать Blueprint?</h2>
+            <p>Использование Blueprint становится особенно важным по мере роста приложения. Вот основные преимущества:</p>
+            
+            <h3>1. Модульность</h3>
+            <p>Разделение приложения на логические модули упрощает навигацию по коду и его понимание.</p>
+            
+            <h3>2. Повторное использование</h3>
+            <p>Blueprint можно легко переносить между проектами. Например, аутентификационный Blueprint можно использовать в нескольких приложениях.</p>
+            
+            <h3>3. Совместная работа</h3>
+            <p>Разные разработчики могут работать над разными Blueprint'ами одновременно, не мешая друг другу.</p>
+            
+            <h3>4. Масштабируемость</h3>
+            <p>Добавление новых функций становится проще — достаточно создать новый Blueprint.</p>
+            
+            <div class="note">
+                <p><strong>Примечание:</strong> Для небольших приложений (1-2 маршрута) использование Blueprint может быть избыточным. Но для средних и крупных проектов это практически необходимость.</p>
+            </div>
+        </section>
+        
+        <section id="create">
+            <h2>Создание Blueprint</h2>
+            <p>Создание Blueprint — простой процесс. Рассмотрим его на примере.</p>
+            
+            <h3>Базовый пример</h3>
+            <div class="code-block">
+                <span class="code-keyword">from</span> flask <span class="code-keyword">import</span> Blueprint<br>
+                <br>
+                <span class="code-comment"># Создание Blueprint</span><br>
+                auth_bp = Blueprint(<span class="code-string">'auth'</span>, <span class="code-string">__name__</span>)<br>
+                <br>
+                <span class="code-comment"># Определение маршрутов внутри Blueprint</span><br>
+                @auth_bp.route(<span class="code-string">'/login'</span>)<br>
+                <span class="code-keyword">def</span> <span class="code-function">login</span>():<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-string">'Страница входа'</span><br>
+                <br>
+                @auth_bp.route(<span class="code-string">'/register'</span>)<br>
+                <span class="code-keyword">def</span> <span class="code-function">register</span>():<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-string">'Страница регистрации'</span>
+            </div>
+            
+            <h3>Параметры Blueprint</h3>
+            <p>При создании Blueprint можно указать несколько параметров:</p>
+            
+            <div class="code-block">
+                <span class="code-comment"># Полная форма создания Blueprint</span><br>
+                my_bp = Blueprint(<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">'blueprint_name'</span>,           <span class="code-comment"># Имя Blueprint</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">__name__</span>,                    <span class="code-comment"># Имя модуля</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;template_folder=<span class="code-string">'templates'</span>, <span class="code-comment"># Папка с шаблонами</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;static_folder=<span class="code-string">'static'</span>,     <span class="code-comment"># Папка со статическими файлами</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;url_prefix=<span class="code-string">'/admin'</span>         <span class="code-comment"># Префикс URL</span><br>
+                )
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="structure">Структура проекта</div>
+                <div class="tab" data-tab="auth">auth.py</div>
+                <div class="tab" data-tab="blog">blog.py</div>
+            </div>
+            
+            <div class="tab-content active" id="structure-content">
+                <p>Типичная структура проекта с Blueprint:</p>
+                <div class="code-block">
+                    myapp/<br>
+                    ├── app.py                 <span class="code-comment"># Основное приложение</span><br>
+                    ├── auth/                  <span class="code-comment"># Модуль аутентификации</span><br>
+                    │   ├── __init__.py<br>
+                    │   ├── routes.py          <span class="code-comment"># Маршруты аутентификации</span><br>
+                    │   └── templates/         <span class="code-comment"># Шаблоны аутентификации</span><br>
+                    │       └── auth/<br>
+                    │           ├── login.html<br>
+                    │           └── register.html<br>
+                    ├── blog/                  <span class="code-comment"># Модуль блога</span><br>
+                    │   ├── __init__.py<br>
+                    │   ├── routes.py          <span class="code-comment"># Маршруты блога</span><br>
+                    │   └── templates/         <span class="code-comment"># Шаблоны блога</span><br>
+                    │       └── blog/<br>
+                    │           ├── index.html<br>
+                    │           └── post.html<br>
+                    └── templates/             <span class="code-comment"># Общие шаблоны</span><br>
+                        └── base.html
+                </div>
+            </div>
+            
+            <div class="tab-content" id="auth-content">
+                <p>Пример Blueprint для аутентификации (auth/routes.py):</p>
+                <div class="code-block">
+                    <span class="code-keyword">from</span> flask <span class="code-keyword">import</span> Blueprint, render_template, redirect, url_for, flash<br>
+                    <span class="code-keyword">from</span> flask_login <span class="code-keyword">import</span> login_user, logout_user, login_required<br>
+                    <span class="code-keyword">from</span> myapp.auth.forms <span class="code-keyword">import</span> LoginForm, RegistrationForm<br>
+                    <span class="code-keyword">from</span> myapp.models <span class="code-keyword">import</span> User<br>
+                    <br>
+                    <span class="code-comment"># Создание Blueprint для аутентификации</span><br>
+                    auth_bp = Blueprint(<span class="code-string">'auth'</span>, <span class="code-string">__name__</span>, template_folder=<span class="code-string">'templates'</span>)<br>
+                    <br>
+                    @auth_bp.route(<span class="code-string">'/login'</span>, methods=[<span class="code-string">'GET'</span>, <span class="code-string">'POST'</span>])<br>
+                    <span class="code-keyword">def</span> <span class="code-function">login</span>():<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;form = LoginForm()<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">if</span> form.validate_on_submit():<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># Логика входа</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user = User.query.filter_by(email=form.email.data).first()<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">if</span> user <span class="code-keyword">and</span> user.check_password(form.password.data):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;login_user(user)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> redirect(url_for(<span class="code-string">'main.index'</span>))<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">else</span>:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flash(<span class="code-string">'Неверный email или пароль'</span>)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> render_template(<span class="code-string">'auth/login.html'</span>, form=form)<br>
+                    <br>
+                    @auth_bp.route(<span class="code-string">'/register'</span>, methods=[<span class="code-string">'GET'</span>, <span class="code-string">'POST'</span>])<br>
+                    <span class="code-keyword">def</span> <span class="code-function">register</span>():<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;form = RegistrationForm()<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">if</span> form.validate_on_submit():<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># Логика регистрации</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user = User(email=form.email.data)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user.set_password(form.password.data)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db.session.add(user)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db.session.commit()<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flash(<span class="code-string">'Регистрация успешна!'</span>)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> redirect(url_for(<span class="code-string">'auth.login'</span>))<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> render_template(<span class="code-string">'auth/register.html'</span>, form=form)<br>
+                    <br>
+                    @auth_bp.route(<span class="code-string">'/logout'</span>)<br>
+                    @login_required<br>
+                    <span class="code-keyword">def</span> <span class="code-function">logout</span>():<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;logout_user()<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> redirect(url_for(<span class="code-string">'main.index'</span>))
+                </div>
+            </div>
+            
+            <div class="tab-content" id="blog-content">
+                <p>Пример Blueprint для блога (blog/routes.py):</p>
+                <div class="code-block">
+                    <span class="code-keyword">from</span> flask <span class="code-keyword">import</span> Blueprint, render_template, request, flash, redirect, url_for<br>
+                    <span class="code-keyword">from</span> flask_login <span class="code-keyword">import</span> login_required, current_user<br>
+                    <span class="code-keyword">from</span> myapp.blog.forms <span class="code-keyword">import</span> PostForm<br>
+                    <span class="code-keyword">from</span> myapp.models <span class="code-keyword">import</span> Post<br>
+                    <br>
+                    <span class="code-comment"># Создание Blueprint для блога</span><br>
+                    blog_bp = Blueprint(<span class="code-string">'blog'</span>, <span class="code-string">__name__</span>, template_folder=<span class="code-string">'templates'</span>)<br>
+                    <br>
+                    @blog_bp.route(<span class="code-string">'/'</span>)<br>
+                    <span class="code-keyword">def</span> <span class="code-function">index</span>():<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;page = request.args.get(<span class="code-string">'page'</span>, <span class="code-keyword">1</span>, type=int)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;posts = Post.query.order_by(Post.created_at.desc()).paginate(<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;page=page, per_page=<span class="code-keyword">5</span>, error_out=<span class="code-keyword">False</span>)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> render_template(<span class="code-string">'blog/index.html'</span>, posts=posts)<br>
+                    <br>
+                    @blog_bp.route(<span class="code-string">'/post/&lt;int:post_id&gt;'</span>)<br>
+                    <span class="code-keyword">def</span> <span class="code-function">post</span>(post_id):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;post = Post.query.get_or_404(post_id)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> render_template(<span class="code-string">'blog/post.html'</span>, post=post)<br>
+                    <br>
+                    @blog_bp.route(<span class="code-string">'/create'</span>, methods=[<span class="code-string">'GET'</span>, <span class="code-string">'POST'</span>])<br>
+                    @login_required<br>
+                    <span class="code-keyword">def</span> <span class="code-function">create_post</span>():<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;form = PostForm()<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">if</span> form.validate_on_submit():<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;post = Post(<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;title=form.title.data,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;content=form.content.data,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;author=current_user<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db.session.add(post)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db.session.commit()<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flash(<span class="code-string">'Пост создан!'</span>)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> redirect(url_for(<span class="code-string">'blog.post'</span>, post_id=post.id))<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> render_template(<span class="code-string">'blog/create.html'</span>, form=form)
+                </div>
+            </div>
+        </section>
+        
+        <section id="register">
+            <h2>Регистрация Blueprint в приложении</h2>
+            <p>После создания Blueprint его необходимо зарегистрировать в основном приложении Flask.</p>
+            
+            <h3>Базовая регистрация</h3>
+            <div class="code-block">
+                <span class="code-keyword">from</span> flask <span class="code-keyword">import</span> Flask<br>
+                <span class="code-keyword">from</span> myapp.auth.routes <span class="code-keyword">import</span> auth_bp<br>
+                <span class="code-keyword">from</span> myapp.blog.routes <span class="code-keyword">import</span> blog_bp<br>
+                <br>
+                app = Flask(<span class="code-string">__name__</span>)<br>
+                <br>
+                <span class="code-comment"># Регистрация Blueprint</span><br>
+                app.register_blueprint(auth_bp)<br>
+                app.register_blueprint(blog_bp)<br>
+                <br>
+                <span class="code-keyword">if</span> <span class="code-string">__name__</span> == <span class="code-string">'__main__'</span>:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;app.run(debug=<span class="code-keyword">True</span>)
+            </div>
+            
+            <h3>Регистрация с префиксом URL</h3>
+            <p>Можно указать префикс URL для всех маршрутов Blueprint:</p>
+            <div class="code-block">
+                <span class="code-comment"># Все маршруты auth_bp будут начинаться с /auth</span><br>
+                app.register_blueprint(auth_bp, url_prefix=<span class="code-string">'/auth'</span>)<br>
+                <br>
+                <span class="code-comment"># Все маршруты blog_bp будут начинаться с /blog</span><br>
+                app.register_blueprint(blog_bp, url_prefix=<span class="code-string">'/blog'</span>)
+            </div>
+            
+            <h3>Регистрация с поддоменом</h3>
+            <p>Blueprint можно зарегистрировать для работы с поддоменом:</p>
+            <div class="code-block">
+                <span class="code-comment"># Blueprint для админки с поддоменом admin</span><br>
+                admin_bp = Blueprint(<span class="code-string">'admin'</span>, <span class="code-string">__name__</span>, subdomain=<span class="code-string">'admin'</span>)<br>
+                <br>
+                <span class="code-comment"># Регистрация</span><br>
+                app.register_blueprint(admin_bp)
+            </div>
+            
+            <div class="note">
+                <p><strong>Примечание:</strong> Порядок регистрации Blueprint может иметь значение, особенно если используются общие шаблоны или статические файлы.</p>
+            </div>
+        </section>
+        
+        <section id="examples">
+            <h2>Практические примеры</h2>
+            
+            <h3>Пример 1: Простое приложение с Blueprint</h3>
+            <div class="code-block">
+                <span class="code-comment"># app.py</span><br>
+                <span class="code-keyword">from</span> flask <span class="code-keyword">import</span> Flask<br>
+                <span class="code-keyword">from</span> api <span class="code-keyword">import</span> api_bp<br>
+                <span class="code-keyword">from</span> frontend <span class="code-keyword">import</span> frontend_bp<br>
+                <br>
+                app = Flask(<span class="code-string">__name__</span>)<br>
+                <br>
+                app.register_blueprint(api_bp, url_prefix=<span class="code-string">'/api'</span>)<br>
+                app.register_blueprint(frontend_bp)<br>
+                <br>
+                <span class="code-keyword">if</span> <span class="code-string">__name__</span> == <span class="code-string">'__main__'</span>:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;app.run()<br>
+                <br>
+                <span class="code-comment"># api/__init__.py</span><br>
+                <span class="code-keyword">from</span> flask <span class="code-keyword">import</span> Blueprint, jsonify<br>
+                <br>
+                api_bp = Blueprint(<span class="code-string">'api'</span>, <span class="code-string">__name__</span>)<br>
+                <br>
+                @api_bp.route(<span class="code-string">'/users'</span>)<br>
+                <span class="code-keyword">def</span> <span class="code-function">get_users</span>():<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> jsonify([{<span class="code-string">'id'</span>: <span class="code-keyword">1</span>, <span class="code-string">'name'</span>: <span class="code-string">'John'</span>}])<br>
+                <br>
+                <span class="code-comment"># frontend/__init__.py</span><br>
+                <span class="code-keyword">from</span> flask <span class="code-keyword">import</span> Blueprint, render_template<br>
+                <br>
+                frontend_bp = Blueprint(<span class="code-string">'frontend'</span>, <span class="code-string">__name__</span>)<br>
+                <br>
+                @frontend_bp.route(<span class="code-string">'/'</span>)<br>
+                <span class="code-keyword">def</span> <span class="code-function">index</span>():<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> render_template(<span class="code-string">'index.html'</span>)
+            </div>
+            
+            <h3>Пример 2: Blueprint с шаблонами и статическими файлами</h3>
+            <div class="code-block">
+                <span class="code-comment"># admin/__init__.py</span><br>
+                <span class="code-keyword">from</span> flask <span class="code-keyword">import</span> Blueprint<br>
+                <br>
+                admin_bp = Blueprint(<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">'admin'</span>,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">__name__</span>,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;template_folder=<span class="code-string">'templates'</span>,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;static_folder=<span class="code-string">'static'</span>,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;static_url_path=<span class="code-string">'/admin/static'</span><br>
+                )<br>
+                <br>
+                <span class="code-keyword">from</span> . <span class="code-keyword">import</span> routes
+            </div>
+            
+            <div class="warning">
+                <p><strong>Важно:</strong> При использовании url_for для генерации URL внутри Blueprint, необходимо указывать имя Blueprint перед именем функции:</p>
+                <div class="code-block">
+                    <span class="code-comment"># Внутри auth Blueprint</span><br>
+                    url_for(<span class="code-string">'auth.login'</span>)  <span class="code-comment"># Правильно</span><br>
+                    url_for(<span class="code-string">'login'</span>)        <span class="code-comment"># Неправильно (если не в основном приложении)</span>
+                </div>
+            </div>
+        </section>
+        
+        <section id="best-practices">
+            <h2>Лучшие практики работы с Blueprint</h2>
+            
+            <h3>1. Организация проекта</h3>
+            <p>Структурируйте проект по функциональным модулям. Каждый модуль — отдельный Blueprint.</p>
+            
+            <h3>2. Именование</h3>
+            <p>Используйте осмысленные имена для Blueprint и согласованное именование маршрутов.</p>
+            
+            <h3>3. Избегайте циклических импортов</h3>
+            <p>Правильно организуйте импорты между модулями, чтобы избежать циклических зависимостей.</p>
+            
+            <h3>4. Используйте префиксы URL</h3>
+            <p>Для ясности и избежания конфликтов используйте префиксы URL при регистрации Blueprint.</p>
+            
+            <h3>5. Разделение ответственности</h3>
+            <p>Каждый Blueprint должен отвечать за одну конкретную функциональность.</p>
+            
+            <h3>6. Тестирование</h3>
+            <p>Тестируйте каждый Blueprint независимо от основного приложения.</p>
+            
+            <div class="example">
+                <h3>Пример правильной структуры</h3>
+                <div class="code-block">
+                    myapp/<br>
+                    ├── __init__.py<br>
+                    ├── app.py<br>
+                    ├── config.py<br>
+                    ├── auth/<br>
+                    │   ├── __init__.py<br>
+                    │   ├── routes.py<br>
+                    │   ├── forms.py<br>
+                    │   └── templates/<br>
+                    │       └── auth/<br>
+                    ├── blog/<br>
+                    │   ├── __init__.py<br>
+                    │   ├── routes.py<br>
+                    │   ├── forms.py<br>
+                    │   └── templates/<br>
+                    │       └── blog/<br>
+                    ├── static/<br>
+                    │   ├── css/<br>
+                    │   ├── js/<br>
+                    │   └── images/<br>
+                    ├── templates/<br>
+                    │   └── base.html<br>
+                    └── models.py
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>© 2023 Руководство по Flask Blueprint. Все права защищены.</p>
+            <p>Для более подробной информации обратитесь к <a href="https://flask.palletsprojects.com/en/2.3.x/blueprints/" style="color: #3498db;">официальной документации Flask</a>.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Навигация по странице
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Удаляем активный класс у всех ссылок
+                document.querySelectorAll('.nav-menu a').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Добавляем активный класс к текущей ссылке
+                this.classList.add('active');
+                
+                // Прокручиваем к выбранному разделу
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                targetSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        
+        // Табы с кодом
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Удаляем активный класс у всех табов и контента
+                document.querySelectorAll('.tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-content').forEach(c => {
+                    c.classList.remove('active');
+                });
+                
+                // Добавляем активный класс к текущему табу и контенту
+                this.classList.add('active');
+                document.getElementById(`${tabId}-content`).classList.add('active');
+            });
+        });
+        
+        // Подсветка активного раздела при прокрутке
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

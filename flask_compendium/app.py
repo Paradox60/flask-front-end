@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from main_app import *
+# from main_app import *
 
 app = Flask(__name__)
 
@@ -173,3 +173,7 @@ def models_to_view():
 @app.route("/django_view")
 def django_view():
     return render_template("CSS_temp/django_view.html")
+
+@app.route("/blueprint")
+def blueprint():
+    return render_template("CSS_temp/blueprint.html")
