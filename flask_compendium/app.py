@@ -177,3 +177,7 @@ def django_view():
 @app.route("/blueprint")
 def blueprint():
     return render_template("CSS_temp/blueprint.html")
+    
+@app.route("/op_time")
+def op_time():
+    return render_template("CSS_temp/op_time.html")

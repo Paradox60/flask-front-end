@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор времени обработки</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .operation-type {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .delete-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #ff3742;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .result p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .add-card-btn {
+            background: white;
+            color: #667eea;
+            border: 2px dashed #667eea;
+            border-radius: 15px;
+            padding: 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            min-height: 200px;
+        }
+
+        .add-card-btn:hover {
+            background: #f0f4ff;
+            transform: scale(1.02);
+        }
+
+        .add-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .summary {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 20px;
+        }
+
+        .summary h2 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .summary-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            min-width: 200px;
+        }
+
+        .summary-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .summary-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Калькулятор времени обработки</h1>
+            <p>Расчет времени токарных и фрезерных операций</p>
+        </div>
+
+        <div class="card-container" id="cardsContainer">
+            <!-- Карточки будут добавляться здесь -->
+        </div>
+
+        <div class="card add-card-btn" id="addCardBtn">
+            <div class="add-icon">+</div>
+            <div>Добавить операцию</div>
+        </div>
+
+        <div class="summary">
+            <h2>Сводка по операциям</h2>
+            <div class="summary-content">
+                <div class="summary-item">
+                    <div class="summary-label">Общее время обработки</div>
+                    <div class="summary-value" id="totalTime">0 мин</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Количество операций</div>
+                    <div class="summary-value" id="operationCount">0</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Токарные операции</div>
+                    <div class="summary-value" id="turningCount">0</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Фрезерные операции</div>
+                    <div class="summary-value" id="millingCount">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Переменные для хранения данных
+        let cards = [];
+        let cardIdCounter = 0;
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            const addCardBtn = document.getElementById('addCardBtn');
+            addCardBtn.addEventListener('click', addNewCard);
+            
+            // Добавляем первую карточку при загрузке
+            addNewCard();
+        });
+
+        // Функция добавления новой карточки
+        function addNewCard() {
+            const cardId = cardIdCounter++;
+            const card = {
+                id: cardId,
+                type: 'turning',
+                diameter: '',
+                length: '',
+                feed: '',
+                speed: '',
+                passes: 1,
+                time: 0
+            };
+            
+            cards.push(card);
+            renderCards();
+        }
+
+        // Функция удаления карточки
+        function deleteCard(id) {
+            cards = cards.filter(card => card.id !== id);
+            renderCards();
+        }
+
+        // Функция обновления данных карточки
+        function updateCard(id, field, value) {
+            const card = cards.find(card => card.id === id);
+            if (card) {
+                card[field] = value;
+                calculateTime(id);
+                updateSummary();
+            }
+        }
+
+        // Функция расчета времени обработки
+        function calculateTime(id) {
+            const card = cards.find(card => card.id === id);
+            if (!card) return;
+
+            const diameter = parseFloat(card.diameter) || 0;
+            const length = parseFloat(card.length) || 0;
+            const feed = parseFloat(card.feed) || 0;
+            const speed = parseFloat(card.speed) || 0;
+            const passes = parseInt(card.passes) || 1;
+
+            if (diameter > 0 && length > 0 && feed > 0 && speed > 0) {
+                let time = 0;
+                
+                if (card.type === 'turning') {
+                    // Для токарной обработки: время = (длина / подача) * количество проходов
+                    time = (length / feed) * passes;
+                } else {
+                    // Для фрезерной обработки: время = (длина / (подача на зуб * количество зубьев * обороты)) * количество проходов
+                    // Упрощенная формула: время = (длина / подача) * количество проходов
+                    time = (length / feed) * passes;
+                }
+                
+                // Добавляем коэффициент безопасности 1.2
+                card.time = time * 1.2;
+            } else {
+                card.time = 0;
+            }
+            
+            // Обновляем отображение времени
+            const timeElement = document.getElementById(`time-${id}`);
+            if (timeElement) {
+                timeElement.textContent = card.time > 0 ? card.time.toFixed(2) + ' мин' : 'Введите параметры';
+            }
+        }
+
+        // Функция обновления сводки
+        function updateSummary() {
+            const totalTime = cards.reduce((sum, card) => sum + card.time, 0);
+            const turningCount = cards.filter(card => card.type === 'turning').length;
+            const millingCount = cards.filter(card => card.type === 'milling').length;
+            
+            document.getElementById('totalTime').textContent = totalTime.toFixed(2) + ' мин';
+            document.getElementById('operationCount').textContent = cards.length;
+            document.getElementById('turningCount').textContent = turningCount;
+            document.getElementById('millingCount').textContent = millingCount;
+        }
+
+        // Функция отрисовки всех карточек
+        function renderCards() {
+            const container = document.getElementById('cardsContainer');
+            container.innerHTML = '';
+            
+            cards.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card';
+                cardElement.innerHTML = `
+                    <div class="card-header">
+                        <div class="operation-type">
+                            ${card.type === 'turning' ? 'Токарная операция' : 'Фрезерная операция'}
+                        </div>
+                        <button class="delete-btn" onclick="deleteCard(${card.id})">×</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="type-${card.id}">Тип операции:</label>
+                        <select id="type-${card.id}" onchange="updateCard(${card.id}, 'type', this.value)">
+                            <option value="turning" ${card.type === 'turning' ? 'selected' : ''}>Токарная</option>
+                            <option value="milling" ${card.type === 'milling' ? 'selected' : ''}>Фрезерная</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="diameter-${card.id}">Диаметр заготовки (мм):</label>
+                        <input type="number" id="diameter-${card.id}" step="0.1" 
+                               value="${card.diameter}" 
+                               oninput="updateCard(${card.id}, 'diameter', this.value)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="length-${card.id}">Длина обработки (мм):</label>
+                        <input type="number" id="length-${card.id}" step="0.1" 
+                               value="${card.length}" 
+                               oninput="updateCard(${card.id}, 'length', this.value)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="feed-${card.id}">
+                            ${card.type === 'turning' ? 'Подача (мм/об):' : 'Подача (мм/зуб):'}
+                        </label>
+                        <input type="number" id="feed-${card.id}" step="0.01" 
+                               value="${card.feed}" 
+                               oninput="updateCard(${card.id}, 'feed', this.value)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="speed-${card.id}">Скорость (об/мин):</label>
+                        <input type="number" id="speed-${card.id}" step="1" 
+                               value="${card.speed}" 
+                               oninput="updateCard(${card.id}, 'speed', this.value)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="passes-${card.id}">Количество проходов:</label>
+                        <input type="number" id="passes-${card.id}" min="1" step="1" 
+                               value="${card.passes}" 
+                               oninput="updateCard(${card.id}, 'passes', this.value)">
+                    </div>
+                    
+                    <button class="calculate-btn" onclick="calculateTime(${card.id})">
+                        Рассчитать время
+                    </button>
+                    
+                    <div class="result">
+                        <h3>Результат расчета</h3>
+                        <p>Время обработки: <strong id="time-${card.id}">
+                            ${card.time > 0 ? card.time.toFixed(2) + ' мин' : 'Введите параметры'}
+                        </strong></p>
+                    </div>
+                `;
+                
+                container.appendChild(cardElement);
+            });
+            
+            updateSummary();
+        }
+
+        // Делаем функции глобальными для использования в HTML
+        window.deleteCard = deleteCard;
+        window.updateCard = updateCard;
+        window.calculateTime = calculateTime;
+    </script>
+</body>
+</html>
