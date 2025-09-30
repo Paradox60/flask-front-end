@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конвертер единиц измерения</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .converter-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .converter-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .converter-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .swap-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .swap-btn:hover {
+            background: #5a6fd8;
+            transform: rotate(180deg);
+        }
+
+        .result {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .category-tab {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-tab.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .category-tab:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .history {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 30px;
+        }
+
+        .history h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.3s;
+        }
+
+        .history-item:hover {
+            background: #f8f9fa;
+        }
+
+        .history-conversion {
+            font-weight: 500;
+        }
+
+        .history-value {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .clear-history {
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.3s;
+            display: block;
+            margin-left: auto;
+        }
+
+        .clear-history:hover {
+            background: #ff3742;
+        }
+
+        .unit-info {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 30px;
+        }
+
+        .unit-info h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .info-card p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .converter-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+            }
+            
+            .swap-btn {
+                justify-self: center;
+                transform: rotate(90deg);
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .category-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .category-tab {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Конвертер единиц измерения</h1>
+            <p>Быстрый и точный перевод между различными системами измерений</p>
+        </div>
+
+        <div class="category-tabs" id="categoryTabs">
+            <!-- Tabs will be generated by JavaScript -->
+        </div>
+
+        <div class="converter-container">
+            <div class="converter-card">
+                <div class="converter-group">
+                    <label for="fromValue">Значение:</label>
+                    <input type="number" id="fromValue" step="any" placeholder="Введите число" value="1">
+                </div>
+                <div class="converter-group">
+                    <label for="fromUnit">Из единицы:</label>
+                    <select id="fromUnit"></select>
+                </div>
+            </div>
+
+            <button class="swap-btn" id="swapBtn">⇄</button>
+
+            <div class="converter-card">
+                <div class="converter-group">
+                    <label for="toValue">Результат:</label>
+                    <input type="text" id="toValue" readonly placeholder="Результат">
+                </div>
+                <div class="converter-group">
+                    <label for="toUnit">В единицу:</label>
+                    <select id="toUnit"></select>
+                </div>
+            </div>
+        </div>
+
+        <div class="result">
+            <h3>Результат преобразования:</h3>
+            <div class="result-value" id="resultValue">0</div>
+            <p id="conversionFormula"></p>
+        </div>
+
+        <div class="unit-info">
+            <h2>Информация о единицах измерения</h2>
+            <div class="info-grid" id="unitInfo">
+                <!-- Unit info will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="history">
+            <h2>История конвертаций</h2>
+            <div class="history-list" id="historyList">
+                <!-- History items will be generated here -->
+            </div>
+            <button class="clear-history" id="clearHistory">Очистить историю</button>
+        </div>
+    </div>
+
+    <script>
+        // Определение категорий и единиц измерения
+        const units = {
+            length: {
+                name: "Длина",
+                units: {
+                    meter: { name: "Метр", factor: 1 },
+                    centimeter: { name: "Сантиметр", factor: 0.01 },
+                    millimeter: { name: "Миллиметр", factor: 0.001 },
+                    kilometer: { name: "Километр", factor: 1000 },
+                    inch: { name: "Дюйм", factor: 0.0254 },
+                    foot: { name: "Фут", factor: 0.3048 },
+                    yard: { name: "Ярд", factor: 0.9144 },
+                    mile: { name: "Миля", factor: 1609.344 }
+                }
+            },
+            weight: {
+                name: "Вес",
+                units: {
+                    kilogram: { name: "Килограмм", factor: 1 },
+                    gram: { name: "Грамм", factor: 0.001 },
+                    milligram: { name: "Миллиграмм", factor: 0.000001 },
+                    ton: { name: "Тонна", factor: 1000 },
+                    pound: { name: "Фунт", factor: 0.453592 },
+                    ounce: { name: "Унция", factor: 0.0283495 }
+                }
+            },
+            temperature: {
+                name: "Температура",
+                units: {
+                    celsius: { name: "Цельсий", factor: 1, offset: 0 },
+                    fahrenheit: { name: "Фаренгейт", factor: 5/9, offset: -32 },
+                    kelvin: { name: "Кельвин", factor: 1, offset: -273.15 }
+                }
+            },
+            volume: {
+                name: "Объем",
+                units: {
+                    liter: { name: "Литр", factor: 1 },
+                    milliliter: { name: "Миллилитр", factor: 0.001 },
+                    cubicmeter: { name: "Кубический метр", factor: 1000 },
+                    gallon: { name: "Галлон", factor: 3.78541 },
+                    quart: { name: "Кварта", factor: 0.946353 },
+                    pint: { name: "Пинта", factor: 0.473176 }
+                }
+            },
+            area: {
+                name: "Площадь",
+                units: {
+                    squaremeter: { name: "Квадратный метр", factor: 1 },
+                    squarekilometer: { name: "Квадратный километр", factor: 1000000 },
+                    hectare: { name: "Гектар", factor: 10000 },
+                    acre: { name: "Акр", factor: 4046.86 },
+                    squarefoot: { name: "Квадратный фут", factor: 0.092903 },
+                    squareinch: { name: "Квадратный дюйм", factor: 0.00064516 }
+                }
+            },
+            speed: {
+                name: "Скорость",
+                units: {
+                    meterspersecond: { name: "Метр в секунду", factor: 1 },
+                    kilometersperhour: { name: "Километр в час", factor: 0.277778 },
+                    milesperhour: { name: "Миля в час", factor: 0.44704 },
+                    knot: { name: "Узел", factor: 0.514444 },
+                    feetpersecond: { name: "Фут в секунду", factor: 0.3048 }
+                }
+            },
+            time: {
+                name: "Время",
+                units: {
+                    second: { name: "Секунда", factor: 1 },
+                    minute: { name: "Минута", factor: 60 },
+                    hour: { name: "Час", factor: 3600 },
+                    day: { name: "День", factor: 86400 },
+                    week: { name: "Неделя", factor: 604800 },
+                    month: { name: "Месяц", factor: 2592000 },
+                    year: { name: "Год", factor: 31536000 }
+                }
+            },
+            pressure: {
+                name: "Давление",
+                units: {
+                    pascal: { name: "Паскаль", factor: 1 },
+                    kilopascal: { name: "Килопаскаль", factor: 1000 },
+                    bar: { name: "Бар", factor: 100000 },
+                    atmosphere: { name: "Атмосфера", factor: 101325 },
+                    psi: { name: "PSI", factor: 6894.76 },
+                    mmhg: { name: "мм рт. ст.", factor: 133.322 }
+                }
+            }
+        };
+
+        // Информация о единицах измерения
+        const unitInfo = {
+            length: [
+                {
+                    title: "Метрическая система",
+                    content: "Основные единицы: метр, сантиметр, миллиметр, километр. 1 км = 1000 м, 1 м = 100 см, 1 см = 10 мм."
+                },
+                {
+                    title: "Имперская система",
+                    content: "Используется в США и Великобритании. 1 миля = 1760 ярдов, 1 ярд = 3 фута, 1 фут = 12 дюймов."
+                }
+            ],
+            weight: [
+                {
+                    title: "Метрическая система",
+                    content: "Основные единицы: грамм, килограмм, тонна. 1 т = 1000 кг, 1 кг = 1000 г."
+                },
+                {
+                    title: "Авердюпуа",
+                    content: "Система весов, используемая в США. 1 фунт = 16 унций, 1 унция ≈ 28.35 г."
+                }
+            ],
+            temperature: [
+                {
+                    title: "Шкала Цельсия",
+                    content: "Наиболее распространенная шкала. 0°C - точка замерзания воды, 100°C - точка кипения."
+                },
+                {
+                    title: "Шкала Фаренгейта",
+                    content: "Используется в США. 32°F - точка замерзания воды, 212°F - точка кипения."
+                },
+                {
+                    title: "Шкала Кельвина",
+                    content: "Абсолютная термодинамическая шкала. 0K - абсолютный ноль, 273.15K = 0°C."
+                }
+            ]
+        };
+
+        let currentCategory = 'length';
+        let conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTabs();
+            initializeUnits();
+            updateHistory();
+            updateUnitInfo();
+
+            // События
+            document.getElementById('fromValue').addEventListener('input', convert);
+            document.getElementById('fromUnit').addEventListener('change', convert);
+            document.getElementById('toUnit').addEventListener('change', convert);
+            document.getElementById('swapBtn').addEventListener('click', swapUnits);
+            document.getElementById('clearHistory').addEventListener('click', clearHistory);
+        });
+
+        // Инициализация вкладок категорий
+        function initializeTabs() {
+            const tabsContainer = document.getElementById('categoryTabs');
+            Object.keys(units).forEach(category => {
+                const tab = document.createElement('button');
+                tab.className = `category-tab ${category === currentCategory ? 'active' : ''}`;
+                tab.textContent = units[category].name;
+                tab.addEventListener('click', () => switchCategory(category));
+                tabsContainer.appendChild(tab);
+            });
+        }
+
+        // Переключение категории
+        function switchCategory(category) {
+            currentCategory = category;
+            
+            // Обновление активной вкладки
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Обновление единиц измерения
+            initializeUnits();
+            convert();
+            updateUnitInfo();
+        }
+
+        // Инициализация единиц измерения
+        function initializeUnits() {
+            const fromUnit = document.getElementById('fromUnit');
+            const toUnit = document.getElementById('toUnit');
+            
+            fromUnit.innerHTML = '';
+            toUnit.innerHTML = '';
+            
+            const categoryUnits = units[currentCategory].units;
+            Object.keys(categoryUnits).forEach(unitKey => {
+                const option1 = document.createElement('option');
+                const option2 = document.createElement('option');
+                
+                option1.value = unitKey;
+                option1.textContent = categoryUnits[unitKey].name;
+                option2.value = unitKey;
+                option2.textContent = categoryUnits[unitKey].name;
+                
+                fromUnit.appendChild(option1);
+                toUnit.appendChild(option2);
+            });
+            
+            // Установка разных единиц по умолчанию
+            const unitKeys = Object.keys(categoryUnits);
+            if (unitKeys.length >= 2) {
+                toUnit.value = unitKeys[1];
+            }
+        }
+
+        // Конвертация единиц
+        function convert() {
+            const fromValue = parseFloat(document.getElementById('fromValue').value) || 0;
+            const fromUnit = document.getElementById('fromUnit').value;
+            const toUnit = document.getElementById('toUnit').value;
+            
+            if (fromUnit === toUnit) {
+                document.getElementById('toValue').value = fromValue;
+                document.getElementById('resultValue').textContent = fromValue;
+                document.getElementById('conversionFormula').textContent = '';
+                return;
+            }
+            
+            let result;
+            
+            // Особый случай для температуры
+            if (currentCategory === 'temperature') {
+                result = convertTemperature(fromValue, fromUnit, toUnit);
+            } else {
+                const fromFactor = units[currentCategory].units[fromUnit].factor;
+                const toFactor = units[currentCategory].units[toUnit].factor;
+                result = fromValue * fromFactor / toFactor;
+            }
+            
+            document.getElementById('toValue').value = result.toFixed(6);
+            document.getElementById('resultValue').textContent = result.toFixed(6);
+            
+            // Добавление в историю
+            addToHistory(fromValue, fromUnit, toUnit, result);
+            
+            // Обновление формулы
+            updateConversionFormula(fromValue, fromUnit, toUnit, result);
+        }
+
+        // Конвертация температуры
+        function convertTemperature(value, fromUnit, toUnit) {
+            // Конвертация в Цельсий
+            let celsius;
+            switch (fromUnit) {
+                case 'celsius':
+                    celsius = value;
+                    break;
+                case 'fahrenheit':
+                    celsius = (value - 32) * 5/9;
+                    break;
+                case 'kelvin':
+                    celsius = value - 273.15;
+                    break;
+            }
+            
+            // Конвертация из Цельсия
+            switch (toUnit) {
+                case 'celsius':
+                    return celsius;
+                case 'fahrenheit':
+                    return celsius * 9/5 + 32;
+                case 'kelvin':
+                    return celsius + 273.15;
+            }
+        }
+
+        // Обновление формулы конвертации
+        function updateConversionFormula(fromValue, fromUnit, toUnit, result) {
+            const fromUnitName = units[currentCategory].units[fromUnit].name;
+            const toUnitName = units[currentCategory].units[toUnit].name;
+            
+            let formula = '';
+            if (currentCategory === 'temperature') {
+                formula = `Формула: зависит от шкалы температур`;
+            } else {
+                const fromFactor = units[currentCategory].units[fromUnit].factor;
+                const toFactor = units[currentCategory].units[toUnit].factor;
+                formula = `Формула: ${fromValue} × ${fromFactor} / ${toFactor} = ${result.toFixed(6)}`;
+            }
+            
+            document.getElementById('conversionFormula').textContent = formula;
+        }
+
+        // Обмен единицами измерения
+        function swapUnits() {
+            const fromUnit = document.getElementById('fromUnit');
+            const toUnit = document.getElementById('toUnit');
+            const fromValue = document.getElementById('fromValue');
+            const toValue = document.getElementById('toValue');
+            
+            const tempUnit = fromUnit.value;
+            fromUnit.value = toUnit.value;
+            toUnit.value = tempUnit;
+            
+            // Меняем значения местами, если результат вычислен
+            if (toValue.value && !isNaN(parseFloat(toValue.value))) {
+                fromValue.value = toValue.value;
+            }
+            
+            convert();
+        }
+
+        // Добавление в историю
+        function addToHistory(fromValue, fromUnit, toUnit, result) {
+            const fromUnitName = units[currentCategory].units[fromUnit].name;
+            const toUnitName = units[currentCategory].units[toUnit].name;
+            
+            const historyItem = {
+                timestamp: new Date().toLocaleString(),
+                conversion: `${fromValue} ${fromUnitName} → ${result.toFixed(4)} ${toUnitName}`,
+                category: currentCategory
+            };
+            
+            conversionHistory.unshift(historyItem);
+            if (conversionHistory.length > 10) {
+                conversionHistory = conversionHistory.slice(0, 10);
+            }
+            
+            localStorage.setItem('conversionHistory', JSON.stringify(conversionHistory));
+            updateHistory();
+        }
+
+        // Обновление истории
+        function updateHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            
+            if (conversionHistory.length === 0) {
+                historyList.innerHTML = '<div class="history-item">История пуста</div>';
+                return;
+            }
+            
+            conversionHistory.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <div class="history-conversion">${item.conversion}</div>
+                    <div class="history-time">${item.timestamp}</div>
+                `;
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        // Очистка истории
+        function clearHistory() {
+            conversionHistory = [];
+            localStorage.setItem('conversionHistory', JSON.stringify(conversionHistory));
+            updateHistory();
+        }
+
+        // Обновление информации о единицах
+        function updateUnitInfo() {
+            const infoContainer = document.getElementById('unitInfo');
+            infoContainer.innerHTML = '';
+            
+            const info = unitInfo[currentCategory] || [
+                {
+                    title: "Общая информация",
+                    content: "Используйте конвертер для перевода между различными единицами измерения."
+                }
+            ];
+            
+            info.forEach(item => {
+                const infoCard = document.createElement('div');
+                infoCard.className = 'info-card';
+                infoCard.innerHTML = `
+                    <h3>${item.title}</h3>
+                    <p>${item.content}</p>
+                `;
+                infoContainer.appendChild(infoCard);
+            });
+        }
+    </script>
+</body>
+</html>

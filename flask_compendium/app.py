@@ -181,3 +181,7 @@ def blueprint():
 @app.route("/op_time")
 def op_time():
     return render_template("CSS_temp/op_time.html")
+        
+@app.route("/convert")
+def convert():
+    return render_template("CSS_temp/convert.html")
