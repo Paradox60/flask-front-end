@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор окружностей с точками</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .controls {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input[type="number"], input[type="color"], select {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.9);
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #4CAF50;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #f44336;
+        }
+
+        .btn-danger:hover {
+            background: #da190b;
+        }
+
+        .btn-secondary {
+            background: #2196F3;
+        }
+
+        .btn-secondary:hover {
+            background: #0b7dda;
+        }
+
+        .canvas-container {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        #canvas {
+            display: block;
+            background: #f8f9fa;
+        }
+
+        .info-panel {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .coordinates {
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .coordinates div {
+            margin-bottom: 5px;
+        }
+
+        .presets {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .preset-btn {
+            padding: 8px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Генератор окружностей с точками</h1>
+            <p>Создавайте и настраивайте окружности с равномерно распределенными точками</p>
+        </div>
+
+        <div class="app-container">
+            <div class="controls">
+                <div class="control-group">
+                    <h2>Параметры окружности</h2>
+                    
+                    <label for="centerX">Центр X:</label>
+                    <input type="number" id="centerX" value="400" min="0" max="800">
+                    
+                    <label for="centerY">Центр Y:</label>
+                    <input type="number" id="centerY" value="300" min="0" max="600">
+                    
+                    <label for="radius">Радиус:</label>
+                    <input type="number" id="radius" value="200" min="10" max="400">
+                    
+                    <label for="circleColor">Цвет окружности:</label>
+                    <input type="color" id="circleColor" value="#3498db">
+                </div>
+
+                <div class="control-group">
+                    <h2>Параметры точек</h2>
+                    
+                    <label for="pointsCount">Количество точек:</label>
+                    <input type="number" id="pointsCount" value="12" min="1" max="100">
+                    
+                    <label for="pointSize">Размер точек:</label>
+                    <input type="number" id="pointSize" value="8" min="1" max="20">
+                    
+                    <label for="pointColor">Цвет точек:</label>
+                    <input type="color" id="pointColor" value="#e74c3c">
+                    
+                    <label for="showNumbers">Показать номера:</label>
+                    <select id="showNumbers">
+                        <option value="true">Да</option>
+                        <option value="false">Нет</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <h2>Действия</h2>
+                    <button id="generateBtn">Сгенерировать</button>
+                    <button id="clearBtn" class="btn-danger">Очистить</button>
+                    <button id="exportBtn" class="btn-secondary">Экспорт в PNG</button>
+                </div>
+
+                <div class="control-group">
+                    <h2>Быстрые пресеты</h2>
+                    <div class="presets">
+                        <button class="preset-btn" data-points="4">4 точки</button>
+                        <button class="preset-btn" data-points="6">6 точек</button>
+                        <button class="preset-btn" data-points="8">8 точек</button>
+                        <button class="preset-btn" data-points="16">16 точек</button>
+                        <button class="preset-btn" data-points="24">24 точки</button>
+                        <button class="preset-btn" data-points="32">32 точки</button>
+                    </div>
+                </div>
+
+                <div class="coordinates" id="coordinatesInfo">
+                    <!-- Координаты будут отображаться здесь -->
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="canvas" width="800" height="600"></canvas>
+                <div class="info-panel">
+                    <div>Количество точек: <span id="pointsCountDisplay">12</span></div>
+                    <div>Радиус: <span id="radiusDisplay">200</span>px</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Элементы DOM
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const generateBtn = document.getElementById('generateBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const presetBtns = document.querySelectorAll('.preset-btn');
+        const coordinatesInfo = document.getElementById('coordinatesInfo');
+        const pointsCountDisplay = document.getElementById('pointsCountDisplay');
+        const radiusDisplay = document.getElementById('radiusDisplay');
+
+        // Переменные состояния
+        let circle = {
+            centerX: 400,
+            centerY: 300,
+            radius: 200,
+            color: '#3498db'
+        };
+
+        let points = {
+            count: 12,
+            size: 8,
+            color: '#e74c3c',
+            showNumbers: true,
+            coordinates: []
+        };
+
+        // Инициализация
+        function init() {
+            generateCircleAndPoints();
+            
+            // События
+            generateBtn.addEventListener('click', generateCircleAndPoints);
+            clearBtn.addEventListener('click', clearCanvas);
+            exportBtn.addEventListener('click', exportToPNG);
+            
+            // Пресеты
+            presetBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('pointsCount').value = this.dataset.points;
+                    generateCircleAndPoints();
+                });
+            });
+            
+            // События ввода
+            document.getElementById('centerX').addEventListener('input', updateCircle);
+            document.getElementById('centerY').addEventListener('input', updateCircle);
+            document.getElementById('radius').addEventListener('input', updateCircle);
+            document.getElementById('circleColor').addEventListener('input', updateCircle);
+            document.getElementById('pointsCount').addEventListener('input', updatePoints);
+            document.getElementById('pointSize').addEventListener('input', updatePoints);
+            document.getElementById('pointColor').addEventListener('input', updatePoints);
+            document.getElementById('showNumbers').addEventListener('change', updatePoints);
+        }
+
+        // Обновление параметров окружности
+        function updateCircle() {
+            circle.centerX = parseInt(document.getElementById('centerX').value);
+            circle.centerY = parseInt(document.getElementById('centerY').value);
+            circle.radius = parseInt(document.getElementById('radius').value);
+            circle.color = document.getElementById('circleColor').value;
+            generateCircleAndPoints();
+        }
+
+        // Обновление параметров точек
+        function updatePoints() {
+            points.count = parseInt(document.getElementById('pointsCount').value);
+            points.size = parseInt(document.getElementById('pointSize').value);
+            points.color = document.getElementById('pointColor').value;
+            points.showNumbers = document.getElementById('showNumbers').value === 'true';
+            generateCircleAndPoints();
+        }
+
+        // Генерация окружности и точек
+        function generateCircleAndPoints() {
+            clearCanvas();
+            drawCircle();
+            calculatePoints();
+            drawPoints();
+            updateInfo();
+        }
+
+        // Отрисовка окружности
+        function drawCircle() {
+            ctx.beginPath();
+            ctx.arc(circle.centerX, circle.centerY, circle.radius, 0, Math.PI * 2);
+            ctx.strokeStyle = circle.color;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // Центральная точка
+            ctx.beginPath();
+            ctx.arc(circle.centerX, circle.centerY, 4, 0, Math.PI * 2);
+            ctx.fillStyle = circle.color;
+            ctx.fill();
+        }
+
+        // Расчет координат точек
+        function calculatePoints() {
+            points.coordinates = [];
+            const angleStep = (2 * Math.PI) / points.count;
+            
+            for (let i = 0; i < points.count; i++) {
+                const angle = i * angleStep;
+                const x = circle.centerX + circle.radius * Math.cos(angle);
+                const y = circle.centerY + circle.radius * Math.sin(angle);
+                points.coordinates.push({ x, y, angle });
+            }
+        }
+
+        // Отрисовка точек
+        function drawPoints() {
+            points.coordinates.forEach((point, index) => {
+                // Точка
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, points.size, 0, Math.PI * 2);
+                ctx.fillStyle = points.color;
+                ctx.fill();
+                
+                // Обводка точки
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, points.size, 0, Math.PI * 2);
+                ctx.strokeStyle = '#2c3e50';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                
+                // Номер точки
+                if (points.showNumbers) {
+                    ctx.fillStyle = '#2c3e50';
+                    ctx.font = '14px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(index + 1, point.x, point.y);
+                }
+                
+                // Линия к центру (опционально)
+                ctx.beginPath();
+                ctx.moveTo(circle.centerX, circle.centerY);
+                ctx.lineTo(point.x, point.y);
+                ctx.strokeStyle = 'rgba(52, 152, 219, 0.3)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+        }
+
+        // Очистка холста
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            coordinatesInfo.innerHTML = '';
+        }
+
+        // Обновление информации
+        function updateInfo() {
+            pointsCountDisplay.textContent = points.count;
+            radiusDisplay.textContent = circle.radius;
+            
+            // Обновление информации о координатах
+            coordinatesInfo.innerHTML = '<h3>Координаты точек:</h3>';
+            points.coordinates.forEach((point, index) => {
+                const coordDiv = document.createElement('div');
+                coordDiv.textContent = `${index + 1}. X: ${Math.round(point.x)}, Y: ${Math.round(point.y)}`;
+                coordinatesInfo.appendChild(coordDiv);
+            });
+        }
+
+        // Экспорт в PNG
+        function exportToPNG() {
+            const link = document.createElement('a');
+            link.download = 'circle-with-points.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Запуск приложения
+        init();
+
+        // Добавляем возможность перетаскивания точек (дополнительная функция)
+        canvas.addEventListener('click', function(event) {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
+            
+            // Проверяем, была ли нажата точка
+            points.coordinates.forEach((point, index) => {
+                const distance = Math.sqrt(
+                    Math.pow(mouseX - point.x, 2) + Math.pow(mouseY - point.y, 2)
+                );
+                
+                if (distance <= points.size) {
+                    alert(`Точка ${index + 1}\nКоординаты: X=${Math.round(point.x)}, Y=${Math.round(point.y)}`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
