@@ -189,3 +189,7 @@ def convert():
 @app.route("/circle")
 def circle():
     return render_template("CSS_temp/circle.html")
+    
+@app.route("/circle_2")
+def circle_2():
+    return render_template("CSS_temp/circle_2.html")

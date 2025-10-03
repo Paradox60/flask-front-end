@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивный редактор окружностей</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .controls {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: #6c757d;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        input[type="number"], input[type="color"], select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            background: white;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus, input[type="color"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 12px;
+        }
+
+        button:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-success:hover {
+            background: #219a52;
+        }
+
+        .canvas-container {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 2px solid #e9ecef;
+        }
+
+        #canvas {
+            display: block;
+            background: #f8f9fa;
+            cursor: crosshair;
+        }
+
+        .info-panel {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .coordinates {
+            margin-top: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .coordinates h3 {
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        .coordinate-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .coordinate-number {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .coordinate-values {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .tools {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .tool-btn {
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        .circle-list {
+            margin-top: 15px;
+        }
+
+        .circle-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .circle-item:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .circle-item.active {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .circle-info {
+            font-size: 0.9rem;
+        }
+
+        .circle-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            border-radius: 50%;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .tools {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Интерактивный редактор окружностей</h1>
+            <p>Создавайте, редактируйте и управляйте окружностями на холсте</p>
+        </div>
+
+        <div class="app-container">
+            <div class="controls">
+                <div class="control-group">
+                    <h2>Создание окружности</h2>
+                    
+                    <label for="circleName">Название окружности:</label>
+                    <input type="text" id="circleName" placeholder="Окружность 1" value="Окружность 1">
+                    
+                    <label for="centerX">Центр X:</label>
+                    <input type="number" id="centerX" value="400" min="0" max="800">
+                    
+                    <label for="centerY">Центр Y:</label>
+                    <input type="number" id="centerY" value="300" min="0" max="600">
+                    
+                    <label for="radius">Радиус:</label>
+                    <input type="number" id="radius" value="100" min="10" max="400">
+                    
+                    <label for="circleColor">Цвет обводки:</label>
+                    <input type="color" id="circleColor" value="#3498db">
+                    
+                    <label for="fillColor">Цвет заливки:</label>
+                    <input type="color" id="fillColor" value="#87ceeb">
+                    
+                    <label for="lineWidth">Толщина линии:</label>
+                    <input type="number" id="lineWidth" value="3" min="1" max="10">
+                    
+                    <button id="createBtn" class="btn-success">Создать окружность</button>
+                </div>
+
+                <div class="control-group">
+                    <h2>Инструменты</h2>
+                    <div class="tools">
+                        <button class="tool-btn" id="drawModeBtn">Режим рисования</button>
+                        <button class="tool-btn" id="selectModeBtn">Режим выбора</button>
+                        <button class="tool-btn" id="moveModeBtn">Режим перемещения</button>
+                        <button class="tool-btn" id="clearBtn" class="btn-danger">Очистить холст</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h2>Список окружностей</h2>
+                    <div class="circle-list" id="circleList">
+                        <!-- Список окружностей будет здесь -->
+                    </div>
+                </div>
+
+                <div class="coordinates">
+                    <h3>Информация о выделенной окружности</h3>
+                    <div id="circleInfo">
+                        Выберите окружность для просмотра информации
+                    </div>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="canvas" width="800" height="600"></canvas>
+                <div class="info-panel">
+                    <div>Режим: <span id="modeDisplay">Рисование</span></div>
+                    <div>Окружностей: <span id="circlesCount">0</span></div>
+                    <div id="positionInfo">X: 0, Y: 0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Элементы DOM
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const createBtn = document.getElementById('createBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const drawModeBtn = document.getElementById('drawModeBtn');
+        const selectModeBtn = document.getElementById('selectModeBtn');
+        const moveModeBtn = document.getElementById('moveModeBtn');
+        const circleList = document.getElementById('circleList');
+        const circleInfo = document.getElementById('circleInfo');
+        const modeDisplay = document.getElementById('modeDisplay');
+        const circlesCount = document.getElementById('circlesCount');
+        const positionInfo = document.getElementById('positionInfo');
+
+        // Переменные состояния
+        let circles = [];
+        let selectedCircle = null;
+        let isDragging = false;
+        let currentMode = 'draw'; // 'draw', 'select', 'move'
+        let dragOffset = { x: 0, y: 0 };
+
+        // Класс окружности
+        class Circle {
+            constructor(name, x, y, radius, strokeColor, fillColor, lineWidth) {
+                this.id = Date.now() + Math.random();
+                this.name = name;
+                this.x = x;
+                this.y = y;
+                this.radius = radius;
+                this.strokeColor = strokeColor;
+                this.fillColor = fillColor;
+                this.lineWidth = lineWidth;
+            }
+
+            draw() {
+                // Заливка
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.fillColor + '80'; // Добавляем прозрачность
+                ctx.fill();
+
+                // Обводка
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.strokeStyle = this.strokeColor;
+                ctx.lineWidth = this.lineWidth;
+                ctx.stroke();
+
+                // Центральная точка
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = this.strokeColor;
+                ctx.fill();
+
+                // Выделение если выбрано
+                if (this === selectedCircle) {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius + 5, 0, Math.PI * 2);
+                    ctx.strokeStyle = '#ffeb3b';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([5, 5]);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+            }
+
+            containsPoint(x, y) {
+                const distance = Math.sqrt((x - this.x) ** 2 + (y - this.y) ** 2);
+                return distance <= this.radius;
+            }
+        }
+
+        // Инициализация
+        function init() {
+            // События кнопок
+            createBtn.addEventListener('click', createCircle);
+            clearBtn.addEventListener('click', clearCanvas);
+            drawModeBtn.addEventListener('click', () => setMode('draw'));
+            selectModeBtn.addEventListener('click', () => setMode('select'));
+            moveModeBtn.addEventListener('click', () => setMode('move'));
+
+            // События мыши на холсте
+            canvas.addEventListener('mousedown', handleMouseDown);
+            canvas.addEventListener('mousemove', handleMouseMove);
+            canvas.addEventListener('mouseup', handleMouseUp);
+            canvas.addEventListener('mouseleave', handleMouseUp);
+
+            // Отслеживание положения мыши
+            canvas.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                positionInfo.textContent = `X: ${Math.round(x)}, Y: ${Math.round(y)}`;
+            });
+
+            render();
+        }
+
+        // Создание окружности
+        function createCircle() {
+            const name = document.getElementById('circleName').value;
+            const x = parseInt(document.getElementById('centerX').value);
+            const y = parseInt(document.getElementById('centerY').value);
+            const radius = parseInt(document.getElementById('radius').value);
+            const strokeColor = document.getElementById('circleColor').value;
+            const fillColor = document.getElementById('fillColor').value;
+            const lineWidth = parseInt(document.getElementById('lineWidth').value);
+
+            const circle = new Circle(name, x, y, radius, strokeColor, fillColor, lineWidth);
+            circles.push(circle);
+            updateCircleList();
+            render();
+        }
+
+        // Установка режима работы
+        function setMode(mode) {
+            currentMode = mode;
+            modeDisplay.textContent = 
+                mode === 'draw' ? 'Рисование' : 
+                mode === 'select' ? 'Выбор' : 'Перемещение';
+            
+            // Обновляем стили кнопок
+            [drawModeBtn, selectModeBtn, moveModeBtn].forEach(btn => {
+                btn.style.background = '#667eea';
+            });
+            
+            if (mode === 'draw') drawModeBtn.style.background = '#4CAF50';
+            if (mode === 'select') selectModeBtn.style.background = '#2196F3';
+            if (mode === 'move') moveModeBtn.style.background = '#FF9800';
+        }
+
+        // Обработка нажатия мыши
+        function handleMouseDown(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            if (currentMode === 'draw') {
+                // Создание окружности в месте клика
+                const name = `Окружность ${circles.length + 1}`;
+                const circle = new Circle(name, x, y, 50, '#3498db', '#87ceeb', 3);
+                circles.push(circle);
+                updateCircleList();
+            } else if (currentMode === 'select') {
+                // Выбор окружности
+                selectedCircle = null;
+                for (let i = circles.length - 1; i >= 0; i--) {
+                    if (circles[i].containsPoint(x, y)) {
+                        selectedCircle = circles[i];
+                        break;
+                    }
+                }
+                updateCircleInfo();
+            } else if (currentMode === 'move' && selectedCircle) {
+                // Начало перемещения
+                if (selectedCircle.containsPoint(x, y)) {
+                    isDragging = true;
+                    dragOffset.x = x - selectedCircle.x;
+                    dragOffset.y = y - selectedCircle.y;
+                }
+            }
+
+            render();
+        }
+
+        // Обработка движения мыши
+        function handleMouseMove(e) {
+            if (currentMode === 'move' && isDragging && selectedCircle) {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                selectedCircle.x = x - dragOffset.x;
+                selectedCircle.y = y - dragOffset.y;
+
+                // Обновляем поля ввода
+                document.getElementById('centerX').value = Math.round(selectedCircle.x);
+                document.getElementById('centerY').value = Math.round(selectedCircle.y);
+
+                updateCircleInfo();
+                render();
+            }
+        }
+
+        // Обработка отпускания мыши
+        function handleMouseUp() {
+            isDragging = false;
+        }
+
+        // Очистка холста
+        function clearCanvas() {
+            if (confirm('Вы уверены, что хотите очистить холст?')) {
+                circles = [];
+                selectedCircle = null;
+                updateCircleList();
+                updateCircleInfo();
+                render();
+            }
+        }
+
+        // Удаление окружности
+        function deleteCircle(circleId) {
+            circles = circles.filter(circle => circle.id !== circleId);
+            if (selectedCircle && selectedCircle.id === circleId) {
+                selectedCircle = null;
+                updateCircleInfo();
+            }
+            updateCircleList();
+            render();
+        }
+
+        // Выбор окружности из списка
+        function selectCircleFromList(circleId) {
+            selectedCircle = circles.find(circle => circle.id === circleId);
+            updateCircleInfo();
+            render();
+        }
+
+        // Обновление списка окружностей
+        function updateCircleList() {
+            circleList.innerHTML = '';
+            circles.forEach(circle => {
+                const item = document.createElement('div');
+                item.className = `circle-item ${selectedCircle && selectedCircle.id === circle.id ? 'active' : ''}`;
+                item.innerHTML = `
+                    <div class="circle-info">
+                        <strong>${circle.name}</strong><br>
+                        <small>Радиус: ${circle.radius}px</small>
+                    </div>
+                    <div class="circle-actions">
+                        <button class="action-btn" onclick="selectCircleFromList(${circle.id})">✓</button>
+                        <button class="action-btn btn-danger" onclick="deleteCircle(${circle.id})">×</button>
+                    </div>
+                `;
+                circleList.appendChild(item);
+            });
+            circlesCount.textContent = circles.length;
+        }
+
+        // Обновление информации о выбранной окружности
+        function updateCircleInfo() {
+            if (selectedCircle) {
+                circleInfo.innerHTML = `
+                    <div><strong>${selectedCircle.name}</strong></div>
+                    <div>Центр: (${Math.round(selectedCircle.x)}, ${Math.round(selectedCircle.y)})</div>
+                    <div>Радиус: ${selectedCircle.radius}px</div>
+                    <div>Цвет обводки: <span style="color:${selectedCircle.strokeColor}">${selectedCircle.strokeColor}</span></div>
+                    <div>Цвет заливки: <span style="color:${selectedCircle.fillColor}">${selectedCircle.fillColor}</span></div>
+                `;
+            } else {
+                circleInfo.innerHTML = 'Выберите окружность для просмотра информации';
+            }
+        }
+
+        // Отрисовка сцены
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Рисуем сетку
+            drawGrid();
+            
+            // Рисуем все окружности
+            circles.forEach(circle => circle.draw());
+        }
+
+        // Отрисовка сетки
+        function drawGrid() {
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+
+            // Вертикальные линии
+            for (let x = 0; x <= canvas.width; x += 50) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+
+            // Горизонтальные линии
+            for (let y = 0; y <= canvas.height; y += 50) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+        }
+
+        // Делаем функции глобальными для использования в HTML
+        window.selectCircleFromList = selectCircleFromList;
+        window.deleteCircle = deleteCircle;
+
+        // Запуск приложения
+        init();
+        setMode('draw');
+    </script>
+</body>
+</html>
