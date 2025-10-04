@@ -193,3 +193,8 @@ def circle():
 @app.route("/circle_2")
 def circle_2():
     return render_template("CSS_temp/circle_2.html")
+
+
+@app.route("/flask_app")
+def flask_app():
+    return render_template("CSS_temp/flask_app.html")

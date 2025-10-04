@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Разделение логики в Flask приложении</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .nav {
+            background: #34495e;
+            padding: 0;
+        }
+
+        .nav-list {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            margin: 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 20px 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: #2c3e50;
+            border-bottom-color: #3498db;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            scroll-margin-top: 20px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        h3 {
+            color: #3498db;
+            font-size: 1.6rem;
+            margin: 25px 0 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-left: 5px solid #3498db;
+        }
+
+        .code-comment {
+            color: #75715e;
+        }
+
+        .code-keyword {
+            color: #f92672;
+        }
+
+        .code-string {
+            color: #e6db74;
+        }
+
+        .code-function {
+            color: #66d9ef;
+        }
+
+        .code-class {
+            color: #a6e22e;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .bad-example, .good-example {
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .bad-example {
+            background: #ffe6e6;
+            border: 2px solid #e74c3c;
+        }
+
+        .good-example {
+            background: #e6ffe6;
+            border: 2px solid #27ae60;
+        }
+
+        .example-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .bad-example .example-title {
+            color: #e74c3c;
+        }
+
+        .good-example .example-title {
+            color: #27ae60;
+        }
+
+        .file-structure {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 5px solid #3498db;
+        }
+
+        .structure-item {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .structure-item:before {
+            content: '📁';
+            position: absolute;
+            left: 0;
+        }
+
+        .structure-item.file:before {
+            content: '📄';
+        }
+
+        .diagram {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .architecture-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .flow-item {
+            background: #3498db;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: #3498db;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid #3498db;
+        }
+
+        .benefit-card h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-list {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .architecture-flow {
+                flex-direction: column;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Разделение логики в Flask приложении</h1>
+            <p>Правильная организация кода для масштабируемых и поддерживаемых веб-приложений</p>
+        </div>
+
+        <nav class="nav">
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#problem" class="nav-link active">Проблема</a></li>
+                <li class="nav-item"><a href="#solution" class="nav-link">Решение</a></li>
+                <li class="nav-item"><a href="#structure" class="nav-link">Структура</a></li>
+                <li class="nav-item"><a href="#blueprints" class="nav-link">Blueprints</a></li>
+                <li class="nav-item"><a href="#models" class="nav-link">Модели</a></li>
+                <li class="nav-item"><a href="#benefits" class="nav-link">Преимущества</a></li>
+            </ul>
+        </nav>
+
+        <div class="content">
+            <section id="problem" class="section">
+                <h2>Проблема: Монолитное приложение</h2>
+                
+                <p>Начинающие разработчики часто создают Flask приложения в одном файле <code>app.py</code>, что приводит к нескольким проблемам:</p>
+                
+                <div class="comparison">
+                    <div class="bad-example">
+                        <div class="example-title">❌ Плохой подход - один файл</div>
+                        <ul>
+                            <li>Трудно ориентироваться в коде</li>
+                            <li>Сложно работать в команде</li>
+                            <li>Повторное использование кода невозможно</li>
+                            <li>Тестирование затруднено</li>
+                            <li>При росте приложения код становится нечитаемым</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="good-example">
+                        <div class="example-title">✅ Правильный подход - модульная структура</div>
+                        <ul>
+                            <li>Четкое разделение ответственности</li>
+                            <li>Легкая навигация по коду</li>
+                            <li>Возможность работы в команде</li>
+                            <li>Повторное использование компонентов</li>
+                            <li>Упрощенное тестирование</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Пример монолитного app.py</h3>
+                <div class="code-block">
+                    <span class="code-comment"># app.py - ВСЁ В ОДНОМ ФАЙЛЕ</span><br>
+                    <br>
+                    <span class="code-keyword">from</span> flask <span class="code-keyword">import</span> Flask, render_template, request, redirect, url_for, flash<br>
+                    <span class="code-keyword">from</span> flask_sqlalchemy <span class="code-keyword">import</span> SQLAlchemy<br>
+                    <span class="code-keyword">from</span> flask_login <span class="code-keyword">import</span> LoginManager, UserMixin, login_user, logout_user<br>
+                    <span class="code-keyword">from</span> werkzeug.security <span class="code-keyword">import</span> generate_password_hash, check_password_hash<br>
+                    <br>
+                    app = Flask(<span class="code-string">__name__</span>)<br>
+                    app.config[<span class="code-string">'SECRET_KEY'</span>] = <span class="code-string">'secret'</span><br>
+                    app.config[<span class="code-string">'SQLALCHEMY_DATABASE_URI'</span>] = <span class="code-string">'sqlite:///app.db'</span><br>
+                    <br>
+                    db = SQLAlchemy(app)<br>
+                    login_manager = LoginManager(app)<br>
+                    <br>
+                    <span class="code-comment"># Модели (должны быть в отдельных файлах)</span><br>
+                    <span class="code-keyword">class</span> <span class="code-class">User</span>(UserMixin, db.Model):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># ... 50 строк кода ...</span><br>
+                    <br>
+                    <span class="code-keyword">class</span> <span class="code-class">Post</span>(db.Model):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># ... 30 строк кода ...</span><br>
+                    <br>
+                    <span class="code-comment"># Маршруты аутентификации (должны быть в auth/routes.py)</span><br>
+                    @app.route(<span class="code-string">'/login'</span>)<br>
+                    <span class="code-keyword">def</span> <span class="code-function">login</span>():<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># ... 40 строк кода ...</span><br>
+                    <br>
+                    @app.route(<span class="code-string">'/register'</span>)<br>
+                    <span class="code-keyword">def</span> <span class="code-function">register</span>():<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># ... 50 строк кода ...</span><br>
+                    <br>
+                    <span class="code-comment"># Маршруты блога (должны быть в blog/routes.py)</span><br>
+                    @app.route(<span class="code-string">'/'</span>)<br>
+                    <span class="code-keyword">def</span> <span class="code-function">index</span>():<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># ... 30 строк кода ...</span><br>
+                    <br>
+                    @app.route(<span class="code-string">'/post/&lt;int:id&gt;'</span>)<br>
+                    <span class="code-keyword">def</span> <span class="code-function">post</span>(id):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># ... 25 строк кода ...</span><br>
+                    <br>
+                    <span class="code-comment"># И ещё 500+ строк кода в одном файле...</span><br>
+                    <br>
+                    <span class="code-keyword">if</span> <span class="code-string">__name__</span> == <span class="code-string">'__main__'</span>:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;app.run(debug=<span class="code-keyword">True</span>)
+                </div>
+            </section>
+
+            <section id="solution" class="section">
+                <h2>Решение: Модульная архитектура</h2>
+                
+                <p>Правильное разделение приложения на компоненты по функциональности:</p>
+                
+                <div class="architecture-flow">
+                    <div class="flow-item">app.py</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">Blueprints</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">Модели</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">Сервисы</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">Утилиты</div>
+                </div>
+            </section>
+
+            <section id="structure" class="section">
+                <h2>Правильная структура проекта</h2>
+                
+                <div class="file-structure">
+                    <div class="structure-item">myapp/
+                        <div class="structure-item">app.py</div>
+                        <div class="structure-item">config.py</div>
+                        <div class="structure-item">requirements.txt</div>
+                        <div class="structure-item">auth/
+                            <div class="structure-item file">__init__.py</div>
+                            <div class="structure-item file">routes.py</div>
+                            <div class="structure-item file">forms.py</div>
+                            <div class="structure-item">templates/auth/
+                                <div class="structure-item file">login.html</div>
+                                <div class="structure-item file">register.html</div>
+                            </div>
+                        </div>
+                        <div class="structure-item">blog/
+                            <div class="structure-item file">__init__.py</div>
+                            <div class="structure-item file">routes.py</div>
+                            <div class="structure-item file">forms.py</div>
+                            <div class="structure-item">templates/blog/
+                                <div class="structure-item file">index.html</div>
+                                <div class="structure-item file">post.html</div>
+                            </div>
+                        </div>
+                        <div class="structure-item">models/
+                            <div class="structure-item file">__init__.py</div>
+                            <div class="structure-item file">user.py</div>
+                            <div class="structure-item file">post.py</div>
+                        </div>
+                        <div class="structure-item">static/
+                            <div class="structure-item">css/</div>
+                            <div class="structure-item">js/</div>
+                            <div class="structure-item">images/</div>
+                        </div>
+                        <div class="structure-item">templates/
+                            <div class="structure-item file">base.html</div>
+                            <div class="structure-item file">layout.html</div>
+                        </div>
+                        <div class="structure-item">utils/
+                            <div class="structure-item file">__init__.py</div>
+                            <div class="structure-item file">helpers.py</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="blueprints" class="section">
+                <h2>Использование Blueprints</h2>
+                
+                <p>Blueprint - это способ организации группы связанных маршрутов. Каждый функциональный модуль приложения должен иметь свой Blueprint.</p>
+                
+                <h3>Пример создания Blueprint</h3>
+                
+                <div class="code-block">
+                    <span class="code-comment"># auth/__init__.py</span><br>
+                    <span class="code-keyword">from</span> flask <span class="code-keyword">import</span> Blueprint<br>
+                    <br>
+                    auth_bp = Blueprint(<span class="code-string">'auth'</span>, <span class="code-string">__name__</span>, <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;template_folder=<span class="code-string">'templates'</span>,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;static_folder=<span class="code-string">'static'</span>)<br>
+                    <br>
+                    <span class="code-keyword">from</span> . <span class="code-keyword">import</span> routes
+                </div>
+                
+                <div class="code-block">
+                    <span class="code-comment"># auth/routes.py</span><br>
+                    <span class="code-keyword">from</span> flask <span class="code-keyword">import</span> render_template, redirect, url_for, flash, request<br>
+                    <span class="code-keyword">from</span> . <span class="code-keyword">import</span> auth_bp<br>
+                    <span class="code-keyword">from</span> ..models.user <span class="code-keyword">import</span> User<br>
+                    <span class="code-keyword">from</span> .. import db<br>
+                    <br>
+                    @auth_bp.route(<span class="code-string">'/login'</span>, methods=[<span class="code-string">'GET'</span>, <span class="code-string">'POST'</span>])<br>
+                    <span class="code-keyword">def</span> <span class="code-function">login</span>():<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># Логика входа</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> render_template(<span class="code-string">'auth/login.html'</span>)<br>
+                    <br>
+                    @auth_bp.route(<span class="code-string">'/register'</span>, methods=[<span class="code-string">'GET'</span>, <span class="code-string">'POST'</span>])<br>
+                    <span class="code-keyword">def</span> <span class="code-function">register</span>():<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># Логика регистрации</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> render_template(<span class="code-string">'auth/register.html'</span>)
+                </div>
+                
+                <h3>Основной app.py с Blueprints</h3>
+                <div class="code-block">
+                    <span class="code-comment"># app.py - ТОЛЬКО КОНФИГУРАЦИЯ И РЕГИСТРАЦИЯ</span><br>
+                    <span class="code-keyword">from</span> flask <span class="code-keyword">import</span> Flask<br>
+                    <span class="code-keyword">from</span> config <span class="code-keyword">import</span> Config<br>
+                    <span class="code-keyword">from</span> models <span class="code-keyword">import</span> db<br>
+                    <span class="code-keyword">from</span> auth <span class="code-keyword">import</span> auth_bp<br>
+                    <span class="code-keyword">from</span> blog <span class="code-keyword">import</span> blog_bp<br>
+                    <br>
+                    <span class="code-keyword">def</span> <span class="code-function">create_app</span>():<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;app = Flask(<span class="code-string">__name__</span>)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;app.config.from_object(Config)<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># Инициализация расширений</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;db.init_app(app)<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># Регистрация Blueprints</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;app.register_blueprint(auth_bp, url_prefix=<span class="code-string">'/auth'</span>)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;app.register_blueprint(blog_bp, url_prefix=<span class="code-string">'/blog'</span>)<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> app<br>
+                    <br>
+                    app = create_app()<br>
+                    <br>
+                    <span class="code-keyword">if</span> <span class="code-string">__name__</span> == <span class="code-string">'__main__'</span>:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;app.run(debug=<span class="code-keyword">True</span>)
+                </div>
+            </section>
+
+            <section id="models" class="section">
+                <h2>Организация моделей данных</h2>
+                
+                <p>Модели должны быть разделены по функциональности и находиться в отдельных файлах.</p>
+                
+                <div class="code-block">
+                    <span class="code-comment"># models/__init__.py</span><br>
+                    <span class="code-keyword">from</span> flask_sqlalchemy <span class="code-keyword">import</span> SQLAlchemy<br>
+                    <br>
+                    db = SQLAlchemy()<br>
+                    <br>
+                    <span class="code-keyword">from</span> .user <span class="code-keyword">import</span> User<br>
+                    <span class="code-keyword">from</span> .post <span class="code-keyword">import</span> Post
+                </div>
+                
+                <div class="code-block">
+                    <span class="code-comment"># models/user.py</span><br>
+                    <span class="code-keyword">from</span> . <span class="code-keyword">import</span> db<br>
+                    <span class="code-keyword">from</span> flask_login <span class="code-keyword">import</span> UserMixin<br>
+                    <br>
+                    <span class="code-keyword">class</span> <span class="code-class">User</span>(UserMixin, db.Model):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;id = db.Column(db.Integer, primary_key=<span class="code-keyword">True</span>)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;username = db.Column(db.String(<span class="code-keyword">80</span>), unique=<span class="code-keyword">True</span>, nullable=<span class="code-keyword">False</span>)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;email = db.Column(db.String(<span class="code-keyword">120</span>), unique=<span class="code-keyword">True</span>, nullable=<span class="code-keyword">False</span>)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;password_hash = db.Column(db.String(<span class="code-keyword">128</span>))<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">def</span> <span class="code-function">set_password</span>(self, password):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># ...</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">def</span> <span class="code-function">check_password</span>(self, password):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># ...</span>
+                </div>
+            </section>
+
+            <section id="benefits" class="section">
+                <h2>Преимущества разделения логики</h2>
+                
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <h4>🚀 Масштабируемость</h4>
+                        <p>Легко добавлять новые функции без изменения существующего кода. Каждый модуль независим.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <h4>👥 Командная работа</h4>
+                        <p>Разные разработчики могут работать над разными модулями одновременно без конфликтов.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <h4>🔧 Поддерживаемость</h4>
+                        <p>Легко находить и исправлять ошибки. Код организован логически.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <h4>🔄 Повторное использование</h4>
+                        <p>Blueprints можно использовать в разных проектах. Модули независимы.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <h4>🧪 Тестируемость</h4>
+                        <p>Легко писать unit-тесты для каждого модуля отдельно.</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <h4>📁 Четкая структура</h4>
+                        <p>Новые разработчики быстро понимают архитектуру приложения.</p>
+                    </div>
+                </div>
+                
+                <h3>Золотые правила организации Flask приложения:</h3>
+                <ol>
+                    <li><strong>Один файл - одна ответственность</strong></li>
+                    <li><strong>Разделение по функциональности</strong>, а не по типам файлов</li>
+                    <li><strong>Использование Blueprints</strong> для модульности</li>
+                    <li><strong>Вынесение конфигурации</strong> в отдельный файл</li>
+                    <li><strong>Разделение моделей</strong> по сущностям</li>
+                    <li><strong>Использование фабрики приложений</strong> для гибкости</li>
+                </ol>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Навигация по странице
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Удаляем активный класс у всех ссылок
+                document.querySelectorAll('.nav-link').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Добавляем активный класс к текущей ссылке
+                this.classList.add('active');
+                
+                // Прокручиваем к выбранному разделу
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                targetSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Подсветка активного раздела при прокрутке
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
