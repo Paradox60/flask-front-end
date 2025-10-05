@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Графический построитель функций</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .controls {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: #6c757d;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        input[type="text"], input[type="number"], input[type="color"], select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            background: white;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, input[type="color"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .function-input {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+        }
+
+        button {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            background: #667eea;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 12px;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-success:hover {
+            background: #219a52;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .canvas-container {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 2px solid #e9ecef;
+        }
+
+        #graphCanvas {
+            display: block;
+            background: #f8f9fa;
+            cursor: crosshair;
+        }
+
+        .info-panel {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.85);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            min-width: 200px;
+        }
+
+        .function-list {
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .function-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .function-item:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .function-item.active {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .function-preview {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .function-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+        }
+
+        .function-expression {
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+        }
+
+        .function-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .presets {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .preset-btn {
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        .coordinates {
+            margin-top: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .coordinate-display {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .presets {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .presets {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Графический построитель функций</h1>
+            <p>Визуализируйте математические функции в реальном времени</p>
+        </div>
+
+        <div class="app-container">
+            <div class="controls">
+                <div class="control-group">
+                    <h2>Добавить функцию</h2>
+                    
+                    <label for="functionInput">Функция f(x):</label>
+                    <input type="text" id="functionInput" class="function-input" 
+                           placeholder="sin(x)" value="sin(x)">
+                    
+                    <label for="functionColor">Цвет графика:</label>
+                    <input type="color" id="functionColor" value="#3498db">
+                    
+                    <label for="lineWidth">Толщина линии:</label>
+                    <input type="number" id="lineWidth" value="2" min="1" max="10">
+                    
+                    <button id="addFunctionBtn" class="btn-success">Добавить функцию</button>
+                </div>
+
+                <div class="control-group">
+                    <h2>Настройки графика</h2>
+                    
+                    <label for="xMin">X минимум:</label>
+                    <input type="number" id="xMin" value="-10" step="1">
+                    
+                    <label for="xMax">X максимум:</label>
+                    <input type="number" id="xMax" value="10" step="1">
+                    
+                    <label for="yMin">Y минимум:</label>
+                    <input type="number" id="yMin" value="-5" step="1">
+                    
+                    <label for="yMax">Y максимум:</label>
+                    <input type="number" id="yMax" value="5" step="1">
+                    
+                    <label for="step">Шаг вычислений:</label>
+                    <input type="number" id="step" value="0.01" step="0.001" min="0.001" max="0.1">
+                    
+                    <button id="updateGraphBtn">Обновить график</button>
+                </div>
+
+                <div class="control-group">
+                    <h2>Примеры функций</h2>
+                    <div class="presets">
+                        <button class="preset-btn" data-func="x*x">x²</button>
+                        <button class="preset-btn" data-func="sin(x)">sin(x)</button>
+                        <button class="preset-btn" data-func="cos(x)">cos(x)</button>
+                        <button class="preset-btn" data-func="tan(x)">tan(x)</button>
+                        <button class="preset-btn" data-func="log(x)">log(x)</button>
+                        <button class="preset-btn" data-func="exp(x)">exp(x)</button>
+                        <button class="preset-btn" data-func="1/x">1/x</button>
+                        <button class="preset-btn" data-func="sqrt(x)">√x</button>
+                        <button class="preset-btn" data-func="x*x*x">x³</button>
+                        <button class="preset-btn" data-func="abs(x)">|x|</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h2>Список функций</h2>
+                    <div class="function-list" id="functionList">
+                        <!-- Список функций будет здесь -->
+                    </div>
+                    <button id="clearAllBtn" class="btn-danger">Удалить все</button>
+                </div>
+
+                <div class="coordinates">
+                    <h3>Координаты курсора</h3>
+                    <div class="coordinate-display" id="coordinateDisplay">
+                        Наведите на график
+                    </div>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="graphCanvas" width="1000" height="700"></canvas>
+                <div class="info-panel">
+                    <div>Масштаб: <span id="scaleInfo">1:1</span></div>
+                    <div>Функций: <span id="functionsCount">0</span></div>
+                    <div>Область: X[<span id="domainX">-10,10</span>]</div>
+                    <div>Область: Y[<span id="domainY">-5,5</span>]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Элементы DOM
+        const canvas = document.getElementById('graphCanvas');
+        const ctx = canvas.getContext('2d');
+        const addFunctionBtn = document.getElementById('addFunctionBtn');
+        const updateGraphBtn = document.getElementById('updateGraphBtn');
+        const clearAllBtn = document.getElementById('clearAllBtn');
+        const presetBtns = document.querySelectorAll('.preset-btn');
+        const functionList = document.getElementById('functionList');
+        const coordinateDisplay = document.getElementById('coordinateDisplay');
+        const functionsCount = document.getElementById('functionsCount');
+        const scaleInfo = document.getElementById('scaleInfo');
+        const domainX = document.getElementById('domainX');
+        const domainY = document.getElementById('domainY');
+
+        // Переменные состояния
+        let functions = [];
+        let graphConfig = {
+            xMin: -10,
+            xMax: 10,
+            yMin: -5,
+            yMax: 5,
+            step: 0.01
+        };
+
+        // Класс функции
+        class GraphFunction {
+            constructor(expression, color = '#3498db', lineWidth = 2) {
+                this.id = Date.now() + Math.random();
+                this.expression = expression;
+                this.color = color;
+                this.lineWidth = lineWidth;
+                this.visible = true;
+            }
+
+            evaluate(x) {
+                try {
+                    // Заменяем математические функции и константы
+                    let expr = this.expression
+                        .replace(/sin/g, 'Math.sin')
+                        .replace(/cos/g, 'Math.cos')
+                        .replace(/tan/g, 'Math.tan')
+                        .replace(/log/g, 'Math.log')
+                        .replace(/exp/g, 'Math.exp')
+                        .replace(/sqrt/g, 'Math.sqrt')
+                        .replace(/abs/g, 'Math.abs')
+                        .replace(/PI/g, 'Math.PI')
+                        .replace(/E/g, 'Math.E');
+                    
+                    // Вычисляем значение
+                    return eval(expr);
+                } catch (error) {
+                    return NaN;
+                }
+            }
+
+            draw() {
+                if (!this.visible) return;
+
+                ctx.beginPath();
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = this.lineWidth;
+                ctx.lineJoin = 'round';
+                ctx.lineCap = 'round';
+
+                let firstPoint = true;
+
+                for (let x = graphConfig.xMin; x <= graphConfig.xMax; x += graphConfig.step) {
+                    const y = this.evaluate(x);
+
+                    if (isNaN(y) || !isFinite(y)) {
+                        firstPoint = true;
+                        continue;
+                    }
+
+                    const canvasX = ((x - graphConfig.xMin) / (graphConfig.xMax - graphConfig.xMin)) * canvas.width;
+                    const canvasY = canvas.height - ((y - graphConfig.yMin) / (graphConfig.yMax - graphConfig.yMin)) * canvas.height;
+
+                    if (firstPoint) {
+                        ctx.moveTo(canvasX, canvasY);
+                        firstPoint = false;
+                    } else {
+                        ctx.lineTo(canvasX, canvasY);
+                    }
+                }
+
+                ctx.stroke();
+            }
+        }
+
+        // Инициализация
+        function init() {
+            // События кнопок
+            addFunctionBtn.addEventListener('click', addFunction);
+            updateGraphBtn.addEventListener('click', updateGraph);
+            clearAllBtn.addEventListener('click', clearAllFunctions);
+            
+            // Пресеты
+            presetBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('functionInput').value = this.dataset.func;
+                });
+            });
+
+            // Отслеживание положения мыши
+            canvas.addEventListener('mousemove', handleMouseMove);
+
+            // Загрузка конфигурации
+            loadConfig();
+            render();
+        }
+
+        // Добавление функции
+        function addFunction() {
+            const expression = document.getElementById('functionInput').value.trim();
+            const color = document.getElementById('functionColor').value;
+            const lineWidth = parseInt(document.getElementById('lineWidth').value);
+
+            if (!expression) {
+                alert('Введите выражение функции');
+                return;
+            }
+
+            const func = new GraphFunction(expression, color, lineWidth);
+            functions.push(func);
+            updateFunctionList();
+            render();
+        }
+
+        // Обновление графика
+        function updateGraph() {
+            graphConfig.xMin = parseFloat(document.getElementById('xMin').value);
+            graphConfig.xMax = parseFloat(document.getElementById('xMax').value);
+            graphConfig.yMin = parseFloat(document.getElementById('yMin').value);
+            graphConfig.yMax = parseFloat(document.getElementById('yMax').value);
+            graphConfig.step = parseFloat(document.getElementById('step').value);
+
+            domainX.textContent = `${graphConfig.xMin},${graphConfig.xMax}`;
+            domainY.textContent = `${graphConfig.yMin},${graphConfig.yMax}`;
+
+            render();
+        }
+
+        // Очистка всех функций
+        function clearAllFunctions() {
+            if (functions.length === 0) return;
+            if (confirm('Удалить все функции?')) {
+                functions = [];
+                updateFunctionList();
+                render();
+            }
+        }
+
+        // Удаление функции
+        function deleteFunction(funcId) {
+            functions = functions.filter(f => f.id !== funcId);
+            updateFunctionList();
+            render();
+        }
+
+        // Переключение видимости функции
+        function toggleFunction(funcId) {
+            const func = functions.find(f => f.id === funcId);
+            if (func) {
+                func.visible = !func.visible;
+                updateFunctionList();
+                render();
+            }
+        }
+
+        // Обновление списка функций
+        function updateFunctionList() {
+            functionList.innerHTML = '';
+            functions.forEach(func => {
+                const item = document.createElement('div');
+                item.className = 'function-item';
+                item.innerHTML = `
+                    <div class="function-preview">
+                        <div class="function-color" style="background-color: ${func.color}"></div>
+                        <div class="function-expression">f(x) = ${func.expression}</div>
+                    </div>
+                    <div class="function-actions">
+                        <button class="action-btn ${func.visible ? 'btn-success' : 'btn-secondary'}" 
+                                onclick="toggleFunction(${func.id})">
+                            ${func.visible ? '👁' : '👁‍🗨'}
+                        </button>
+                        <button class="action-btn btn-danger" onclick="deleteFunction(${func.id})">×</button>
+                    </div>
+                `;
+                functionList.appendChild(item);
+            });
+            functionsCount.textContent = functions.length;
+        }
+
+        // Обработка движения мыши
+        function handleMouseMove(e) {
+            const rect = canvas.getBoundingClientRect();
+            const canvasX = e.clientX - rect.left;
+            const canvasY = e.clientY - rect.top;
+
+            // Конвертируем координаты канваса в математические
+            const mathX = graphConfig.xMin + (canvasX / canvas.width) * (graphConfig.xMax - graphConfig.xMin);
+            const mathY = graphConfig.yMax - (canvasY / canvas.height) * (graphConfig.yMax - graphConfig.yMin);
+
+            coordinateDisplay.textContent = `x = ${mathX.toFixed(2)}, y = ${mathY.toFixed(2)}`;
+        }
+
+        // Отрисовка графика
+        function render() {
+            // Очистка холста
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Рисуем сетку и оси
+            drawGridAndAxes();
+
+            // Рисуем все функции
+            functions.forEach(func => func.draw());
+        }
+
+        // Отрисовка сетки и осей
+        function drawGridAndAxes() {
+            const width = canvas.width;
+            const height = canvas.height;
+            const xRange = graphConfig.xMax - graphConfig.xMin;
+            const yRange = graphConfig.yMax - graphConfig.yMin;
+
+            // Сетка
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+
+            // Вертикальные линии сетки
+            for (let x = Math.ceil(graphConfig.xMin); x <= graphConfig.xMax; x++) {
+                if (x === 0) continue;
+                const canvasX = ((x - graphConfig.xMin) / xRange) * width;
+                ctx.beginPath();
+                ctx.moveTo(canvasX, 0);
+                ctx.lineTo(canvasX, height);
+                ctx.stroke();
+            }
+
+            // Горизонтальные линии сетки
+            for (let y = Math.ceil(graphConfig.yMin); y <= graphConfig.yMax; y++) {
+                if (y === 0) continue;
+                const canvasY = height - ((y - graphConfig.yMin) / yRange) * height;
+                ctx.beginPath();
+                ctx.moveTo(0, canvasY);
+                ctx.lineTo(width, canvasY);
+                ctx.stroke();
+            }
+
+            // Оси
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+
+            // Ось Y
+            const yAxisX = ((-graphConfig.xMin) / xRange) * width;
+            if (yAxisX >= 0 && yAxisX <= width) {
+                ctx.beginPath();
+                ctx.moveTo(yAxisX, 0);
+                ctx.lineTo(yAxisX, height);
+                ctx.stroke();
+            }
+
+            // Ось X
+            const xAxisY = height - ((-graphConfig.yMin) / yRange) * height;
+            if (xAxisY >= 0 && xAxisY <= height) {
+                ctx.beginPath();
+                ctx.moveTo(0, xAxisY);
+                ctx.lineTo(width, xAxisY);
+                ctx.stroke();
+            }
+
+            // Подписи осей
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+
+            // Подписи по оси X
+            for (let x = Math.ceil(graphConfig.xMin); x <= graphConfig.xMax; x++) {
+                if (x === 0) continue;
+                const canvasX = ((x - graphConfig.xMin) / xRange) * width;
+                const canvasY = height - ((-graphConfig.yMin) / yRange) * height + 15;
+                ctx.fillText(x.toString(), canvasX, canvasY);
+            }
+
+            // Подписи по оси Y
+            ctx.textAlign = 'right';
+            for (let y = Math.ceil(graphConfig.yMin); y <= graphConfig.yMax; y++) {
+                if (y === 0) continue;
+                const canvasX = ((-graphConfig.xMin) / xRange) * width - 5;
+                const canvasY = height - ((y - graphConfig.yMin) / yRange) * height + 4;
+                ctx.fillText(y.toString(), canvasX, canvasY);
+            }
+
+            // Ноль
+            if (graphConfig.xMin <= 0 && graphConfig.xMax >= 0 && graphConfig.yMin <= 0 && graphConfig.yMax >= 0) {
+                ctx.fillStyle = '#2c3e50';
+                ctx.textAlign = 'right';
+                const zeroX = ((-graphConfig.xMin) / xRange) * width - 5;
+                const zeroY = height - ((-graphConfig.yMin) / yRange) * height + 15;
+                ctx.fillText('0', zeroX, zeroY);
+            }
+        }
+
+        // Загрузка конфигурации
+        function loadConfig() {
+            document.getElementById('xMin').value = graphConfig.xMin;
+            document.getElementById('xMax').value = graphConfig.xMax;
+            document.getElementById('yMin').value = graphConfig.yMin;
+            document.getElementById('yMax').value = graphConfig.yMax;
+            document.getElementById('step').value = graphConfig.step;
+
+            domainX.textContent = `${graphConfig.xMin},${graphConfig.xMax}`;
+            domainY.textContent = `${graphConfig.yMin},${graphConfig.yMax}`;
+        }
+
+        // Делаем функции глобальными для использования в HTML
+        window.toggleFunction = toggleFunction;
+        window.deleteFunction = deleteFunction;
+
+        // Запуск приложения
+        init();
+
+        // Добавляем несколько примеров при загрузке
+        setTimeout(() => {
+            functions.push(new GraphFunction('sin(x)', '#e74c3c', 2));
+            functions.push(new GraphFunction('x*x', '#2ecc71', 2));
+            updateFunctionList();
+            render();
+        }, 100);
+    </script>
+</body>
+</html>
