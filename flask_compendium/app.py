@@ -201,4 +201,8 @@ def flask_app():
     
 @app.route("/graphicks")
 def graphicks():
-    return render_template("CSS_temp/graphicks.html")
+    return render_template("CSS_temp/graphicks.html")  
+      
+@app.route("/js_base")
+def js_base():
+    return render_template("CSS_temp/js_base.html")
