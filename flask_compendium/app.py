@@ -3,6 +3,30 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
+# Js_routs
+#-----------------------------------
+@app.route("/js_home")
+def js_start():
+    return render_template("JS_temp/js_index.html")
+
+@app.route("/js_first_lesson")
+def js_fl():
+    return render_template("JS_temp/lessons/js_fl.html") 
+
+@app.route("/game")
+def mini_game():
+    return render_template("JS_temp/lessons/js_minigame.html") 
+
+@app.route("/calculators")
+def calc_page():
+    return render_template("JS_temp/lessons/calculators.html") 
+
+@app.route("/open_close")
+def hide_show():
+    return render_template("JS_temp/lessons/js_hide_and_show.html") 
+
+#Css_routs
+#-----------------------------------
 @app.route("/")
 def home():
     return render_template("CSS_temp/index.html")
@@ -30,24 +54,10 @@ def position():
 @app.route("/inline")
 def inline():
     return render_template("CSS_temp/inline.html") 
-
-@app.route("/js_home")
-def js_start():
-    return render_template("JS_temp/js_index.html") 
-
-
-@app.route("/js_first_lesson")
-def js_fl():
-    return render_template("JS_temp/lessons/js_fl.html") 
-
-
+ 
 @app.route("/float")
 def float():
     return render_template("CSS_temp/float.html") 
-
-@app.route("/game")
-def mini_game():
-    return render_template("JS_temp/lessons/js_minigame.html") 
 
 @app.route("/text")
 def text():
@@ -77,10 +87,6 @@ def type_size():
 def cards():
     return render_template("CSS_temp/cards.html")  
 
-@app.route("/calculators")
-def calc_page():
-    return render_template("JS_temp/lessons/calculators.html") 
-
 @app.route("/space")
 def space():
     return render_template("CSS_temp/space.html")      
@@ -100,7 +106,6 @@ def page_item_list():
 @app.route("/content_switcher")
 def content_switcher():
     return render_template("CSS_temp/content_switcher.html")
-
 
 @app.route("/cutting_calc")
 def cutting_calc():
@@ -193,7 +198,6 @@ def circle():
 @app.route("/circle_2")
 def circle_2():
     return render_template("CSS_temp/circle_2.html")
-
 
 @app.route("/flask_app")
 def flask_app():

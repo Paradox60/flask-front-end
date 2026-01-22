@@ -1,0 +1,55 @@
+{% extends "JS_temp/js_base.html" %}
+{% block style %}
+<style>
+  .main_field {
+    display:flex;
+    flex-direction: column;
+  }
+  .card{
+    min-width: 500px;
+    min-height: 50px;
+    background-color: black;
+    text:green;
+    text-align: center;
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: red;
+    padding: 5px;
+    padding-top: 15px;
+  }
+  .
+</style>
+{% endblock style %}
+
+{% block content %}
+<div class="main_field">
+  
+  <div class="card">
+    <h2>карточка с переключателем</h2>
+    <select>
+      <option value="default" class='hidden'>Выбрать</option>
+      <option>Карточка №1</option>
+      <option>Карточка №2</option>
+    </select>
+  </div>
+
+  <div class="card">
+   <h2>Карточка 1</h2>     
+  </div>
+
+  <div class="card">
+    <h2>Карточка 2</h2>
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleAdvanced() {
+    document.getElementById("advanced-section").classList.toggle("hidden");
+}
+</script>
+{% endblock scripts %}
