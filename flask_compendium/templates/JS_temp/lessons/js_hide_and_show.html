@@ -5,6 +5,21 @@
     display:flex;
     flex-direction: column;
   }
+
+  .card-selector{
+    min-width: 500px;
+    min-height: 50px;
+    background-color: black;
+    text:green;
+    text-align: center;
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: red;
+    padding: 5px;
+    padding-top: 15px;
+  }
+
   .card{
     min-width: 500px;
     min-height: 50px;
@@ -18,29 +33,35 @@
     padding: 5px;
     padding-top: 15px;
   }
-  .
+
+  .hidden {
+    display: none !important;
+  }
+  
 </style>
 {% endblock style %}
 
 {% block content %}
 <div class="main_field">
   
-  <div class="card">
+  <div class="card-selector">
     <h2>карточка с переключателем</h2>
-    <select>
+    <select id="cardSelector">
       <option value="default" class='hidden'>Выбрать</option>
-      <option>Карточка №1</option>
-      <option>Карточка №2</option>
+      <option value="card1">Карточка №1</option>
+      <option value="card2">Карточка №2</option>
     </select>
   </div>
 
-  <div class="card">
+  <div class="card" id="card1">
    <h2>Карточка 1</h2>     
   </div>
 
-  <div class="card">
+  <div class="card" id="card2">
     <h2>Карточка 2</h2>
   </div>
+
+
 
 </div>
 
@@ -48,8 +69,27 @@
 
 {% block scripts %}
 <script>
-function toggleAdvanced() {
-    document.getElementById("advanced-section").classList.toggle("hidden");
-}
+document.addEventListener('DOMContentLoaded', function() {
+  // Скрываем карточки при загрузке
+  document.querySelectorAll('.card').forEach(card => {
+    card.classList.add('hidden');
+  });
+  
+  // Вешаем обработчик на селектор
+  document.getElementById('cardSelector').addEventListener('change', function() {
+    const value = this.value;
+    
+    if (value === 'card1') {
+      // Показать карточку 1, скрыть 2
+      document.getElementById('card1').classList.remove('hidden');
+      document.getElementById('card2').classList.add('hidden');
+    } 
+    else if (value === 'card2') {
+      // Показать карточку 2, скрыть 1
+      document.getElementById('card1').classList.add('hidden');
+      document.getElementById('card2').classList.remove('hidden');
+    }
+  });
+});
 </script>
 {% endblock scripts %}
