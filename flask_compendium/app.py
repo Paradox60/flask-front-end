@@ -27,9 +27,14 @@ def hide_show():
 
 #Css_routs
 #-----------------------------------
+
 @app.route("/")
 def home():
     return render_template("CSS_temp/index.html")
+
+@app.route("/svg_page")
+def svg():
+    return render_template("CSS_temp/svg.html")
 
 @app.route("/selector_page")
 def text_page():
