@@ -32,6 +32,10 @@ def hide_show():
 def home():
     return render_template("CSS_temp/index.html")
 
+@app.route("/roughness")
+def roughness():
+    return render_template("CSS_temp/roughness.html")
+
 @app.route("/svg_page")
 def svg():
     return render_template("CSS_temp/svg.html")

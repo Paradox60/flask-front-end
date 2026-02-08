@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор шероховатости (Точение) | CNC Портал</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .calculator {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e1e5eb;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-top: 0;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            font-size: 1.8em;
+        }
+        h3 {
+            color: #2980b9;
+            margin-top: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background: linear-gradient(to right, #2980b9, #2573a7);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(41, 128, 185, 0.3);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f4fc;
+            border-radius: 8px;
+            border-left: 5px solid #3498db;
+            font-size: 1.1em;
+            display: none; /* Сначала скрыт */
+        }
+        .result h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .highlight {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #e74c3c;
+            padding: 5px 10px;
+            background-color: white;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        .formula {
+            font-family: 'Courier New', monospace;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px dashed #95a5a6;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        .info-box {
+            background-color: #fffde7;
+            border-left: 5px solid #f1c40f;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95em;
+        }
+        .mode-switch {
+            display: flex;
+            margin-bottom: 20px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .mode-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .mode-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        .input-section {
+            display: block;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        .tooltip {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1><span style="color: #3498db;">▦</span> Калькулятор теоретической шероховатости при точении</h1>
+        <p>Расчёт по классической формуле для пластин с радиусом при вершине. Выберите режим расчета.</p>
+
+        <div class="mode-switch">
+            <button id="modeDirect" class="mode-btn active">Режим 1: Подача → Шероховатость</button>
+            <button id="modeReverse" class="mode-btn">Режим 2: Шероховатость → Подача</button>
+        </div>
+
+        <!-- РЕЖИМ 1: Прямой расчет (Подача -> Ra) -->
+        <div id="directInputs" class="input-section">
+            <div class="form-group">
+                <label for="feedRate">Подача на оборот, f (мм/об):</label>
+                <input type="number" id="feedRate" step="0.01" min="0.01" max="2" value="0.2">
+                <span class="tooltip">Обычно от 0.05 до 1.0 мм/об для чистовой обработки.</span>
+            </div>
+
+            <div class="form-group">
+                <label for="insertRadius">Радиус при вершине пластины, r (мм):</label>
+                <select id="insertRadius">
+                    <option value="0.2">0.2 (чистовая, мелкие радиусы)</option>
+                    <option value="0.4" selected>0.4 (стандартный)</option>
+                    <option value="0.8">0.8 (универсальный, повышенная прочность)</option>
+                    <option value="1.2">1.2 (черновая/получистовая)</option>
+                    <option value="custom">Ввести своё значение...</option>
+                </select>
+                <div id="customRadiusContainer" style="display:none; margin-top:10px;">
+                    <label for="customRadius">Ваш радиус, r (мм):</label>
+                    <input type="number" id="customRadius" step="0.1" min="0.1" max="3" value="0.8">
+                </div>
+            </div>
+
+            <button id="btnCalculateDirect" class="btn">📊 Рассчитать теоретическую шероховатость Ra</button>
+        </div>
+
+        <!-- РЕЖИМ 2: Обратный расчет (Ra -> Подача) -->
+        <div id="reverseInputs" class="input-section" style="display:none;">
+            <div class="form-group">
+                <label for="targetRa">Целевая шероховатость, Ra (мкм):</label>
+                <input type="number" id="targetRa" step="0.1" min="0.1" max="25" value="3.2">
+                <span class="tooltip>Например: 1.6 (чистовая), 3.2 (получистовая), 6.3 (черновая).</span>
+            </div>
+
+            <div class="form-group">
+                <label for="insertRadiusRev">Радиус при вершине пластины, r (мм):</label>
+                <select id="insertRadiusRev">
+                    <option value="0.2">0.2 (чистовая, мелкие радиусы)</option>
+                    <option value="0.4" selected>0.4 (стандартный)</option>
+                    <option value="0.8">0.8 (универсальный, повышенная прочность)</option>
+                    <option value="1.2">1.2 (черновая/получистовая)</option>
+                    <option value="customRev">Ввести своё значение...</option>
+                </select>
+                <div id="customRadiusRevContainer" style="display:none; margin-top:10px;">
+                    <label for="customRadiusRev">Ваш радиус, r (мм):</label>
+                    <input type="number" id="customRadiusRev" step="0.1" min="0.1" max="3" value="0.8">
+                </div>
+            </div>
+
+            <button id="btnCalculateReverse" class="btn">🔧 Рассчитать требуемую подачу f</button>
+        </div>
+
+        <!-- БЛОК ФОРМУЛЫ -->
+        <div class="formula">
+            <strong>Используемая формула:</strong><br>
+            Ra (мкм) ≈ [ f² (мм/об) ] / [ 8 × r (мм) ] × 1000
+        </div>
+
+        <!-- РЕЗУЛЬТАТЫ РАСЧЕТА -->
+        <div id="resultDirect" class="result">
+            <h3>Результат прямого расчета:</h3>
+            <p>При подаче <strong><span id="resultFeed">0.2</span> мм/об</strong> и радиусе пластины <strong><span id="resultRadius">0.4</span> мм</strong>:</p>
+            <p>Теоретическая шероховатость: <span class="highlight" id="resultRa">6.25 мкм</span> (Ra)</p>
+            <p><strong>Рекомендация:</strong> <span id="recommendation">Подходит для получистовой обработки.</span></p>
+        </div>
+
+        <div id="resultReverse" class="result">
+            <h3>Результат обратного расчета:</h3>
+            <p>Для достижения шероховатости <strong><span id="resultTargetRa">3.2</span> мкм (Ra)</strong> с радиусом пластины <strong><span id="resultRadiusRev">0.4</span> мм</strong>:</p>
+            <p>Необходимая подача: <span class="highlight" id="resultFeedRev">0.10 мм/об</span></p>
+            <p><strong>Практический совет:</strong> <span id="recommendationRev">Используйте пластину с радиусом 0.8 мм для увеличения подачи до ~0.14 мм/об при той же шероховатости, что повысит стойкость инструмента.</span></p>
+        </div>
+
+        <!-- ИНФОБОКС -->
+        <div class="info-box">
+            <strong>❗ Важно!</strong> Это <strong>теоретическая</strong> шероховатость. На реальную поверхность также влияют:
+            <ul>
+                <li>Износ и геометрия пластины</li>
+                <li>Вибрации (биение, жёсткость системы)</li>
+                <li>Материал заготовки и режимы резания (скорость, глубина)</li>
+                <li>СОЖ и состояние станка</li>
+            </ul>
+            Используйте результат как отличную стартовую точку для настройки.
+        </div>
+    </div>
+
+    <footer>
+        <p>CNC Портал © 2023. Калькулятор для специалистов по обработке металлов резанием.</p>
+    </footer>
+
+    <script>
+        // Элементы DOM
+        const modeDirectBtn = document.getElementById('modeDirect');
+        const modeReverseBtn = document.getElementById('modeReverse');
+        const directInputs = document.getElementById('directInputs');
+        const reverseInputs = document.getElementById('reverseInputs');
+        const resultDirect = document.getElementById('resultDirect');
+        const resultReverse = document.getElementById('resultReverse');
+        const insertRadiusSelect = document.getElementById('insertRadius');
+        const customRadiusContainer = document.getElementById('customRadiusContainer');
+        const customRadiusInput = document.getElementById('customRadius');
+        const insertRadiusRevSelect = document.getElementById('insertRadiusRev');
+        const customRadiusRevContainer = document.getElementById('customRadiusRevContainer');
+        const customRadiusRevInput = document.getElementById('customRadiusRev');
+
+        // ПЕРЕКЛЮЧЕНИЕ РЕЖИМОВ
+        modeDirectBtn.addEventListener('click', () => switchMode('direct'));
+        modeReverseBtn.addEventListener('click', () => switchMode('reverse'));
+
+        function switchMode(mode) {
+            if (mode === 'direct') {
+                modeDirectBtn.classList.add('active');
+                modeReverseBtn.classList.remove('active');
+                directInputs.style.display = 'block';
+                reverseInputs.style.display = 'none';
+                resultDirect.style.display = 'none';
+                resultReverse.style.display = 'none';
+            } else {
+                modeDirectBtn.classList.remove('active');
+                modeReverseBtn.classList.add('active');
+                directInputs.style.display = 'none';
+                reverseInputs.style.display = 'block';
+                resultDirect.style.display = 'none';
+                resultReverse.style.display = 'none';
+            }
+        }
+
+        // ОБРАБОТКА ВЫБОРА РАДИУСА (Прямой режим)
+        insertRadiusSelect.addEventListener('change', function() {
+            customRadiusContainer.style.display = this.value === 'custom' ? 'block' : 'none';
+        });
+
+        // ОБРАБОТКА ВЫБОРА РАДИУСА (Обратный режим)
+        insertRadiusRevSelect.addEventListener('change', function() {
+            customRadiusRevContainer.style.display = this.value === 'customRev' ? 'block' : 'none';
+        });
+
+        // ФУНКЦИЯ РАСЧЕТА: Подача -> Ra
+        function calculateRa() {
+            // 1. Получаем подачу
+            const feed = parseFloat(document.getElementById('feedRate').value);
+            if (isNaN(feed) || feed <= 0) {
+                alert('Введите корректное значение подачи (больше 0).');
+                return;
+            }
+
+            // 2. Получаем радиус
+            let radius;
+            if (insertRadiusSelect.value === 'custom') {
+                radius = parseFloat(customRadiusInput.value);
+            } else {
+                radius = parseFloat(insertRadiusSelect.value);
+            }
+            if (isNaN(radius) || radius <= 0) {
+                alert('Введите корректное значение радиуса (больше 0).');
+                return;
+            }
+
+            // 3. Основная формула: Ra (мкм) = (f^2 / (8 * r)) * 1000
+            const ra = (Math.pow(feed, 2) / (8 * radius)) * 1000;
+
+            // 4. Обновляем результат на странице
+            document.getElementById('resultFeed').textContent = feed.toFixed(2);
+            document.getElementById('resultRadius').textContent = radius.toFixed(1);
+            document.getElementById('resultRa').textContent = ra.toFixed(2) + ' мкм';
+
+            // 5. Даем рекомендацию
+            let recommendation = '';
+            if (ra <= 1.6) recommendation = 'Отличный результат для чистовой обработки, зеркальных поверхностей.';
+            else if (ra <= 3.2) recommendation = 'Хорошая получистовая поверхность. Подходит для большинства посадочных мест.';
+            else if (ra <= 6.3) recommendation = 'Стандартная черновая/получистовая обработка. Возможно, требуется чистый проход.';
+            else recommendation = 'Черновая обработка или обдирка. Для финиша уменьшите подачу или увеличьте радиус пластины.';
+
+            document.getElementById('recommendation').textContent = recommendation;
+
+            // 6. Показываем блок результата
+            resultDirect.style.display = 'block';
+            resultReverse.style.display = 'none';
+        }
+
+        // ФУНКЦИЯ РАСЧЕТА: Ra -> Подача
+        function calculateFeed() {
+            // 1. Получаем целевую шероховатость
+            const targetRa = parseFloat(document.getElementById('targetRa').value);
+            if (isNaN(targetRa) || targetRa <= 0) {
+                alert('Введите корректное значение шероховатости Ra (больше 0).');
+                return;
+            }
+
+            // 2. Получаем радиус
+            let radius;
+            if (insertRadiusRevSelect.value === 'customRev') {
+                radius = parseFloat(customRadiusRevInput.value);
+            } else {
+                radius = parseFloat(insertRadiusRevSelect.value);
+            }
+            if (isNaN(radius) || radius <= 0) {
+                alert('Введите корректное значение радиуса (больше 0).');
+                return;
+            }
+
+            // 3. Обратная формула: f (мм/об) = sqrt( (Ra * 8 * r) / 1000 )
+            const feed = Math.sqrt((targetRa * 8 * radius) / 1000);
+
+            // 4. Обновляем результат на странице
+            document.getElementById('resultTargetRa').textContent = targetRa.toFixed(2);
+            document.getElementById('resultRadiusRev').textContent = radius.toFixed(1);
+            document.getElementById('resultFeedRev').textContent = feed.toFixed(3) + ' мм/об';
+
+            // 5. Даем практический совет
+            let advice = '';
+            if (feed < 0.05) {
+                advice = 'Подача очень мала. Риск наростообразования и низкой стойкости. Попробуйте пластину с радиусом 0.2 мм или чистовую пластину с wiper-геометрией.';
+            } else if (feed < 0.15) {
+                advice = 'Типичная подача для чистовой обработки. Убедитесь в отсутствии вибраций.';
+            } else {
+                advice = 'Хорошая подача для получистовой обработки. Пластина будет работать в комфортном режиме.';
+            }
+            // Добавляем совет по сравнению с другим радиусом
+            const altRadius = (radius === 0.4) ? 0.8 : 0.4;
+            const altFeed = Math.sqrt((targetRa * 8 * altRadius) / 1000);
+            advice += ` Для сравнения: при радиусе ${altRadius} мм подача была бы ~${altFeed.toFixed(3)} мм/об.`;
+
+            document.getElementById('recommendationRev').textContent = advice;
+
+            // 6. Показываем блок результата
+            resultDirect.style.display = 'none';
+            resultReverse.style.display = 'block';
+        }
+
+        // НАЗНАЧЕНИЕ ОБРАБОТЧИКОВ КНОПОК
+        document.getElementById('btnCalculateDirect').addEventListener('click', calculateRa);
+        document.getElementById('btnCalculateReverse').addEventListener('click', calculateFeed);
+
+        // РАСЧЕТ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ (прямой режим по умолчанию)
+        window.addEventListener('DOMContentLoaded', () => {
+            calculateRa(); // Чтобы сразу показать пример расчета
+        });
+    </script>
+</body>
+</html>
