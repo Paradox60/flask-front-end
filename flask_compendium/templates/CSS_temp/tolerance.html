@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор допусков по квалитетам | CNC Портал</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+        .calculator {
+            flex: 1;
+            min-width: 350px;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e1e5eb;
+        }
+        .reference {
+            flex: 1;
+            min-width: 350px;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e1e5eb;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-top: 0;
+            border-bottom: 2px solid #27ae60;
+            padding-bottom: 10px;
+            font-size: 1.8em;
+        }
+        h2 {
+            color: #27ae60;
+            font-size: 1.4em;
+            margin-top: 0;
+        }
+        h3 {
+            color: #2980b9;
+            margin-top: 25px;
+            font-size: 1.2em;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #27ae60;
+        }
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, #27ae60, #219653);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background: linear-gradient(to right, #219653, #1e8449);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #eafaf1;
+            border-radius: 8px;
+            border-left: 5px solid #27ae60;
+            font-size: 1.1em;
+        }
+        .highlight {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #e74c3c;
+            padding: 5px 10px;
+            background-color: white;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        .tolerance-display {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .tolerance-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #27ae60;
+            margin: 10px 0;
+        }
+        .info-box {
+            background-color: #e8f4fc;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95em;
+        }
+        .warning-box {
+            background-color: #fef9e7;
+            border-left: 5px solid #f1c40f;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95em;
+        }
+        .qualities-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+        .qualities-table th {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        .qualities-table td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .qualities-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .qualities-table tr:hover {
+            background-color: #e8f4fc;
+        }
+        .tolerance-range {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e1e5eb;
+        }
+        .range-item {
+            text-align: center;
+            flex: 1;
+        }
+        .range-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .range-label {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        .size-group {
+            display: flex;
+            gap: 15px;
+        }
+        .size-group .form-group {
+            flex: 1;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        .tooltip {
+            color: #7f8c8d;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: block;
+        }
+        .interactive-table {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 15px;
+            border: 1px solid #e1e5eb;
+            border-radius: 8px;
+        }
+        .table-header {
+            position: sticky;
+            top: 0;
+            background: #2c3e50;
+            color: white;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="calculator">
+            <h1><span style="color: #27ae60;">⎔</span> Калькулятор допусков по квалитетам</h1>
+            <p>Расчёт поля допуска для валов и отверстий в соответствии с ГОСТ 25346-89 (ISO 286-1).</p>
+            
+            <div class="form-group">
+                <label>Тип элемента:</label>
+                <select id="elementType">
+                    <option value="hole" selected>Отверстие</option>
+                    <option value="shaft">Вал</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Диапазон номинального размера:</label>
+                <select id="sizeRange">
+                    <option value="1-3">От 1 до 3 мм</option>
+                    <option value="3-6">От 3 до 6 мм</option>
+                    <option value="6-10">От 6 до 10 мм</option>
+                    <option value="10-18">От 10 до 18 мм</option>
+                    <option value="18-30" selected>От 18 до 30 мм</option>
+                    <option value="30-50">От 30 до 50 мм</option>
+                    <option value="50-80">От 50 до 80 мм</option>
+                    <option value="80-120">От 80 до 120 мм</option>
+                    <option value="120-180">От 120 до 180 мм</option>
+                    <option value="180-250">От 180 до 250 мм</option>
+                    <option value="250-315">От 250 до 315 мм</option>
+                    <option value="315-400">От 315 до 400 мм</option>
+                    <option value="400-500">От 400 до 500 мм</option>
+                </select>
+                <span class="tooltip">Выберите диапазон, в который попадает ваш размер</span>
+            </div>
+            
+            <div class="size-group">
+                <div class="form-group">
+                    <label for="nominalSize">Номинальный размер (мм):</label>
+                    <input type="number" id="nominalSize" step="0.01" min="1" max="500" value="25">
+                </div>
+                
+                <div class="form-group">
+                    <label for="quality">Квалитет (IT):</label>
+                    <select id="quality">
+                        <option value="01">IT01 (прецизионный)</option>
+                        <option value="0">IT0 (особо точный)</option>
+                        <option value="1">IT1 (очень точный)</option>
+                        <option value="2">IT2</option>
+                        <option value="3">IT3</option>
+                        <option value="4">IT4</option>
+                        <option value="5">IT5 (прецизионный)</option>
+                        <option value="6">IT6 (точный)</option>
+                        <option value="7">IT7 (средней точности)</option>
+                        <option value="8" selected>IT8 (средней точности)</option>
+                        <option value="9">IT9 (пониженной точности)</option>
+                        <option value="10">IT10</option>
+                        <option value="11">IT11 (свободные размеры)</option>
+                        <option value="12">IT12</option>
+                        <option value="13">IT13</option>
+                        <option value="14">IT14</option>
+                        <option value="15">IT15</option>
+                        <option value="16">IT16</option>
+                        <option value="17">IT17</option>
+                        <option value="18">IT18</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="fieldType">Поле допуска (опционально):</label>
+                <select id="fieldType">
+                    <option value="none" selected>Только квалитет (система допусков)</option>
+                    <option value="H">H - основное отверстие</option>
+                    <option value="G">G</option>
+                    <option value="F">F</option>
+                    <option value="E">E</option>
+                    <option value="D">D</option>
+                    <option value="C">C</option>
+                    <option value="B">B</option>
+                    <option value="A">A</option>
+                    <option value="h">h - основной вал</option>
+                    <option value="g">g</option>
+                    <option value="f">f</option>
+                    <option value="e">e</option>
+                    <option value="d">d</option>
+                    <option value="c">c</option>
+                    <option value="b">b</option>
+                    <option value="a">a</option>
+                </select>
+                <span class="tooltip">Выберите для получения предельных отклонений</span>
+            </div>
+            
+            <button id="btnCalculate" class="btn">📐 Рассчитать допуск</button>
+            
+            <div class="tolerance-display">
+                <div>Допуск размера</div>
+                <div class="tolerance-value" id="toleranceValue">0.033 мм</div>
+                <div id="toleranceDetails">IT8 для размера 25 мм</div>
+            </div>
+            
+            <div class="tolerance-range" id="toleranceRange">
+                <div class="range-item">
+                    <div class="range-value" id="maxSize">25.033</div>
+                    <div class="range-label">Верхнее отклонение (ES/es)</div>
+                    <div id="upperDeviation">+0.033 мм</div>
+                </div>
+                <div class="range-item">
+                    <div class="range-value" id="minSize">25.000</div>
+                    <div class="range-label">Нижнее отклонение (EI/ei)</div>
+                    <div id="lowerDeviation">0.000 мм</div>
+                </div>
+            </div>
+            
+            <div class="result">
+                <h3>Результаты расчета:</h3>
+                <p><strong>Номинальный размер:</strong> <span id="resultNominal">25</span> мм</p>
+                <p><strong>Квалитет:</strong> <span id="resultQuality">IT8</span></p>
+                <p><strong>Допуск:</strong> T = <span class="highlight" id="resultTolerance">0.033</span> мм</p>
+                <p><strong>Поле допуска:</strong> <span id="resultField">H8</span></p>
+                <p><strong>Предельные размеры:</strong> <span id="resultLimits">25.000...25.033 мм</span></p>
+                <p id="fieldDescription"><strong>Описание:</strong> Основное отверстие H8 - нижнее отклонение EI = 0.</p>
+            </div>
+            
+            <div class="warning-box">
+                <strong>⚠️ Внимание!</strong> Данные приведены в соответствии с ГОСТ 25346-89 и ISO 286-1. 
+                Для ответственных соединений всегда проверяйте требования конкретного чертежа или стандарта.
+            </div>
+        </div>
+        
+        <div class="reference">
+            <h2><span style="color: #2980b9;">📋</span> Справочная информация</h2>
+            
+            <h3>Квалитеты и их применение:</h3>
+            <div class="interactive-table">
+                <table class="qualities-table">
+                    <thead class="table-header">
+                        <tr>
+                            <th>Квалитет</th>
+                            <th>Точность</th>
+                            <th>Типовое применение</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>IT01-IT4</strong></td>
+                            <td>Особо высокая</td>
+                            <td>Калибры, эталоны, прецизионные приборы</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IT5-IT7</strong></td>
+                            <td>Высокая</td>
+                            <td>Подшипники качения, точные зубчатые колеса</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IT8-IT11</strong></td>
+                            <td>Средняя</td>
+                            <td>Общее машиностроение, посадки с натягом/зазором</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IT12-IT14</strong></td>
+                            <td>Пониженная</td>
+                            <td>Свободные размеры, заготовки, поковки</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IT15-IT18</strong></td>
+                            <td>Грубая</td>
+                            <td>Литые детали, строительные конструкции</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h3>Единицы допусков (мкм) для диапазона 18-30 мм:</h3>
+            <div class="interactive-table">
+                <table class="qualities-table">
+                    <thead class="table-header">
+                        <tr>
+                            <th>Квалитет</th>
+                            <th>Допуск, мкм</th>
+                            <th>Допуск, мм</th>
+                        </tr>
+                    </thead>
+                    <tbody id="toleranceTableBody">
+                        <!-- Заполняется JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <h3>Системы допусков:</h3>
+            <div class="info-box">
+                <p><strong>Система отверстия (H)</strong> - основное отверстие имеет нижнее отклонение EI = 0. 
+                Посадки образуются сочетанием с различными полями допусков валов.</p>
+                <p><strong>Система вала (h)</strong> - основной вал имеет верхнее отклонение es = 0.
+                Посадки образуются сочетанием с различными полями допусков отверстий.</p>
+                <p><strong>Буква</strong> указывает положение поля допуска относительно нулевой линии, 
+                <strong>цифра</strong> - квалитет точности.</p>
+            </div>
+            
+            <h3>Популярные посадки:</h3>
+            <ul>
+                <li><strong>H7/g6</strong> - подвижная посадка (подшипники скольжения)</li>
+                <li><strong>H7/k6</strong> - переходная посадка (шкивы, маховики)</li>
+                <li><strong>H7/p6</strong> - посадка с натягом (постоянные соединения)</li>
+                <li><strong>H8/d9</strong> - посадка с большим зазором (неответственные соединения)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <footer>
+        <p>CNC Портал © 2023. Калькулятор допусков для инженеров и технологов.</p>
+        <p>Основано на ГОСТ 25346-89 "Основные нормы взаимозаменяемости. Единая система допусков и посадок."</p>
+    </footer>
+
+    <script>
+        // База данных допусков по квалитетам (мкм) для разных диапазонов размеров
+        const toleranceDatabase = {
+            // Формат: "размер-диапазон": [IT01, IT0, IT1, IT2, IT3, IT4, IT5, IT6, IT7, IT8, IT9, IT10, IT11, IT12, IT13, IT14, IT15, IT16, IT17, IT18]
+            "1-3": [0.3, 0.5, 0.8, 1.2, 2, 3, 4, 6, 10, 14, 25, 40, 60, 100, 140, 250, 400, 600, 1000, 1400],
+            "3-6": [0.4, 0.6, 1, 1.5, 2.5, 4, 5, 8, 12, 18, 30, 48, 75, 120, 180, 300, 480, 750, 1200, 1800],
+            "6-10": [0.4, 0.6, 1, 1.5, 2.5, 4, 6, 9, 15, 22, 36, 58, 90, 150, 220, 360, 580, 900, 1500, 2200],
+            "10-18": [0.5, 0.8, 1.2, 2, 3, 5, 8, 11, 18, 27, 43, 70, 110, 180, 270, 430, 700, 1100, 1800, 2700],
+            "18-30": [0.6, 1, 1.5, 2.5, 4, 6, 9, 13, 21, 33, 52, 84, 130, 210, 330, 520, 840, 1300, 2100, 3300],
+            "30-50": [0.6, 1, 1.5, 2.5, 4, 7, 11, 16, 25, 39, 62, 100, 160, 250, 390, 620, 1000, 1600, 2500, 3900],
+            "50-80": [0.8, 1.2, 2, 3, 5, 8, 13, 19, 30, 46, 74, 120, 190, 300, 460, 740, 1200, 1900, 3000, 4600],
+            "80-120": [1, 1.5, 2.5, 4, 6, 10, 15, 22, 35, 54, 87, 140, 220, 350, 540, 870, 1400, 2200, 3500, 5400],
+            "120-180": [1.2, 2, 3.5, 5, 8, 12, 18, 25, 40, 63, 100, 160, 250, 400, 630, 1000, 1600, 2500, 4000, 6300],
+            "180-250": [2, 3, 4.5, 7, 10, 14, 20, 29, 46, 72, 115, 185, 290, 460, 720, 1150, 1850, 2900, 4600, 7200],
+            "250-315": [2.5, 4, 6, 8, 12, 16, 23, 32, 52, 81, 130, 210, 320, 520, 810, 1300, 2100, 3200, 5200, 8100],
+            "315-400": [3, 5, 7, 9, 13, 18, 25, 36, 57, 89, 140, 230, 360, 570, 890, 1400, 2300, 3600, 5700, 8900],
+            "400-500": [4, 6, 8, 10, 15, 20, 27, 40, 63, 97, 155, 250, 400, 630, 970, 1550, 2500, 4000, 6300, 9700]
+        };
+
+        // Предельные отклонения для полей допусков (верхнее/нижнее в мкм)
+        // Формат: { поле: [верхнее отклонение, нижнее отклонение] }
+        // Для отверстий (прописные буквы) - относительно нулевой линии вверх
+        // Для валов (строчные буквы) - относительно нулевой линии вниз
+        const deviationDatabase = {
+            // Отверстия (положительные отклонения)
+            "A": [270, 140], "B": [140, 65], "C": [70, 0], "D": [20, 0], 
+            "E": [14, 0], "F": [6, 0], "G": [4, 0], "H": [0, 0], // H - основное отверстие
+            
+            // Валы (отрицательные отклонения)
+            "a": [0, -270], "b": [0, -140], "c": [0, -70], "d": [0, -20],
+            "e": [0, -14], "f": [0, -6], "g": [0, -4], "h": [0, 0]  // h - основной вал
+        };
+
+        // Индекс для преобразования IT-номера в индекс массива
+        const qualityToIndex = {
+            "01": 0, "0": 1, "1": 2, "2": 3, "3": 4, "4": 5, "5": 6, 
+            "6": 7, "7": 8, "8": 9, "9": 10, "10": 11, "11": 12, 
+            "12": 13, "13": 14, "14": 15, "15": 16, "16": 17, "17": 18, "18": 19
+        };
+
+        // Элементы DOM
+        const sizeRangeSelect = document.getElementById('sizeRange');
+        const qualitySelect = document.getElementById('quality');
+        const elementTypeSelect = document.getElementById('elementType');
+        const fieldTypeSelect = document.getElementById('fieldType');
+        const nominalSizeInput = document.getElementById('nominalSize');
+        const btnCalculate = document.getElementById('btnCalculate');
+        const toleranceTableBody = document.getElementById('toleranceTableBody');
+
+        // Инициализация таблицы допусков
+        function initializeToleranceTable() {
+            const sizeRange = sizeRangeSelect.value;
+            const tolerances = toleranceDatabase[sizeRange];
+            
+            toleranceTableBody.innerHTML = '';
+            
+            const qualities = ["IT01", "IT0", "IT1", "IT2", "IT3", "IT4", "IT5", 
+                              "IT6", "IT7", "IT8", "IT9", "IT10", "IT11", "IT12", 
+                              "IT13", "IT14", "IT15", "IT16", "IT17", "IT18"];
+            
+            qualities.forEach((quality, index) => {
+                const row = document.createElement('tr');
+                
+                // Подсветка выбранного квалитета
+                const isSelected = qualitySelect.value === (index === 0 ? "01" : (index === 1 ? "0" : index-1).toString());
+                
+                row.innerHTML = `
+                    <td><strong>${quality}</strong></td>
+                    <td>${tolerances[index]} мкм</td>
+                    <td>${(tolerances[index] / 1000).toFixed(3)} мм</td>
+                `;
+                
+                if (isSelected) {
+                    row.style.backgroundColor = '#e8f4fc';
+                    row.style.fontWeight = 'bold';
+                }
+                
+                toleranceTableBody.appendChild(row);
+            });
+        }
+
+        // Расчет допуска
+        function calculateTolerance() {
+            // Получаем значения
+            const sizeRange = sizeRangeSelect.value;
+            const quality = qualitySelect.value;
+            const nominalSize = parseFloat(nominalSizeInput.value);
+            const elementType = elementTypeSelect.value;
+            const fieldType = fieldTypeSelect.value;
+            
+            // Проверка входных данных
+            if (isNaN(nominalSize) || nominalSize <= 0) {
+                alert('Введите корректный номинальный размер (больше 0).');
+                return;
+            }
+            
+            // Получаем допуск из базы данных
+            const qualityIndex = qualityToIndex[quality];
+            const toleranceMikrons = toleranceDatabase[sizeRange][qualityIndex];
+            const toleranceMm = toleranceMikrons / 1000;
+            
+            // Определяем предельные отклонения
+            let upperDeviation = 0;
+            let lowerDeviation = 0;
+            let fieldDescription = "";
+            
+            if (fieldType !== "none") {
+                // Получаем базовые отклонения для поля допуска
+                const baseDeviations = deviationDatabase[fieldType.toUpperCase()];
+                
+                if (baseDeviations) {
+                    // Для отверстий (прописные буквы)
+                    if (fieldType === fieldType.toUpperCase()) {
+                        upperDeviation = baseDeviations[0] + toleranceMikrons;
+                        lowerDeviation = baseDeviations[1];
+                        
+                        if (fieldType === "H") {
+                            fieldDescription = "Основное отверстие H - нижнее отклонение EI = 0.";
+                        } else {
+                            fieldDescription = `Поле допуска отверстия ${fieldType}${quality.replace('IT', '')}.`;
+                        }
+                    } 
+                    // Для валов (строчные буквы)
+                    else {
+                        upperDeviation = baseDeviations[0];
+                        lowerDeviation = baseDeviations[1] - toleranceMikrons;
+                        
+                        if (fieldType === "h") {
+                            fieldDescription = "Основной вал h - верхнее отклонение es = 0.";
+                        } else {
+                            fieldDescription = `Поле допуска вала ${fieldType}${quality.replace('IT', '')}.`;
+                        }
+                    }
+                }
+            } else {
+                // Если поле допуска не выбрано, используем симметричное расположение
+                if (elementType === "hole") {
+                    // Для отверстия - положительные отклонения
+                    upperDeviation = toleranceMikrons;
+                    lowerDeviation = 0;
+                    fieldDescription = "Система отверстия (положительные отклонения).";
+                } else {
+                    // Для вала - отрицательные отклонения
+                    upperDeviation = 0;
+                    lowerDeviation = -toleranceMikrons;
+                    fieldDescription = "Система вала (отрицательные отклонения).";
+                }
+            }
+            
+            // Рассчитываем предельные размеры
+            const maxSize = nominalSize + (upperDeviation / 1000);
+            const minSize = nominalSize + (lowerDeviation / 1000);
+            
+            // Форматируем вывод отклонений
+            const formatDeviation = (dev) => {
+                return dev >= 0 ? `+${(dev/1000).toFixed(3)}` : `${(dev/1000).toFixed(3)}`;
+            };
+            
+            // Обновляем интерфейс
+            document.getElementById('toleranceValue').textContent = toleranceMm.toFixed(3) + ' мм';
+            document.getElementById('toleranceDetails').textContent = 
+                `IT${quality} для размера ${nominalSize} мм`;
+            
+            document.getElementById('maxSize').textContent = maxSize.toFixed(3);
+            document.getElementById('minSize').textContent = minSize.toFixed(3);
+            document.getElementById('upperDeviation').textContent = formatDeviation(upperDeviation) + ' мм';
+            document.getElementById('lowerDeviation').textContent = formatDeviation(lowerDeviation) + ' мм';
+            
+            document.getElementById('resultNominal').textContent = nominalSize;
+            document.getElementById('resultQuality').textContent = `IT${quality}`;
+            document.getElementById('resultTolerance').textContent = toleranceMm.toFixed(3);
+            document.getElementById('resultField').textContent = 
+                fieldType === "none" ? (elementType === "hole" ? "H" + quality.replace('IT', '') : "h" + quality.replace('IT', '')) 
+                : fieldType.toUpperCase() + quality.replace('IT', '');
+            document.getElementById('resultLimits').textContent = 
+                `${minSize.toFixed(3)}...${maxSize.toFixed(3)} мм`;
+            document.getElementById('fieldDescription').innerHTML = `<strong>Описание:</strong> ${fieldDescription}`;
+            
+            // Обновляем таблицу с подсветкой выбранного квалитета
+            initializeToleranceTable();
+        }
+
+        // Обработчики событий
+        btnCalculate.addEventListener('click', calculateTolerance);
+        sizeRangeSelect.addEventListener('change', initializeToleranceTable);
+        qualitySelect.addEventListener('change', calculateTolerance);
+
+        // Автоматический подбор диапазона при вводе размера
+        nominalSizeInput.addEventListener('input', function() {
+            const size = parseFloat(this.value);
+            if (!isNaN(size)) {
+                // Находим подходящий диапазон
+                const ranges = [
+                    [1, 3], [3, 6], [6, 10], [10, 18], [18, 30],
+                    [30, 50], [50, 80], [80, 120], [120, 180],
+                    [180, 250], [250, 315], [315, 400], [400, 500]
+                ];
+                
+                for (let i = 0; i < ranges.length; i++) {
+                    if (size >= ranges[i][0] && size < ranges[i][1]) {
+                        const rangeStr = `${ranges[i][0]}-${ranges[i][1]}`;
+                        if (sizeRangeSelect.value !== rangeStr) {
+                            sizeRangeSelect.value = rangeStr;
+                            initializeToleranceTable();
+                        }
+                        break;
+                    }
+                }
+            }
+        });
+
+        // Инициализация при загрузке
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeToleranceTable();
+            calculateTolerance();
+        });
+    </script>
+</body>
+</html>

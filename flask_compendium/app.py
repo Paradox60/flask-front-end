@@ -32,6 +32,10 @@ def hide_show():
 def home():
     return render_template("CSS_temp/index.html")
 
+@app.route("/tolerance")
+def tolerance():
+    return render_template("CSS_temp/tolerance.html")
+
 @app.route("/roughness")
 def roughness():
     return render_template("CSS_temp/roughness.html")
